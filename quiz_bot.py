@@ -6,6 +6,11 @@ Quiz sets live in quizzes/<id>.json (e.g. quizzes/ows001.json). The file
 schedule.json says which set goes out at which time. Each run of this script
 posts every set that is due and not yet posted, then records it in sent.json.
 
+Every poll shows a countdown (POLL_TIMER_SECONDS) and closes when it ends.
+After the last poll closes, a result message is posted: a leaderboard with marks
+(+2 right, -0.5 wrong), right/wrong/skipped counts and time taken. This needs
+non-anonymous polls, which Telegram allows in groups but not in channels.
+
 Usage:
     python quiz_bot.py                  post everything that is due
     python quiz_bot.py --quiz ows001    post one set right now (ignores schedule)
@@ -25,6 +30,7 @@ import argparse
 import json
 import logging
 import os
+import random
 import re
 import sys
 import tempfile
@@ -32,7 +38,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
@@ -43,16 +49,44 @@ import requests
 TELEGRAM_API_BASE = "https://api.telegram.org"
 
 DELAY_BETWEEN_POLLS = 15        # seconds to wait between polls
-MAX_ATTEMPTS = 3                # total tries per poll (1 initial + 2 retries)
+MAX_ATTEMPTS = 3                # total tries per request (1 initial + 2 retries)
 BACKOFF_BASE = 2                # retry delay = BACKOFF_BASE ** attempt seconds
 MAX_RETRY_AFTER = 120           # cap for Telegram's "retry_after" (HTTP 429)
 REQUEST_TIMEOUT = (10, 30)      # (connect, read) timeouts in seconds
+
+# --- Poll behaviour (change these to taste) ---------------------------------
+# Countdown shown on every poll, in seconds. The poll closes when it reaches
+# zero. Telegram allows 5-600. Use 0 for no timer.
+POLL_TIMER_SECONDS = 15
+
+# False  = Telegram shows who answered (and the script can build a leaderboard).
+#          Works in groups. Telegram does NOT allow it in channels: there the
+#          script automatically falls back to anonymous polls.
+# True   = anonymous polls (only vote counts are visible).
+ANONYMOUS_POLLS = False
+
+# Order and numbering of the questions.
+SHUFFLE_QUESTIONS = True        # random order every time a set is posted
+SHOW_QUESTION_NUMBERS = True    # question text starts with "Q3/10: "
+QUESTION_PREFIX_RESERVE = 12    # characters kept free for that prefix
+
+# Result message after each quiz set.
+POST_RESULTS = True             # post the final result when the quiz ends
+MARKS_CORRECT = 2.0             # marks for a right answer
+MARKS_WRONG = 0.5               # marks taken off for a wrong answer (skipped = 0)
+SHOW_ANSWER_KEY = False         # also list the correct answers in the result
+RESULTS_MAX_ROWS = 20           # most names shown in the leaderboard
+RESULT_GRACE_SECONDS = 3        # extra wait after the last poll closes
+MAX_LONG_POLL = 20              # longest single wait when reading answers
 
 # Telegram limits for poll content.
 MAX_QUESTION_LENGTH = 300
 MAX_OPTION_LENGTH = 100
 MIN_OPTIONS = 2
 MAX_OPTIONS = 10
+MIN_TIMER = 5
+MAX_TIMER = 600
+MAX_MESSAGE_LENGTH = 4000       # Telegram's hard limit is 4096
 
 # Data files (resolved relative to this script, so the working directory
 # does not matter).
@@ -78,10 +112,42 @@ class ScheduleEntry:
     key: str         # unique id used in sent.json, e.g. "ows001@2026-10-19T09:00Z"
 
 
+@dataclass
+class TelegramResult:
+    """Outcome of one Telegram API call (after retries)."""
+    ok: bool
+    data: Dict[str, Any]
+    status: Optional[int]    # HTTP status of the last response; None = network failure
+
+    @property
+    def description(self) -> str:
+        return str(self.data.get("description", ""))
+
+
+@dataclass
+class SentPoll:
+    """A poll that was posted successfully (needed to build the results)."""
+    poll_id: Optional[str]
+    question: str
+    correct_index: int
+    correct_text: str
+    sent_at: float            # time.monotonic() when the poll was posted
+
+
+@dataclass
+class Scorecard:
+    """One participant's final numbers."""
+    name: str
+    correct: int
+    wrong: int
+    skipped: int
+    score: float
+    seconds: float            # total time taken (skipped questions count the full timer)
+
+
 # --------------------------------------------------------------------------- #
 # General helpers
 # --------------------------------------------------------------------------- #
-
 
 def setup_logging() -> None:
     """Configure timestamped logging to stdout."""
@@ -128,7 +194,7 @@ def get_config() -> Tuple[str, str]:
     """Read BOT_TOKEN and CHAT_ID from the environment.
 
     Raises:
-        RuntimeError: if either variable is missing or empty.
+        RuntimeError: if either variable is missing, empty or malformed.
     """
     token = os.environ.get("BOT_TOKEN", "").strip()
     chat_id = os.environ.get("CHAT_ID", "").strip()
@@ -159,10 +225,19 @@ def read_json(path: Path) -> Any:
         return json.load(handle)
 
 
+def poll_timer() -> Optional[int]:
+    """Return the poll countdown in seconds, or None when no timer is used."""
+    if MIN_TIMER <= POLL_TIMER_SECONDS <= MAX_TIMER:
+        return POLL_TIMER_SECONDS
+    if POLL_TIMER_SECONDS != 0:
+        logger.warning("POLL_TIMER_SECONDS=%s is outside %d-%d; polls will have no timer.",
+                       POLL_TIMER_SECONDS, MIN_TIMER, MAX_TIMER)
+    return None
+
+
 # --------------------------------------------------------------------------- #
 # Quiz files
 # --------------------------------------------------------------------------- #
-
 
 def validate_question(item: Any) -> str:
     """Check one quiz entry against the expected format and Telegram limits.
@@ -177,8 +252,9 @@ def validate_question(item: Any) -> str:
 
     if not isinstance(question, str) or not question.strip():
         return "question must be a non-empty string"
-    if len(question) > MAX_QUESTION_LENGTH:
-        return f"question exceeds {MAX_QUESTION_LENGTH} characters"
+    max_question = MAX_QUESTION_LENGTH - (QUESTION_PREFIX_RESERVE if SHOW_QUESTION_NUMBERS else 0)
+    if len(question) > max_question:
+        return f"question exceeds {max_question} characters"
 
     if not isinstance(options, (list, tuple)):
         return "options must be a list"
@@ -240,7 +316,6 @@ def load_quiz(quiz_id: str) -> List[Any]:
 # --------------------------------------------------------------------------- #
 # Schedule and sent record
 # --------------------------------------------------------------------------- #
-
 
 def parse_time(value: Any) -> datetime:
     """Parse an ISO-8601 time into an aware UTC datetime.
@@ -340,33 +415,19 @@ def save_sent(sent: Dict[str, Any]) -> None:
 # Telegram
 # --------------------------------------------------------------------------- #
 
-
-def send_quiz_poll(
+def call_telegram(
     session: requests.Session,
     token: str,
-    chat_id: str,
-    question: str,
-    options: List[str],
-    correct_index: int,
-) -> bool:
-    """Send one anonymous Quiz Poll, retrying on transient failures.
+    method: str,
+    payload: Dict[str, Any],
+) -> TelegramResult:
+    """Call a Telegram Bot API method, retrying on transient failures.
 
     Retries on: network errors/timeouts, HTTP 429 (honouring retry_after),
     and HTTP 5xx. Permanent client errors (e.g. 400, 401, 403) are not retried.
-
-    Returns:
-        True if Telegram accepted the poll, False otherwise.
     """
-    url = f"{TELEGRAM_API_BASE}/bot{token}/sendPoll"
-    payload = {
-        "chat_id": chat_id,
-        "question": question,
-        "options": list(options),
-        "type": "quiz",
-        "is_anonymous": True,
-        "correct_option_id": correct_index,
-        "open_period": 15,
-    }
+    url = f"{TELEGRAM_API_BASE}/bot{token}/{method}"
+    last = TelegramResult(ok=False, data={}, status=None)
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
         delay = BACKOFF_BASE ** attempt  # default wait before the next attempt
@@ -374,6 +435,7 @@ def send_quiz_poll(
         try:
             response = session.post(url, json=payload, timeout=REQUEST_TIMEOUT)
         except requests.exceptions.RequestException as exc:
+            last = TelegramResult(ok=False, data={}, status=None)
             logger.warning("Attempt %d/%d: network error: %s",
                            attempt, MAX_ATTEMPTS, redact(exc, token))
         else:
@@ -385,8 +447,9 @@ def send_quiz_poll(
                 data = {}
 
             if response.status_code == 200 and data.get("ok") is True:
-                return True
+                return TelegramResult(ok=True, data=data, status=200)
 
+            last = TelegramResult(ok=False, data=data, status=response.status_code)
             description = data.get("description") or response.text[:200]
             logger.warning("Attempt %d/%d: HTTP %d: %s", attempt, MAX_ATTEMPTS,
                            response.status_code, redact(description, token))
@@ -401,50 +464,354 @@ def send_quiz_poll(
                 if "chat not found" in str(description).lower():
                     logger.error(
                         "Telegram says the chat was not found. Check CHAT_ID, make sure "
-                        "the bot is a member/admin of the target chat, and use the numeric ID "
-                        "for private channels/groups."
+                        "the bot is a member/admin of the target chat, and use the numeric "
+                        "ID for private channels/groups."
                     )
-                return False
+                return last
 
         if attempt < MAX_ATTEMPTS:
             logger.info("Retrying in %d seconds...", delay)
             time.sleep(delay)
 
-    return False
+    return last
 
 
-def run_quiz(questions: List[Any], token: str, chat_id: str) -> Tuple[int, int, int]:
-    """Validate and post one quiz set.
+def send_quiz_poll(
+    session: requests.Session,
+    token: str,
+    chat_id: str,
+    question: str,
+    options: List[str],
+    correct_index: int,
+    anonymous: bool,
+) -> TelegramResult:
+    """Send one Quiz Poll with a countdown timer."""
+    payload: Dict[str, Any] = {
+        "chat_id": chat_id,
+        "question": question,
+        "options": list(options),
+        "type": "quiz",
+        "is_anonymous": anonymous,
+        "correct_option_id": correct_index,
+    }
+    timer = poll_timer()
+    if timer:
+        payload["open_period"] = timer   # Telegram shows a countdown and closes the poll
+    return call_telegram(session, token, "sendPoll", payload)
+
+
+def extract_poll_id(data: Dict[str, Any]) -> Optional[str]:
+    """Pull the poll id out of a sendPoll response (None if absent)."""
+    result = data.get("result")
+    poll = result.get("poll") if isinstance(result, dict) else None
+    poll_id = poll.get("id") if isinstance(poll, dict) else None
+    return poll_id if isinstance(poll_id, str) else None
+
+
+def display_name(user: Dict[str, Any]) -> str:
+    """Readable name for a Telegram user object."""
+    full = " ".join(part for part in (user.get("first_name"), user.get("last_name"))
+                    if isinstance(part, str) and part.strip()).strip()
+    if full:
+        return full
+    username = user.get("username")
+    if isinstance(username, str) and username:
+        return "@" + username
+    return f"User {user.get('id')}"
+
+
+class AnswerCollector:
+    """Collects who answered which poll while the script waits.
+
+    Telegram only reports answers (poll_answer updates) for NON-anonymous polls,
+    and only through getUpdates. If that is not possible (anonymous polls,
+    a webhook is set, ...) the collector switches itself off and simply sleeps.
+    """
+
+    def __init__(self, session: requests.Session, token: str, enabled: bool) -> None:
+        self.session = session
+        self.token = token
+        self.enabled = enabled
+        self.offset: Optional[int] = None
+        # poll_id -> {user_id: (display_name, option_ids, time_received)}
+        self.answers: Dict[str, Dict[int, Tuple[str, List[int], float]]] = {}
+
+    def disable(self, reason: str) -> None:
+        if self.enabled and reason:
+            logger.warning("%s", reason)
+        self.enabled = False
+
+    def wait(self, seconds: float) -> None:
+        """Wait `seconds`, reading answers meanwhile when enabled."""
+        deadline = time.monotonic() + seconds
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return
+            if not self.enabled:
+                time.sleep(remaining)
+                return
+            self._read_once(remaining)
+
+    def _read_once(self, remaining: float) -> None:
+        long_poll = max(1, min(int(remaining), MAX_LONG_POLL))
+        payload: Dict[str, Any] = {"timeout": long_poll, "allowed_updates": ["poll_answer"]}
+        if self.offset is not None:
+            payload["offset"] = self.offset
+        url = f"{TELEGRAM_API_BASE}/bot{self.token}/getUpdates"
+
+        try:
+            response = self.session.post(url, json=payload, timeout=(10, long_poll + 10))
+        except requests.exceptions.RequestException as exc:
+            logger.warning("Could not read answers: %s", redact(exc, self.token))
+            time.sleep(min(2, remaining))
+            return
+
+        try:
+            data = response.json()
+        except ValueError:
+            data = {}
+        if not isinstance(data, dict):
+            data = {}
+
+        if response.status_code == 409:
+            self.disable("Cannot read answers (a webhook is set, or something else is "
+                         "reading this bot's updates). Scores will not be shown.")
+            return
+        if response.status_code != 200 or data.get("ok") is not True:
+            logger.warning("Could not read answers: HTTP %d: %s", response.status_code,
+                           redact(data.get("description", ""), self.token))
+            time.sleep(min(2, remaining))
+            return
+
+        for update in data.get("result") or []:
+            if not isinstance(update, dict):
+                continue
+            update_id = update.get("update_id")
+            if isinstance(update_id, int):
+                self.offset = update_id + 1   # confirms this update to Telegram
+            self._record(update.get("poll_answer"))
+
+    def _record(self, poll_answer: Any) -> None:
+        if not isinstance(poll_answer, dict):
+            return
+        poll_id = poll_answer.get("poll_id")
+        user = poll_answer.get("user")
+        if not isinstance(poll_id, str) or not isinstance(user, dict):
+            return
+        user_id = user.get("id")
+        if not isinstance(user_id, int):
+            return
+        option_ids = poll_answer.get("option_ids")
+        chosen = [o for o in option_ids if isinstance(o, int)] if isinstance(option_ids, list) else []
+        self.answers.setdefault(poll_id, {})[user_id] = (
+            display_name(user), chosen, time.monotonic())
+
+
+# --------------------------------------------------------------------------- #
+# Results
+# --------------------------------------------------------------------------- #
+
+def format_marks(value: float) -> str:
+    """17.5 -> '17.5', 20.0 -> '20'."""
+    return f"{value:g}"
+
+
+def format_duration(seconds: float) -> str:
+    """Seconds -> '45 sec', '1 min 12 sec' or '1 hr 5 min'."""
+    total = int(round(seconds))
+    hours, rest = divmod(total, 3600)
+    minutes, secs = divmod(rest, 60)
+    if hours:
+        return f"{hours} hr {minutes} min"
+    if minutes:
+        return f"{minutes} min {secs} sec"
+    return f"{secs} sec"
+
+
+def build_scoreboard(polls: List[SentPoll],
+                     answers: Dict[str, Dict[int, Tuple[str, List[int], float]]]
+                     ) -> List[Scorecard]:
+    """Score everyone who answered at least once, best first.
+
+    Marks: +MARKS_CORRECT per right answer, -MARKS_WRONG per wrong one, 0 if
+    skipped. Ties are broken by the shorter total time.
+    """
+    timer = float(poll_timer() or 0)
+
+    names: Dict[int, str] = {}
+    for poll in polls:
+        if poll.poll_id is None:
+            continue
+        for user_id, (name, chosen, _received) in answers.get(poll.poll_id, {}).items():
+            if chosen:
+                names[user_id] = name
+
+    cards: List[Scorecard] = []
+    for user_id, name in names.items():
+        correct = wrong = skipped = 0
+        seconds = 0.0
+        for poll in polls:
+            record = answers.get(poll.poll_id, {}).get(user_id) if poll.poll_id else None
+            if record and record[1]:
+                if record[1] == [poll.correct_index]:
+                    correct += 1
+                else:
+                    wrong += 1
+                elapsed = max(0.0, record[2] - poll.sent_at)
+                seconds += min(elapsed, timer) if timer else elapsed
+            else:
+                skipped += 1
+                seconds += timer
+        score = correct * MARKS_CORRECT - wrong * MARKS_WRONG
+        cards.append(Scorecard(name, correct, wrong, skipped, score, seconds))
+
+    cards.sort(key=lambda card: (-card.score, round(card.seconds), card.name.lower()))
+    return cards
+
+
+def build_results_message(title: str,
+                          polls: List[SentPoll],
+                          board: List[Scorecard],
+                          scores_available: bool,
+                          reason: str) -> str:
+    """Compose the plain-text result message."""
+    total = len(polls)
+    medals = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F949"}
+
+    if scores_available:
+        lines = [f"\U0001F3C6 {title} - Final Result"]
+        if board:
+            max_score = total * MARKS_CORRECT
+            rank, previous = 0, None
+            for index, card in enumerate(board[:RESULTS_MAX_ROWS], start=1):
+                key = (card.score, round(card.seconds))
+                if key != previous:          # same score and time share a rank
+                    rank, previous = index, key
+                marker = medals.get(rank, f"{rank}.")
+                lines += [
+                    "",
+                    f"{marker} {card.name}: {format_marks(card.score)}/{format_marks(max_score)}",
+                    f"   \u2705 {card.correct}  \u274C {card.wrong}  \u23ED {card.skipped}"
+                    f"  \u23F1 {format_duration(card.seconds)}",
+                ]
+            if len(board) > RESULTS_MAX_ROWS:
+                lines += ["", f"...and {len(board) - RESULTS_MAX_ROWS} more"]
+        else:
+            lines += ["", "Nobody answered this time."]
+    else:
+        lines = [f"\U0001F3C6 {title} - Quiz complete", "", reason]
+
+    if SHOW_ANSWER_KEY:
+        lines += ["", "Answer key"]
+        lines += [f"Q{number}: {poll.correct_text}" for number, poll in enumerate(polls, start=1)]
+
+    text = "\n".join(lines)
+    if len(text) > MAX_MESSAGE_LENGTH:
+        text = text[:MAX_MESSAGE_LENGTH - 10].rstrip() + "\n..."
+    return text
+
+
+def post_results(session: requests.Session, token: str, chat_id: str, title: str,
+                 polls: List[SentPoll], collector: AnswerCollector,
+                 anonymous: bool) -> bool:
+    """Build and send the result message. Failure only logs a warning."""
+    if anonymous:
+        scores_available = False
+        reason = "Scores are not shown because these polls are anonymous."
+    elif not collector.enabled:
+        scores_available = False
+        reason = "Scores could not be collected this time."
+    else:
+        scores_available = True
+        reason = ""
+
+    board = build_scoreboard(polls, collector.answers) if scores_available else []
+    if scores_available:
+        logger.info("Collected answers from %d participant(s).", len(board))
+
+    text = build_results_message(title, polls, board, scores_available, reason)
+    result = call_telegram(session, token, "sendMessage", {"chat_id": chat_id, "text": text})
+    if result.ok:
+        logger.info("SUCCESS: result message posted.")
+    else:
+        logger.warning("The result message could not be posted.")
+    return result.ok
+
+
+def run_quiz(questions: List[Any], token: str, chat_id: str,
+             title: str = "Quiz") -> Tuple[int, int, int]:
+    """Validate, shuffle and post one quiz set, then post the result.
 
     Returns:
         (sent, failed, skipped) counts.
     """
     valid, skipped = filter_valid(questions)
+    if SHUFFLE_QUESTIONS and len(valid) > 1:
+        random.shuffle(valid)
+        logger.info("Question order shuffled.")
+    total = len(valid)
 
     sent = failed = 0
+    sent_polls: List[SentPoll] = []
+    anonymous = ANONYMOUS_POLLS
+
     with requests.Session() as session:
+        collector = AnswerCollector(session, token, enabled=POST_RESULTS and not anonymous)
+
         for position, (question, options, correct_index) in enumerate(valid, start=1):
-            logger.info("Posting poll %d/%d: %s", position, len(valid), question)
+            shown = f"Q{position}/{total}: {question}" if SHOW_QUESTION_NUMBERS else question
+            logger.info("Posting poll %d/%d: %s", position, total, question)
             try:
-                ok = send_quiz_poll(session, token, chat_id,
-                                    question, options, correct_index)
+                result = send_quiz_poll(session, token, chat_id, shown, options,
+                                        correct_index, anonymous)
+
+                # Channels refuse non-anonymous polls. If the chat did not simply
+                # fail to exist, try once anonymously and stay anonymous if it works.
+                if (not result.ok and not anonymous and result.status == 400
+                        and "chat not found" not in result.description.lower()):
+                    retry = send_quiz_poll(session, token, chat_id, shown, options,
+                                           correct_index, True)
+                    if retry.ok:
+                        logger.warning(
+                            "Telegram refused a non-anonymous poll (normal for channels). "
+                            "Switching to anonymous polls; names and scores will not be shown.")
+                        anonymous = True
+                        collector.disable("")
+                        result = retry
             except Exception as exc:  # last-resort guard: never stop the run
-                ok = False
+                result = TelegramResult(ok=False, data={}, status=None)
                 logger.error("Unexpected error: %s", redact(exc, token))
 
-            if ok:
+            if result.ok:
                 sent += 1
-                logger.info("SUCCESS: poll %d/%d posted.", position, len(valid))
+                sent_polls.append(SentPoll(
+                    poll_id=extract_poll_id(result.data),
+                    question=question,
+                    correct_index=correct_index,
+                    correct_text=options[correct_index],
+                    sent_at=time.monotonic(),
+                ))
+                logger.info("SUCCESS: poll %d/%d posted.", position, total)
             else:
                 failed += 1
-                logger.error("FAILED: poll %d/%d could not be posted.",
-                             position, len(valid))
+                logger.error("FAILED: poll %d/%d could not be posted.", position, total)
 
-            # Wait between polls (not after the last one).
-            if position < len(valid):
+            # Wait between polls (not after the last one), collecting answers.
+            if position < total:
                 logger.info("Waiting %d seconds before the next poll...",
                             DELAY_BETWEEN_POLLS)
-                time.sleep(DELAY_BETWEEN_POLLS)
+                collector.wait(DELAY_BETWEEN_POLLS)
+
+        if POST_RESULTS and sent_polls:
+            # Let the last poll close first, so the result does not give away its answer.
+            wait_seconds = (poll_timer() or DELAY_BETWEEN_POLLS) + RESULT_GRACE_SECONDS
+            logger.info("Waiting %d seconds for the last poll to close...", wait_seconds)
+            collector.wait(wait_seconds)
+            try:
+                post_results(session, token, chat_id, title, sent_polls, collector, anonymous)
+            except Exception as exc:  # the result is a bonus; never fail the quiz for it
+                logger.error("Could not post the result: %s", redact(exc, token))
 
     return sent, failed, skipped
 
@@ -452,7 +819,6 @@ def run_quiz(questions: List[Any], token: str, chat_id: str) -> Tuple[int, int, 
 # --------------------------------------------------------------------------- #
 # Run modes
 # --------------------------------------------------------------------------- #
-
 
 def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
     """Post every scheduled quiz that is due and not yet recorded as sent."""
@@ -508,7 +874,7 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
             exit_code = 1
             continue
 
-        sent, failed, skipped = run_quiz(questions, token, chat_id)
+        sent, failed, skipped = run_quiz(questions, token, chat_id, entry.quiz_id.upper())
         logger.info("%s finished: sent=%d failed=%d skipped=%d",
                     entry.quiz_id, sent, failed, skipped)
 
@@ -561,7 +927,7 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
 
     logger.info("Manual run: posting %s now (schedule and sent record unchanged).",
                 quiz_id)
-    sent, failed, skipped = run_quiz(questions, token, chat_id)
+    sent, failed, skipped = run_quiz(questions, token, chat_id, quiz_id.upper())
     logger.info("%s finished: sent=%d failed=%d skipped=%d",
                 quiz_id, sent, failed, skipped)
     return 0 if sent > 0 and failed == 0 else 1
@@ -570,7 +936,6 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
 # --------------------------------------------------------------------------- #
 # Entry point
 # --------------------------------------------------------------------------- #
-
 
 def parse_args(argv: Any = None) -> argparse.Namespace:
     """Parse command-line arguments."""
