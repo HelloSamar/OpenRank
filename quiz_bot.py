@@ -28,7 +28,6 @@ import os
 import re
 import sys
 import tempfile
-import threading
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -43,12 +42,11 @@ import requests
 
 TELEGRAM_API_BASE = "https://api.telegram.org"
 
-DELAY_BETWEEN_POLLS = 30        # seconds to wait between polls
+DELAY_BETWEEN_POLLS = 15        # seconds to wait between polls
 MAX_ATTEMPTS = 3                # total tries per poll (1 initial + 2 retries)
 BACKOFF_BASE = 2                # retry delay = BACKOFF_BASE ** attempt seconds
 MAX_RETRY_AFTER = 120           # cap for Telegram's "retry_after" (HTTP 429)
 REQUEST_TIMEOUT = (10, 30)      # (connect, read) timeouts in seconds
-POLL_OPEN_PERIOD = 30           # Telegram poll lifetime in seconds (5-600)
 
 # Telegram limits for poll content.
 MAX_QUESTION_LENGTH = 300
@@ -95,6 +93,37 @@ def setup_logging() -> None:
     )
 
 
+def validate_chat_id(chat_id: str) -> str:
+    """Validate Telegram chat ID inputs.
+
+    Accepts either a numeric chat ID (e.g. -1001234567890) or a public username
+    like @channelname. Telegram rejects private channels/groups unless the bot is
+    present and the numeric ID is used.
+    """
+    chat_id = chat_id.strip()
+    if not chat_id:
+        raise RuntimeError("CHAT_ID is empty.")
+
+    if chat_id.startswith("@") and len(chat_id) > 1:
+        return chat_id
+
+    if re.fullmatch(r"-?\d+", chat_id):
+        return chat_id
+
+    # Common user mistakes while copying the value from a browser or docs.
+    if chat_id.startswith("https://") or chat_id.startswith("http://"):
+        raise RuntimeError(
+            "CHAT_ID looks like a URL, not a Telegram chat ID. "
+            "Use a numeric chat ID (for example -1001234567890) or @channelname."
+        )
+
+    raise RuntimeError(
+        "Invalid CHAT_ID. Use a numeric Telegram chat ID such as -1001234567890 "
+        "or a public @channelname. For private channels/groups, use the numeric chat ID "
+        "from getUpdates and make sure the bot is a member/admin."
+    )
+
+
 def get_config() -> Tuple[str, str]:
     """Read BOT_TOKEN and CHAT_ID from the environment.
 
@@ -110,7 +139,7 @@ def get_config() -> Tuple[str, str]:
         raise RuntimeError(
             "Missing required environment variable(s): " + ", ".join(missing)
         )
-    return token, chat_id
+    return token, validate_chat_id(chat_id)
 
 
 def redact(text: Any, token: str) -> str:
@@ -312,100 +341,6 @@ def save_sent(sent: Dict[str, Any]) -> None:
 # --------------------------------------------------------------------------- #
 
 
-def send_chat_message(
-    session: requests.Session,
-    token: str,
-    chat_id: str,
-    text: str,
-) -> None:
-    """Send a normal chat message."""
-    url = f"{TELEGRAM_API_BASE}/bot{token}/sendMessage"
-    payload = {
-        "chat_id": chat_id,
-        "text": text,
-        "parse_mode": "HTML",
-    }
-    try:
-        session.post(url, json=payload, timeout=REQUEST_TIMEOUT)
-    except requests.exceptions.RequestException as exc:
-        logger.warning("Could not send announcement message: %s", redact(exc, token))
-
-
-def listen_for_poll_answers(
-    session: requests.Session,
-    token: str,
-    chat_id: str,
-    poll_id: str,
-    option_texts: List[str],
-    window_secs: int = 30,
-) -> None:
-    """Poll Telegram for PollAnswer updates and announce each response.
-
-    This runs in a background thread so the bot can continue posting the next quiz.
-    """
-    deadline = time.time() + max(5, int(window_secs))
-    offset = None
-
-    while time.time() < deadline:
-        params = {
-            "timeout": 2,
-            "allowed_updates": json.dumps(["poll_answer"]),
-        }
-        if offset is not None:
-            params["offset"] = offset
-
-        try:
-            response = session.get(
-                f"{TELEGRAM_API_BASE}/bot{token}/getUpdates",
-                params=params,
-                timeout=REQUEST_TIMEOUT,
-            )
-            data = response.json() if response.ok else {}
-        except requests.exceptions.RequestException as exc:
-            logger.warning("getUpdates error while listening for answers: %s",
-                           redact(exc, token))
-            time.sleep(1)
-            continue
-
-        if not isinstance(data, dict):
-            time.sleep(1)
-            continue
-
-        for update in data.get("result", []) or []:
-            update_id = update.get("update_id")
-            if update_id is not None:
-                offset = update_id + 1
-
-            poll_answer = update.get("poll_answer")
-            if not poll_answer:
-                continue
-            if poll_answer.get("poll_id") != poll_id:
-                continue
-
-            user = poll_answer.get("user") or {}
-            username = user.get("username")
-            if not username:
-                first = user.get("first_name") or ""
-                last = user.get("last_name") or ""
-                username = " ".join(part for part in (first, last) if part).strip()
-            if not username:
-                username = f"user:{user.get('id', 'unknown')}"
-
-            option_ids = poll_answer.get("option_ids") or []
-            selected_text = "(no option)"
-            if option_ids:
-                option_index = option_ids[0]
-                if 0 <= option_index < len(option_texts):
-                    selected_text = option_texts[option_index]
-                else:
-                    selected_text = f"option #{option_index}"
-
-            send_chat_message(session, token, chat_id,
-                              f"✅ <b>{username}</b> answered: {selected_text}")
-
-        time.sleep(0.25)
-
-
 def send_quiz_poll(
     session: requests.Session,
     token: str,
@@ -414,21 +349,23 @@ def send_quiz_poll(
     options: List[str],
     correct_index: int,
 ) -> bool:
-    """Send one quiz poll, retrying on transient failures.
+    """Send one anonymous Quiz Poll, retrying on transient failures.
 
-    This is intentionally non-anonymous so Telegram includes PollAnswer updates.
-    A background thread listens for responses without blocking the main loop.
+    Retries on: network errors/timeouts, HTTP 429 (honouring retry_after),
+    and HTTP 5xx. Permanent client errors (e.g. 400, 401, 403) are not retried.
+
+    Returns:
+        True if Telegram accepted the poll, False otherwise.
     """
     url = f"{TELEGRAM_API_BASE}/bot{token}/sendPoll"
-    poll_open_period = max(5, min(600, POLL_OPEN_PERIOD))
     payload = {
         "chat_id": chat_id,
         "question": question,
         "options": list(options),
         "type": "quiz",
-        "is_anonymous": False,
+        "is_anonymous": True,
         "correct_option_id": correct_index,
-        "open_period": poll_open_period,
+        "open_period": 15,
     }
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
@@ -448,17 +385,6 @@ def send_quiz_poll(
                 data = {}
 
             if response.status_code == 200 and data.get("ok") is True:
-                result = data.get("result") or {}
-                poll = result.get("poll") or {}
-                poll_id = poll.get("id")
-                option_texts = [option.get("text", "") for option in poll.get("options", [])]
-                if poll_id and option_texts:
-                    thread = threading.Thread(
-                        target=listen_for_poll_answers,
-                        args=(session, token, chat_id, poll_id, option_texts, poll_open_period),
-                        daemon=True,
-                    )
-                    thread.start()
                 return True
 
             description = data.get("description") or response.text[:200]
@@ -472,6 +398,12 @@ def send_quiz_poll(
             elif response.status_code < 500:
                 # Permanent error (bad token, bad chat, bad payload...).
                 logger.error("Not retrying: this error will not fix itself.")
+                if "chat not found" in str(description).lower():
+                    logger.error(
+                        "Telegram says the chat was not found. Check CHAT_ID, make sure "
+                        "the bot is a member/admin of the target chat, and use the numeric ID "
+                        "for private channels/groups."
+                    )
                 return False
 
         if attempt < MAX_ATTEMPTS:
