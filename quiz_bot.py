@@ -42,7 +42,7 @@ import requests
 
 TELEGRAM_API_BASE = "https://api.telegram.org"
 
-DELAY_BETWEEN_POLLS = 30        # seconds to wait between polls
+DELAY_BETWEEN_POLLS = 15        # seconds to wait between polls
 MAX_ATTEMPTS = 3                # total tries per poll (1 initial + 2 retries)
 BACKOFF_BASE = 2                # retry delay = BACKOFF_BASE ** attempt seconds
 MAX_RETRY_AFTER = 120           # cap for Telegram's "retry_after" (HTTP 429)
