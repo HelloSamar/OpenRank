@@ -1,0 +1,12 @@
+[
+  ["One who does not believe in the existence of God", ["Theist", "Atheist", "Optimist", "Cynic"], 1],
+  ["A person who loves and collects books", ["Philatelist", "Numismatist", "Bibliophile", "Oenophile"], 2],
+  ["A person who hates women", ["Misogynist", "Misanthrope", "Misogamist", "Philanthropist"], 0],
+  ["A person who can speak many languages", ["Bilingual", "Pedant", "Orator", "Polyglot"], 3],
+  ["The life story of a person written by himself or herself", ["Biography", "Autobiography", "Anthology", "Dictionary"], 1],
+  ["Happening or published after a person's death", ["Anonymous", "Unanimous", "Posthumous", "Prehistoric"], 2],
+  ["A child who has lost both parents", ["Orphan", "Widow", "Bachelor", "Heir"], 0],
+  ["A person who is unable to pay his or her debts", ["Indolent", "Insolvent", "Insolent", "Ignorant"], 1],
+  ["One who knows everything", ["Omnipotent", "Omnipresent", "Omnivorous", "Omniscient"], 3],
+  ["A sentimental longing for the past", ["Nostalgia", "Neuralgia", "Amnesia", "Insomnia"], 0]
+]
