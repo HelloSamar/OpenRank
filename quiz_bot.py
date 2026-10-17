@@ -365,6 +365,7 @@ def send_quiz_poll(
         "type": "quiz",
         "is_anonymous": True,
         "correct_option_id": correct_index,
+        "open_period": 15,
     }
 
     for attempt in range(1, MAX_ATTEMPTS + 1):
