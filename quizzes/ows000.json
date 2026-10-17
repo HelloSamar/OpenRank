@@ -98,7 +98,7 @@
   ["A person who paints pictures", ["Painter", "Sculptor", "Artist", "Poet"], 0],
   ["A person who creates sculptures", ["Sculptor", "Painter", "Carpenter", "Architect"], 0],
   ["A person who designs buildings", ["Architect", "Engineer", "Sculptor", "Artist"], 0],
-  ["A person who repairs machines", ["Mechanic", "Engineer", "Technician", "Operator"], 0]
+  ["A person who repairs machines", ["Mechanic", "Engineer", "Technician", "Operator"], 0],
   ["A person who flies an aircraft", ["Pilot", "Sailor", "Driver", "Navigator"], 0],
   ["A person who travels from place to place", ["Nomad", "Resident", "Citizen", "Settler"], 0],
   ["A person who settles in a new country", ["Immigrant", "Emigrant", "Tourist", "Nomad"], 0],
