@@ -48,7 +48,7 @@
   ["A person who enjoys suffering himself", ["Masochist", "Sadist", "Optimist", "Fatalist"], 0],
   ["A person who believes everything is predetermined", ["Fatalist", "Optimist", "Realist", "Idealist"], 0],
   ["A person who accepts things as they are", ["Realist", "Idealist", "Dreamer", "Visionary"], 0],
-  ["A person who has excessive love for luxury", ["Sybarite", "Ascetic", "Stoic", "Minimalist"], 0]
+  ["A person who has excessive love for luxury", ["Sybarite", "Ascetic", "Stoic", "Minimalist"], 0],
   ["A person who is new to a profession or activity", ["Novice", "Veteran", "Expert", "Master"], 0],
   ["A person who has a long experience in a field", ["Novice", "Amateur", "Veteran", "Beginner"], 2],
   ["A person who is skilled in many arts", ["Versatile", "Mediocre", "Ignorant", "Naive"], 0],
