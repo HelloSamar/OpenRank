@@ -4,5 +4,11 @@
     "posted_at": "2026-10-17T12:05:24Z",
     "sent": 10,
     "skipped": 0
+  },
+  "ows001@2026-10-17T16:50Z": {
+    "failed": 0,
+    "posted_at": "2026-10-17T16:57:16Z",
+    "sent": 10,
+    "skipped": 0
   }
 }
