@@ -82,6 +82,7 @@ class ScheduleEntry:
 # General helpers
 # --------------------------------------------------------------------------- #
 
+
 def setup_logging() -> None:
     """Configure timestamped logging to stdout."""
     logging.basicConfig(
@@ -89,6 +90,37 @@ def setup_logging() -> None:
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
         stream=sys.stdout,
+    )
+
+
+def validate_chat_id(chat_id: str) -> str:
+    """Validate Telegram chat ID inputs.
+
+    Accepts either a numeric chat ID (e.g. -1001234567890) or a public username
+    like @channelname. Telegram rejects private channels/groups unless the bot is
+    present and the numeric ID is used.
+    """
+    chat_id = chat_id.strip()
+    if not chat_id:
+        raise RuntimeError("CHAT_ID is empty.")
+
+    if chat_id.startswith("@") and len(chat_id) > 1:
+        return chat_id
+
+    if re.fullmatch(r"-?\d+", chat_id):
+        return chat_id
+
+    # Common user mistakes while copying the value from a browser or docs.
+    if chat_id.startswith("https://") or chat_id.startswith("http://"):
+        raise RuntimeError(
+            "CHAT_ID looks like a URL, not a Telegram chat ID. "
+            "Use a numeric chat ID (for example -1001234567890) or @channelname."
+        )
+
+    raise RuntimeError(
+        "Invalid CHAT_ID. Use a numeric Telegram chat ID such as -1001234567890 "
+        "or a public @channelname. For private channels/groups, use the numeric chat ID "
+        "from getUpdates and make sure the bot is a member/admin."
     )
 
 
@@ -107,7 +139,7 @@ def get_config() -> Tuple[str, str]:
         raise RuntimeError(
             "Missing required environment variable(s): " + ", ".join(missing)
         )
-    return token, chat_id
+    return token, validate_chat_id(chat_id)
 
 
 def redact(text: Any, token: str) -> str:
@@ -130,6 +162,7 @@ def read_json(path: Path) -> Any:
 # --------------------------------------------------------------------------- #
 # Quiz files
 # --------------------------------------------------------------------------- #
+
 
 def validate_question(item: Any) -> str:
     """Check one quiz entry against the expected format and Telegram limits.
@@ -207,6 +240,7 @@ def load_quiz(quiz_id: str) -> List[Any]:
 # --------------------------------------------------------------------------- #
 # Schedule and sent record
 # --------------------------------------------------------------------------- #
+
 
 def parse_time(value: Any) -> datetime:
     """Parse an ISO-8601 time into an aware UTC datetime.
@@ -306,6 +340,7 @@ def save_sent(sent: Dict[str, Any]) -> None:
 # Telegram
 # --------------------------------------------------------------------------- #
 
+
 def send_quiz_poll(
     session: requests.Session,
     token: str,
@@ -362,6 +397,12 @@ def send_quiz_poll(
             elif response.status_code < 500:
                 # Permanent error (bad token, bad chat, bad payload...).
                 logger.error("Not retrying: this error will not fix itself.")
+                if "chat not found" in str(description).lower():
+                    logger.error(
+                        "Telegram says the chat was not found. Check CHAT_ID, make sure "
+                        "the bot is a member/admin of the target chat, and use the numeric ID "
+                        "for private channels/groups."
+                    )
                 return False
 
         if attempt < MAX_ATTEMPTS:
@@ -410,6 +451,7 @@ def run_quiz(questions: List[Any], token: str, chat_id: str) -> Tuple[int, int, 
 # --------------------------------------------------------------------------- #
 # Run modes
 # --------------------------------------------------------------------------- #
+
 
 def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
     """Post every scheduled quiz that is due and not yet recorded as sent."""
@@ -527,6 +569,7 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
 # --------------------------------------------------------------------------- #
 # Entry point
 # --------------------------------------------------------------------------- #
+
 
 def parse_args(argv: Any = None) -> argparse.Namespace:
     """Parse command-line arguments."""
