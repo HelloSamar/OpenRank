@@ -83,6 +83,20 @@ The countdown comes from the **letters at the start of the quiz id**:
 ]
 ```
 
+Every field of an entry:
+
+| Field | Required | Meaning | Example |
+|---|---|---|---|
+| `quiz` | yes | Which file in `quizzes/` | `"ows000"` |
+| `at` | yes | When to post it | `"2026-10-19T09:00+05:30"` |
+| `pick` | no | How many questions to use, chosen at random. Leave it out to post the whole file. | `10` |
+| `timer` | no | Poll seconds for this entry (5 to 600). Leave it out to use the timer for the quiz type. | `10` |
+| `strategy` | no | With `pick` only: `random` (default) or `hardest` | `"hardest"` |
+
+```json
+{ "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 }
+```
+
 - `Z` means UTC; `+05:30` is India time. A time with no zone is read as UTC.
 - **Every entry except the last needs a comma after the `}`.** A missing comma makes the whole file invalid and nothing posts.
 - A set whose time is already in the past and which is not in `sent.json` posts at the next check.
