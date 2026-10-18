@@ -1,30 +1,37 @@
 # 📚 PYQxBot
 
-### Daily English vocabulary quizzes for SSC, Railway, Banking and other competitive exams.
+### Daily quiz practice for SSC, Railway, Banking, and other competitive exams.
 
-Practise a little every day. Get faster, score higher, and walk into the exam with confidence.
+Practice a little every day and strengthen your preparation across multiple subjects — not just English, but also reasoning, aptitude, and general awareness.
 
----
-
-## ✨ Why you'll love it
-
-- ⏱ **15-second questions.** Real exam pressure, so you learn to think fast.
-- 🎯 **Smart marking.** +2 for a right answer, -0.5 for a wrong one, just like the real test.
-- 🏆 **Instant result.** See your score, right and wrong answers, and total time taken the moment the quiz ends.
-- 🥇 **Leaderboard.** Compete with friends and see who is the fastest and sharpest.
-- 💡 **Learn from every answer.** The correct option is shown right after each question.
-- 📅 **Fresh quizzes on schedule.** A new set arrives on time, so practice becomes a habit.
+PYQxBot helps aspirants stay consistent through short, smart quizzes, instant feedback, and healthy competition.
 
 ---
 
-## 📖 What you can practise
+## ✨ Why learners love it
 
-| Topic | Example |
+- ⏱️ **15-second questions** to build speed under exam-like pressure.
+- 🎯 **Smart scoring** with +2 for correct answers and -0.5 for wrong ones.
+- 🏆 **Instant results** showing your score, right/wrong attempts, and total time taken.
+- 🥇 **Leaderboard challenge** to stay motivated and compete with friends.
+- 💡 **Learn from every answer** with the correct option shown immediately after each question.
+- 📅 **Daily quiz routine** to make revision simple, regular, and effective.
+- 🧠 **Multiple subjects covered** including English, Reasoning, Quant, GK, and Current Affairs.
+
+---
+
+## 📖 What you can practice
+
+| Subject | Example |
 |---|---|
-| One Word Substitution | *One who knows many languages* → **Linguist** |
+| English Vocabulary | *One who knows many languages* → **Linguist** |
 | Idioms & Phrases | *A blessing in disguise* → **A good thing that seemed bad at first** |
+| Reasoning | *Odd one out* → **Identify the incorrect pattern** |
+| Quantitative Aptitude | *Simple interest* → **Fast calculation practice** |
+| General Knowledge | *National parks, capitals, history, science* |
+| Current Affairs | *Recent government schemes, sports, awards, and news* |
 
-More topics are coming soon.
+More topics and subject categories are coming soon.
 
 ---
 
@@ -32,16 +39,16 @@ More topics are coming soon.
 
 1. **Join** the quiz group.
 2. **Wait** for the next quiz to start.
-3. **Tap** your answer before the 15 seconds run out.
-4. **Check** your result and rank when the quiz ends.
+3. **Tap** your answer before the 15-second timer ends.
+4. **Check** your result, rank, and performance summary once the quiz ends.
 
-That's it. No sign-up, no fees.
+That’s it — no signup, no fees, and no complicated setup.
 
 ---
 
-## 🏆 A result looks like this
+## 🏆 Sample result
 
-```
+```text
 🏆 OWS001 - Final Result
 
 🥇 Asha: 17.5/20
@@ -53,10 +60,24 @@ That's it. No sign-up, no fees.
 
 ---
 
+## 🎯 Built for competitive exam aspirants
+
+PYQxBot is designed for students preparing for:
+
+- SSC CGL / CHSL / GD
+- Railway exams
+- Banking exams
+- State-level competitive exams
+- Other aptitude and recruitment-based tests
+
+Whether you want to improve English, reasoning, maths, or general knowledge, PYQxBot helps you prepare smarter every day.
+
+---
+
 ## 👉 Start today
 
 📲 Bot: **@PYQxBot**
 📢 Channel: *add your channel link here*
 👥 Quiz group: *add your group link here*
 
-*Practise daily. Improve daily. Crack the exam.* 💪
+*Practice daily. Improve daily. Crack the exam.* 💪
