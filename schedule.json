@@ -35,11 +35,6 @@
 //     each open for 10 seconds.
 // =============================================================================
 [
-  // ---- Already posted (kept for reference; safe to delete) ----
-  { "quiz": "ows001", "at": "2026-10-17T22:20+05:30" },
-  { "quiz": "ows000", "at": "2026-10-17T22:30+05:30" },
-  { "quiz": "idm001", "at": "2026-10-17T23:00+05:30" },
-
   // ---- Upcoming ----
   // Monday 9:00 AM: 10 random questions from the big ows000 quiz, 10 seconds each
   { "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 },
