@@ -1,47 +1,5 @@
-// =============================================================================
-// SCHEDULE  -  which quiz goes out, and when
-// =============================================================================
-// Every line between { } is one quiz run. Lines that start with // are notes
-// (like this one) and are ignored. A quiz runs once; to run it again, add a new
-// line with a new time. Every line except the last needs a comma at the end
-// (a comma after the last line is also fine).
-//
-//   "quiz"   Name of the quiz file, without .json
-//            "ows000" means the file quizzes/ows000.json
-//
-//   "at"     Date and time to run it. India time is written like this:
-//            "2026-10-19T09:00+05:30"   (year-month-day, T, hour:minute, +05:30)
-//
-//   "pick"   How many questions to run, chosen at random from that quiz.
-//            Any number from 1 up to the number of questions in the quiz.
-//            0, or leaving "pick" out      = run ALL the questions
-//            More than the quiz really has = run ALL the questions
-//
-//   "timer"  Seconds each question stays open (5 to 600).
-//            A smaller number runs faster, a bigger number runs slower.
-//            This replaces the usual speed of the quiz type.
-//            Leave it out to use the usual speed:
-//            ows 10, idm 15, rsn 25, mth 60, any other quiz 15.
-//
-//   Optional, and only together with "pick":
-//   "strategy"        "random" (the default), or "hardest" = the questions people
-//                     get right least often are chosen first
-//   "no_repeat_days"  Do not choose the same question again within this many days.
-//                     Leave it out for the usual 7.
-//
-// Example
-//   { "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 },
-//   = on 19 Oct at 9:00 AM India time, run 10 random questions from ows000,
-//     each open for 10 seconds.
-// =============================================================================
 [
-  // ---- Upcoming ----
-  // Monday 9:00 AM: 10 random questions from the big ows000 quiz, 10 seconds each
   { "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 },
-
-  // Tuesday 9:00 AM: another 10 from ows000 (none of Monday's repeat), 10 seconds each
   { "quiz": "ows000", "at": "2026-10-20T09:00+05:30", "pick": 10, "timer": 10 },
-
-  // Wednesday 5:00 PM: 5 random idioms, slower: 20 seconds each
-  { "quiz": "idm001", "at": "2026-10-21T17:00+05:30", "pick": 5, "timer": 20 }
+  { "quiz": "idm001", "at": "2026-10-21T17:00+05:30", "pick": 05, "timer": 20 }
 ]
