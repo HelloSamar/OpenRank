@@ -14,6 +14,7 @@ non-anonymous polls, which Telegram allows in groups but not in channels.
 Usage:
     python quiz_bot.py                  post everything that is due
     python quiz_bot.py --quiz ows001    post one set right now (ignores schedule)
+    python quiz_bot.py --quiz weekly    post this week's standings right now
     python quiz_bot.py --dry-run        validate files and show status, send nothing
 
 Configuration (environment variables only - nothing is hardcoded):
@@ -36,7 +37,7 @@ import sys
 import tempfile
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -79,9 +80,23 @@ RESULTS_MAX_ROWS = 20           # most names shown in the leaderboard
 RESULT_GRACE_SECONDS = 3        # extra wait after the last poll closes
 MAX_LONG_POLL = 20              # longest single wait when reading answers
 
+# Weekly leaderboard (India time). Marks are added up from Sunday 8:00 PM to the
+# next Sunday 8:00 PM; the leaderboard is posted one hour before that reset.
+POST_WEEKLY = True
+LOCAL_TZ_NAME = "IST"
+LOCAL_TZ = timezone(timedelta(hours=5, minutes=30))
+WEEK_RESET_DAY = 6                    # Monday=0 ... Sunday=6
+WEEK_RESET_HOUR = 20                  # 8:00 PM
+WEEK_RESET_MINUTE = 0
+WEEKLY_POST_HOURS_BEFORE_RESET = 1    # so the leaderboard goes out at 7:00 PM
+WEEKLY_CATCHUP_HOURS = 12             # still post it if a run was late
+WEEKLY_MAX_ROWS = 20                  # most names shown in the weekly leaderboard
+WEEKS_TO_KEEP = 8                     # older weeks are dropped from scores.json
+
 # Telegram limits for poll content.
 MAX_QUESTION_LENGTH = 300
 MAX_OPTION_LENGTH = 100
+MAX_EXPLANATION_LENGTH = 200
 MIN_OPTIONS = 2
 MAX_OPTIONS = 10
 MIN_TIMER = 5
@@ -94,14 +109,18 @@ BASE_DIR = Path(__file__).resolve().parent
 QUIZ_DIR = BASE_DIR / "quizzes"
 SCHEDULE_FILE = BASE_DIR / "schedule.json"
 SENT_FILE = BASE_DIR / "sent.json"
+SCORES_FILE = BASE_DIR / "scores.json"
 
 # Quiz IDs become file names, so only allow safe characters.
 QUIZ_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 
 # A question is: (question_text, [option1, option2, ...], correct_option_index)
-Question = Tuple[str, List[str], int]
+# (the explanation is optional and may be an empty string)
+Question = Tuple[str, List[str], int, str]
 
 logger = logging.getLogger("quiz_bot")
+
+MEDALS = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F949"}
 
 
 @dataclass(frozen=True)
@@ -137,12 +156,22 @@ class SentPoll:
 @dataclass
 class Scorecard:
     """One participant's final numbers."""
+    user_id: int
     name: str
     correct: int
     wrong: int
     skipped: int
     score: float
     seconds: float            # total time taken (skipped questions count the full timer)
+
+
+@dataclass
+class QuizOutcome:
+    """What happened when one quiz set was posted."""
+    sent: int
+    failed: int
+    skipped: int
+    board: List[Scorecard]    # final scores (empty when names are not visible)
 
 
 # --------------------------------------------------------------------------- #
@@ -245,10 +274,10 @@ def validate_question(item: Any) -> str:
     Returns:
         An empty string if the entry is valid, otherwise the reason it is not.
     """
-    if not isinstance(item, (tuple, list)) or len(item) != 3:
-        return "entry must be [question, [options], correct_index]"
+    if not isinstance(item, (tuple, list)) or len(item) not in (3, 4):
+        return "entry must be [question, [options], correct_index, optional explanation]"
 
-    question, options, correct_index = item
+    question, options, correct_index = item[0], item[1], item[2]
 
     if not isinstance(question, str) or not question.strip():
         return "question must be a non-empty string"
@@ -273,6 +302,15 @@ def validate_question(item: Any) -> str:
         return (f"correct_index {correct_index} is out of range "
                 f"(0-{len(options) - 1})")
 
+    if len(item) == 4:
+        explanation = item[3]
+        if not isinstance(explanation, str):
+            return "explanation must be text"
+        if len(explanation) > MAX_EXPLANATION_LENGTH:
+            return f"explanation exceeds {MAX_EXPLANATION_LENGTH} characters"
+        if explanation.count("\n") > 2:
+            return "explanation can have at most 2 line breaks"
+
     return ""
 
 
@@ -289,7 +327,8 @@ def filter_valid(questions: List[Any]) -> Tuple[List[Question], int]:
             skipped += 1
             logger.warning("Skipping question #%d: %s", number, problem)
         else:
-            valid.append((item[0], list(item[1]), item[2]))
+            valid.append((item[0], list(item[1]), item[2],
+                          item[3] if len(item) == 4 else ""))
     return valid, skipped
 
 
@@ -395,20 +434,25 @@ def load_sent() -> Dict[str, Any]:
     return data
 
 
-def save_sent(sent: Dict[str, Any]) -> None:
-    """Write sent.json atomically (temp file, then rename)."""
-    fd, tmp_name = tempfile.mkstemp(dir=SENT_FILE.parent, prefix=".sent-", suffix=".tmp")
+def write_json_atomic(path: Path, data: Any) -> None:
+    """Write a JSON file atomically (temp file, then rename)."""
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=".tmp-", suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(sent, handle, indent=2, sort_keys=True)
+            json.dump(data, handle, indent=2, sort_keys=True)
             handle.write("\n")
-        os.replace(tmp_name, SENT_FILE)
+        os.replace(tmp_name, path)
     except OSError:
         try:
             os.unlink(tmp_name)
         except OSError:
             pass
         raise
+
+
+def save_sent(sent: Dict[str, Any]) -> None:
+    """Write sent.json."""
+    write_json_atomic(SENT_FILE, sent)
 
 
 # --------------------------------------------------------------------------- #
@@ -484,8 +528,9 @@ def send_quiz_poll(
     options: List[str],
     correct_index: int,
     anonymous: bool,
+    explanation: str = "",
 ) -> TelegramResult:
-    """Send one Quiz Poll with a countdown timer."""
+    """Send one Quiz Poll with a countdown timer and an optional explanation."""
     payload: Dict[str, Any] = {
         "chat_id": chat_id,
         "question": question,
@@ -494,6 +539,8 @@ def send_quiz_poll(
         "is_anonymous": anonymous,
         "correct_option_id": correct_index,
     }
+    if explanation:
+        payload["explanation"] = explanation   # shown on a wrong answer or the lamp icon
     timer = poll_timer()
     if timer:
         payload["open_period"] = timer   # Telegram shows a countdown and closes the poll
@@ -664,7 +711,7 @@ def build_scoreboard(polls: List[SentPoll],
                 skipped += 1
                 seconds += timer
         score = correct * MARKS_CORRECT - wrong * MARKS_WRONG
-        cards.append(Scorecard(name, correct, wrong, skipped, score, seconds))
+        cards.append(Scorecard(user_id, name, correct, wrong, skipped, score, seconds))
 
     cards.sort(key=lambda card: (-card.score, round(card.seconds), card.name.lower()))
     return cards
@@ -677,7 +724,6 @@ def build_results_message(title: str,
                           reason: str) -> str:
     """Compose the plain-text result message."""
     total = len(polls)
-    medals = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F949"}
 
     if scores_available:
         lines = [f"\U0001F3C6 {title} - Final Result"]
@@ -688,7 +734,7 @@ def build_results_message(title: str,
                 key = (card.score, round(card.seconds))
                 if key != previous:          # same score and time share a rank
                     rank, previous = index, key
-                marker = medals.get(rank, f"{rank}.")
+                marker = MEDALS.get(rank, f"{rank}.")
                 lines += [
                     "",
                     f"{marker} {card.name}: {format_marks(card.score)}/{format_marks(max_score)}",
@@ -702,7 +748,8 @@ def build_results_message(title: str,
     else:
         lines = [f"\U0001F3C6 {title} - Quiz complete", "", reason]
 
-    if SHOW_ANSWER_KEY:
+    # When scores cannot be shown, give the answer key instead so the end is still useful.
+    if SHOW_ANSWER_KEY or not scores_available:
         lines += ["", "Answer key"]
         lines += [f"Q{number}: {poll.correct_text}" for number, poll in enumerate(polls, start=1)]
 
@@ -714,8 +761,8 @@ def build_results_message(title: str,
 
 def post_results(session: requests.Session, token: str, chat_id: str, title: str,
                  polls: List[SentPoll], collector: AnswerCollector,
-                 anonymous: bool) -> bool:
-    """Build and send the result message. Failure only logs a warning."""
+                 anonymous: bool) -> Tuple[bool, List[Scorecard]]:
+    """Build and send the result message. Returns (posted, final scores)."""
     if anonymous:
         scores_available = False
         reason = "Scores are not shown because these polls are anonymous."
@@ -736,15 +783,15 @@ def post_results(session: requests.Session, token: str, chat_id: str, title: str
         logger.info("SUCCESS: result message posted.")
     else:
         logger.warning("The result message could not be posted.")
-    return result.ok
+    return result.ok, board
 
 
 def run_quiz(questions: List[Any], token: str, chat_id: str,
-             title: str = "Quiz") -> Tuple[int, int, int]:
+             title: str = "Quiz") -> QuizOutcome:
     """Validate, shuffle and post one quiz set, then post the result.
 
     Returns:
-        (sent, failed, skipped) counts.
+        A QuizOutcome with the sent/failed/skipped counts and the final scores.
     """
     valid, skipped = filter_valid(questions)
     if SHUFFLE_QUESTIONS and len(valid) > 1:
@@ -754,24 +801,25 @@ def run_quiz(questions: List[Any], token: str, chat_id: str,
 
     sent = failed = 0
     sent_polls: List[SentPoll] = []
+    board: List[Scorecard] = []
     anonymous = ANONYMOUS_POLLS
 
     with requests.Session() as session:
         collector = AnswerCollector(session, token, enabled=POST_RESULTS and not anonymous)
 
-        for position, (question, options, correct_index) in enumerate(valid, start=1):
+        for position, (question, options, correct_index, explanation) in enumerate(valid, start=1):
             shown = f"Q{position}/{total}: {question}" if SHOW_QUESTION_NUMBERS else question
             logger.info("Posting poll %d/%d: %s", position, total, question)
             try:
                 result = send_quiz_poll(session, token, chat_id, shown, options,
-                                        correct_index, anonymous)
+                                        correct_index, anonymous, explanation)
 
                 # Channels refuse non-anonymous polls. If the chat did not simply
                 # fail to exist, try once anonymously and stay anonymous if it works.
                 if (not result.ok and not anonymous and result.status == 400
                         and "chat not found" not in result.description.lower()):
                     retry = send_quiz_poll(session, token, chat_id, shown, options,
-                                           correct_index, True)
+                                           correct_index, True, explanation)
                     if retry.ok:
                         logger.warning(
                             "Telegram refused a non-anonymous poll (normal for channels). "
@@ -809,60 +857,291 @@ def run_quiz(questions: List[Any], token: str, chat_id: str,
             logger.info("Waiting %d seconds for the last poll to close...", wait_seconds)
             collector.wait(wait_seconds)
             try:
-                post_results(session, token, chat_id, title, sent_polls, collector, anonymous)
+                _posted, board = post_results(session, token, chat_id, title,
+                                              sent_polls, collector, anonymous)
             except Exception as exc:  # the result is a bonus; never fail the quiz for it
                 logger.error("Could not post the result: %s", redact(exc, token))
 
-    return sent, failed, skipped
+    return QuizOutcome(sent=sent, failed=failed, skipped=skipped, board=board)
+
+
+# --------------------------------------------------------------------------- #
+# Weekly leaderboard
+# --------------------------------------------------------------------------- #
+
+def format_local(moment: datetime) -> str:
+    """'Sun 18 Oct, 8:00 PM' in India time."""
+    local = moment.astimezone(LOCAL_TZ)
+    hour12 = local.hour % 12 or 12
+    suffix = "AM" if local.hour < 12 else "PM"
+    return f"{local:%a %d %b}, {hour12}:{local.minute:02d} {suffix}"
+
+
+def week_start_for(moment: datetime) -> datetime:
+    """The most recent weekly reset (Sunday 8:00 PM IST) at or before `moment`, in UTC."""
+    local = moment.astimezone(LOCAL_TZ)
+    days_back = (local.weekday() - WEEK_RESET_DAY) % 7
+    start = (local - timedelta(days=days_back)).replace(
+        hour=WEEK_RESET_HOUR, minute=WEEK_RESET_MINUTE, second=0, microsecond=0)
+    if start > local:
+        start -= timedelta(days=7)
+    return start.astimezone(timezone.utc)
+
+
+def week_key(start: datetime) -> str:
+    """Stable text id for a week, e.g. '2026-10-11T14:30Z'."""
+    return start.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+
+
+def load_scores() -> Dict[str, Any]:
+    """Read scores.json (weekly totals). A missing file means no scores yet.
+
+    Raises:
+        RuntimeError: if the file exists but is not valid.
+    """
+    if not SCORES_FILE.exists():
+        return {"weeks": {}, "weekly_posted": []}
+    try:
+        data = read_json(SCORES_FILE)
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"cannot load scores.json: {exc}") from exc
+    if not isinstance(data, dict):
+        raise RuntimeError("scores.json must contain a JSON object")
+    weeks = data.get("weeks")
+    posted = data.get("weekly_posted")
+    return {
+        "weeks": weeks if isinstance(weeks, dict) else {},
+        "weekly_posted": posted if isinstance(posted, list) else [],
+    }
+
+
+def save_scores(scores: Dict[str, Any]) -> None:
+    """Write scores.json."""
+    write_json_atomic(SCORES_FILE, scores)
+
+
+def add_to_scores(scores: Dict[str, Any], board: List[Scorecard], when: datetime) -> None:
+    """Add one quiz's final scores to the week that `when` falls in."""
+    key = week_key(week_start_for(when))
+    week = scores["weeks"].setdefault(key, {"users": {}})
+    users = week.setdefault("users", {})
+    for card in board:
+        entry = users.setdefault(str(card.user_id), {
+            "name": card.name, "points": 0.0, "correct": 0, "wrong": 0,
+            "skipped": 0, "seconds": 0.0, "quizzes": 0,
+        })
+        entry["name"] = card.name
+        entry["points"] = round(float(entry.get("points", 0)) + card.score, 2)
+        entry["correct"] = int(entry.get("correct", 0)) + card.correct
+        entry["wrong"] = int(entry.get("wrong", 0)) + card.wrong
+        entry["skipped"] = int(entry.get("skipped", 0)) + card.skipped
+        entry["seconds"] = round(float(entry.get("seconds", 0)) + card.seconds, 1)
+        entry["quizzes"] = int(entry.get("quizzes", 0)) + 1
+    for old_key in sorted(scores["weeks"])[:-WEEKS_TO_KEEP]:
+        del scores["weeks"][old_key]
+
+
+def build_weekly_message(week_start: datetime, users: Dict[str, Any], now: datetime) -> str:
+    """Compose the plain-text weekly leaderboard."""
+    week_end = week_start + timedelta(days=7)
+    rows = [entry for entry in users.values() if isinstance(entry, dict)]
+    rows.sort(key=lambda e: (-float(e.get("points", 0)),
+                             round(float(e.get("seconds", 0))),
+                             str(e.get("name", "")).lower()))
+
+    lines = [
+        "\U0001F3C6 Weekly Leaderboard",
+        f"{format_local(week_start)} to {format_local(week_end)} {LOCAL_TZ_NAME}",
+    ]
+    rank, previous = 0, None
+    for index, entry in enumerate(rows[:WEEKLY_MAX_ROWS], start=1):
+        points = float(entry.get("points", 0))
+        seconds = float(entry.get("seconds", 0))
+        key = (points, round(seconds))
+        if key != previous:              # same marks and time share a rank
+            rank, previous = index, key
+        marker = MEDALS.get(rank, f"{rank}.")
+        quizzes = int(entry.get("quizzes", 0))
+        word = "quiz" if quizzes == 1 else "quizzes"
+        lines += [
+            "",
+            f"{marker} {entry.get('name', 'Unknown')}: {format_marks(points)} pts",
+            f"   \u2705 {int(entry.get('correct', 0))}  \u274C {int(entry.get('wrong', 0))}"
+            f"  \u23ED {int(entry.get('skipped', 0))}  \U0001F4DD {quizzes} {word}"
+            f"  \u23F1 {format_duration(seconds)}",
+        ]
+    if len(rows) > WEEKLY_MAX_ROWS:
+        lines += ["", f"...and {len(rows) - WEEKLY_MAX_ROWS} more"]
+
+    lines.append("")
+    if now < week_end:
+        lines.append(f"Scores reset on {format_local(week_end)} {LOCAL_TZ_NAME}.")
+    else:
+        lines.append("A new week has started.")
+
+    text = "\n".join(lines)
+    if len(text) > MAX_MESSAGE_LENGTH:
+        text = text[:MAX_MESSAGE_LENGTH - 10].rstrip() + "\n..."
+    return text
+
+
+def week_users(scores: Dict[str, Any], start: datetime) -> Dict[str, Any]:
+    """The per-user totals stored for the week starting at `start` (may be empty)."""
+    week = scores["weeks"].get(week_key(start))
+    users = week.get("users") if isinstance(week, dict) else None
+    return users if isinstance(users, dict) else {}
+
+
+def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
+                       now: datetime) -> bool:
+    """Post the weekly leaderboard when its time has come (once per week).
+
+    Returns:
+        False only if posting was attempted and failed.
+    """
+    if not POST_WEEKLY:
+        return True
+
+    current = week_start_for(now)
+    for start in (current, current - timedelta(days=7)):
+        key = week_key(start)
+        week_end = start + timedelta(days=7)
+        post_time = week_end - timedelta(hours=WEEKLY_POST_HOURS_BEFORE_RESET)
+        if post_time > now or now - post_time > timedelta(hours=WEEKLY_CATCHUP_HOURS):
+            continue
+        if key in scores["weekly_posted"]:
+            return True
+        users = week_users(scores, start)
+        if not users:
+            logger.info("The weekly leaderboard is due but nobody has scored this week.")
+            return True
+
+        logger.info("=== Posting the weekly leaderboard ===")
+        text = build_weekly_message(start, users, now)
+        with requests.Session() as session:
+            result = call_telegram(session, token, "sendMessage",
+                                   {"chat_id": chat_id, "text": text})
+        if not result.ok:
+            logger.error("The weekly leaderboard could not be posted; it will be "
+                         "retried on the next run.")
+            return False
+        logger.info("SUCCESS: weekly leaderboard posted.")
+
+        scores["weekly_posted"] = (list(scores["weekly_posted"]) + [key])[-WEEKS_TO_KEEP:]
+        try:
+            save_scores(scores)
+        except OSError as exc:
+            logger.critical("Could not save scores.json (%s); the leaderboard may be "
+                            "posted again.", exc)
+            return False
+        return True
+    return True
 
 
 # --------------------------------------------------------------------------- #
 # Run modes
 # --------------------------------------------------------------------------- #
 
-def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
-    """Post every scheduled quiz that is due and not yet recorded as sent."""
+def inspect_quiz(quiz_id: str) -> Tuple[int, int, str]:
+    """Check one quiz file. Returns (valid_count, invalid_count, error_text)."""
+    try:
+        valid, skipped = filter_valid(load_quiz(quiz_id))
+    except ValueError as exc:
+        return 0, 0, str(exc)
+    return len(valid), skipped, ""
+
+
+def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
+                   scores: Optional[Dict[str, Any]], now: datetime) -> int:
+    """Log the state of the schedule, every quiz file and the weekly board.
+
+    Returns:
+        The number of problems found (0 means everything is fine).
+    """
+    problems = 0
+    scheduled_ids = {entry.quiz_id for entry in schedule}
+    quiz_files = {path.stem for path in QUIZ_DIR.glob("*.json")}
+    checked = {quiz_id: inspect_quiz(quiz_id) for quiz_id in sorted(quiz_files | scheduled_ids)}
+
+    def describe(quiz_id: str) -> Tuple[str, bool]:
+        valid, invalid, error = checked[quiz_id]
+        if error:
+            return f"PROBLEM: {error}", True
+        detail = f"{valid} valid question(s)"
+        if invalid or not valid:
+            return detail + f", {invalid} invalid", True
+        return detail, False
+
+    logger.info("--- Schedule ---")
+    if not schedule:
+        logger.info("schedule.json has no valid entries.")
+    for entry in schedule:
+        if entry.key in sent_record:
+            status = "already posted"
+        elif entry.when <= now:
+            status = "DUE"
+        else:
+            status = "upcoming"
+        detail, bad = describe(entry.quiz_id)
+        problems += bad
+        logger.info("%s | %-10s | %-14s | %s",
+                    entry.when.strftime("%Y-%m-%d %H:%M UTC"), entry.quiz_id, status, detail)
+
+    unscheduled = [quiz_id for quiz_id in sorted(quiz_files) if quiz_id not in scheduled_ids]
+    if unscheduled:
+        logger.info("--- Quiz files not in the schedule ---")
+    for quiz_id in unscheduled:
+        detail, bad = describe(quiz_id)
+        problems += bad
+        logger.info("%-10s | %s", quiz_id, detail)
+
+    logger.info("--- Weekly leaderboard ---")
+    if scores is None:
+        problems += 1
+        logger.info("scores.json is not valid (see the error above).")
+    else:
+        start = week_start_for(now)
+        logger.info("Current week: %s to %s %s; %d participant(s) so far.",
+                    format_local(start), format_local(start + timedelta(days=7)),
+                    LOCAL_TZ_NAME, len(week_users(scores, start)))
+        post_time = start + timedelta(days=7) - timedelta(hours=WEEKLY_POST_HOURS_BEFORE_RESET)
+        logger.info("The leaderboard is posted on %s %s.", format_local(post_time), LOCAL_TZ_NAME)
+    return problems
+
+
+def run_scheduled(token: str, chat_id: str, dry_run: bool,
+                  now: Optional[datetime] = None) -> int:
+    """Post every scheduled quiz that is due, then the weekly leaderboard if due."""
     schedule = load_schedule()
     sent_record = load_sent()
-    now = datetime.now(timezone.utc)
+    exit_code = 0
+
+    # A broken scores.json must not stop the quizzes; weekly scoring is skipped instead.
+    scores: Optional[Dict[str, Any]]
+    try:
+        scores = load_scores()
+    except RuntimeError as exc:
+        logger.error("%s. Weekly scores are switched off for this run.", exc)
+        scores = None
+        exit_code = 1
+
+    def current_time() -> datetime:
+        return now if now is not None else datetime.now(timezone.utc)
 
     if dry_run:
-        problems = 0
-        if not schedule:
-            logger.info("schedule.json has no valid entries.")
-        for entry in schedule:
-            if entry.key in sent_record:
-                status = "already posted"
-            elif entry.when <= now:
-                status = "DUE"
-            else:
-                status = "upcoming"
-            try:
-                valid, skipped = filter_valid(load_quiz(entry.quiz_id))
-                detail = f"{len(valid)} valid question(s)"
-                if skipped or not valid:
-                    problems += 1
-                    detail += f", {skipped} invalid"
-            except ValueError as exc:
-                problems += 1
-                detail = f"PROBLEM: {exc}"
-            logger.info("%s | %-10s | %-14s | %s",
-                        entry.when.strftime("%Y-%m-%d %H:%M UTC"),
-                        entry.quiz_id, status, detail)
-        return 1 if problems else 0
+        return 1 if dry_run_report(schedule, sent_record, scores, current_time()) else 0
 
-    due = [e for e in schedule if e.when <= now and e.key not in sent_record]
+    start_time = current_time()
+    due = [e for e in schedule if e.when <= start_time and e.key not in sent_record]
     if not due:
-        upcoming = [e for e in schedule if e.when > now and e.key not in sent_record]
+        upcoming = [e for e in schedule if e.when > start_time and e.key not in sent_record]
         if upcoming:
             logger.info("Nothing due. Next: %s at %s.", upcoming[0].quiz_id,
                         upcoming[0].when.strftime("%Y-%m-%d %H:%M UTC"))
         else:
             logger.info("Nothing due and nothing upcoming.")
-        return 0
-
-    logger.info("%d quiz set(s) due: %s", len(due), ", ".join(e.quiz_id for e in due))
-    exit_code = 0
+    else:
+        logger.info("%d quiz set(s) due: %s", len(due), ", ".join(e.quiz_id for e in due))
 
     for index, entry in enumerate(due, start=1):
         logger.info("=== Posting %s (scheduled for %s) ===", entry.quiz_id,
@@ -874,7 +1153,8 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
             exit_code = 1
             continue
 
-        sent, failed, skipped = run_quiz(questions, token, chat_id, entry.quiz_id.upper())
+        outcome = run_quiz(questions, token, chat_id, entry.quiz_id.upper())
+        sent, failed, skipped = outcome.sent, outcome.failed, outcome.skipped
         logger.info("%s finished: sent=%d failed=%d skipped=%d",
                     entry.quiz_id, sent, failed, skipped)
 
@@ -903,17 +1183,61 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool) -> int:
                                 "duplicate posts.", exc)
                 return 1
 
+            # Add this quiz to the weekly totals (the week is decided by its scheduled time).
+            if scores is not None and outcome.board:
+                try:
+                    add_to_scores(scores, outcome.board, entry.when)
+                    save_scores(scores)
+                except OSError as exc:
+                    logger.error("Could not save scores.json (%s). This quiz was not "
+                                 "added to the weekly totals.", exc)
+                    exit_code = 1
+
         if index < len(due):
             logger.info("Waiting %d seconds before the next quiz set...",
                         DELAY_BETWEEN_POLLS)
             time.sleep(DELAY_BETWEEN_POLLS)
 
+    if scores is not None and not post_weekly_if_due(token, chat_id, scores, current_time()):
+        exit_code = 1
+
     return exit_code
 
 
+def run_weekly_preview(token: str, chat_id: str, dry_run: bool) -> int:
+    """Post (or just show) this week's standings now. Nothing is recorded or reset."""
+    try:
+        scores = load_scores()
+    except RuntimeError as exc:
+        logger.error("%s", exc)
+        return 2
+
+    now = datetime.now(timezone.utc)
+    start = week_start_for(now)
+    users = week_users(scores, start)
+    if not users:
+        logger.info("Nobody has scored yet this week; nothing to post.")
+        return 0
+
+    text = build_weekly_message(start, users, now)
+    if dry_run:
+        logger.info("Weekly leaderboard preview:\n%s", text)
+        return 0
+    with requests.Session() as session:
+        result = call_telegram(session, token, "sendMessage", {"chat_id": chat_id, "text": text})
+    if result.ok:
+        logger.info("SUCCESS: this week's standings were posted.")
+        return 0
+    logger.error("The standings could not be posted.")
+    return 1
+
+
 def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
-    """Post one quiz set right now. Does not read or change schedule/sent files."""
+    """Post one quiz set right now. Does not read or change schedule/sent/scores files."""
     quiz_id = quiz_id.strip()
+    if quiz_id.lower() == "weekly":
+        return run_weekly_preview(token, chat_id, dry_run)
+
     try:
         questions = load_quiz(quiz_id)
     except ValueError as exc:
@@ -925,12 +1249,12 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
         logger.info("%s: %d valid question(s), %d invalid.", quiz_id, len(valid), skipped)
         return 0 if valid and not skipped else 1
 
-    logger.info("Manual run: posting %s now (schedule and sent record unchanged).",
-                quiz_id)
-    sent, failed, skipped = run_quiz(questions, token, chat_id, quiz_id.upper())
+    logger.info("Manual run: posting %s now (schedule, sent record and weekly "
+                "scores are unchanged).", quiz_id)
+    outcome = run_quiz(questions, token, chat_id, quiz_id.upper())
     logger.info("%s finished: sent=%d failed=%d skipped=%d",
-                quiz_id, sent, failed, skipped)
-    return 0 if sent > 0 and failed == 0 else 1
+                quiz_id, outcome.sent, outcome.failed, outcome.skipped)
+    return 0 if outcome.sent > 0 and outcome.failed == 0 else 1
 
 
 # --------------------------------------------------------------------------- #
