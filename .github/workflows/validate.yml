@@ -1,0 +1,36 @@
+name: Validate quiz files
+
+# Runs whenever quizzes, the schedule or the script change, and shows a red cross
+# if something is broken (for example a missing comma in schedule.json).
+on:
+  push:
+    paths:
+      - "quizzes/**"
+      - "schedule.json"
+      - "quiz_bot.py"
+      - "requirements.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check schedule and quiz files
+        run: python quiz_bot.py --dry-run
