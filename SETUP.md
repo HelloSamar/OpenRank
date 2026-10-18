@@ -4,47 +4,40 @@
 
 ## How it works
 
-Quiz sets live in `quizzes/<id>.json`. `schedule.json` says which set goes out and when. A GitHub Actions workflow wakes every 15 minutes, posts every set that is due and not yet posted, and records it in `sent.json`.
+Questions live in `quizzes/<id>.json`. `schedule.json` says which quiz goes out and when. A GitHub Actions workflow wakes every 15 minutes, posts every quiz that is due and records it in `sent.json`.
 
-Each poll counts down from 15 seconds and closes. After the last poll closes, the bot posts the final result. The marks are also added to a weekly total (`scores.json`), and the weekly leaderboard is posted every Sunday at 7:00 PM IST.
+Each question is a poll with a countdown; the next poll appears when the previous one closes, so the gap between polls equals the seconds of the question (plus about 1 second of network time). After the last poll the bot posts the result, adds the marks to the weekly total, and every Sunday at 7:00 PM IST posts the weekly leaderboard.
 
 ## Files
 
 | File | Purpose |
 |---|---|
+| `schedule.json` | Which quiz runs when, how many questions, how many seconds. **Explained in the comments at the top of the file.** |
+| `quizzes/*.json` | The questions, one file per quiz |
 | `quiz_bot.py` | The script and its settings |
-| `quizzes/*.json` | Quiz sets (one file per set) |
-| `schedule.json` | Which set is posted when |
-| `sent.json` | Record of what was posted (updated automatically) |
-| `scores.json` | Weekly totals (created and updated automatically) |
-| `stats.json` | How often each question was answered right or wrong, and when it was last asked (created automatically) |
+| `sent.json` | What was posted, with the question list of each quiz (automatic) |
+| `stats.json` | How each question did and when it was last asked (automatic) |
+| `scores.json` | Weekly totals per person (automatic) |
 | `.github/workflows/quiz.yml` | Posts quizzes every 15 minutes, or manually |
 | `.github/workflows/validate.yml` | Checks your files whenever you edit them |
 
-## Settings (top of `quiz_bot.py`)
+## schedule.json
 
-| Setting | Default | Meaning |
-|---|---|---|
-| `TIMER_BY_PREFIX` | ows 10, idm 15, rsn 25, mth 60 | Countdown by quiz type (the letters at the start of the quiz id) |
-| `POLL_TIMER_SECONDS` | 15 | Countdown for any other quiz type (5-600, 0 = none) |
-| `POLL_GAP_SECONDS` | 0 | Extra pause after a poll closes, before the next one |
-| `DELAY_BETWEEN_POLLS` | 15 | Pause between two quiz sets in one run |
-| `REPEAT_COOLDOWN_DAYS` | 7 | A picked question will not repeat within this many days |
-| `ANONYMOUS_POLLS` | False | False shows who answered (groups only) |
-| `SHUFFLE_QUESTIONS` | True | New random order every time a set is posted |
-| `SHOW_QUESTION_NUMBERS` | True | Each poll starts with `Q3/10:` |
-| `POST_RESULTS` | True | Post the final result after each set |
-| `MARKS_CORRECT` / `MARKS_WRONG` | 2 / 0.5 | +2 for right, -0.5 for wrong, 0 for skipped |
-| `SHOW_ANSWER_KEY` | False | Also list the correct answers in the result |
-| `POST_WEEKLY` | True | Post the weekly leaderboard |
-| `WEEK_RESET_DAY/HOUR/MINUTE` | Sunday 20:00 | When the weekly scores reset (India time) |
-| `WEEKLY_POST_HOURS_BEFORE_RESET` | 1 | Leaderboard goes out at 7:00 PM |
+Everything about a run is set here, and every field is explained in the comments at the top of the file, so it is not repeated in this guide. Edit it on GitHub: open the file, click the pencil, change a line, commit.
 
-To change one: open `quiz_bot.py` on GitHub, click the pencil icon, edit the value, commit.
+| I want to... | Do this |
+|---|---|
+| Reschedule a quiz that has not run | Change its `at` |
+| Cancel a quiz | Delete its line, or put `//` in front of it |
+| Run a quiz again | Add a new line with a new time |
+| Run a quiz right now | Actions -> Quiz Scheduler -> Run workflow -> type the quiz name. This posts the whole quiz and records nothing. |
+| See the current weekly standings | Same, but type `weekly` |
 
-## Quiz sets and explanations
+Every edit is checked by `validate.yml`: a green tick means fine, a red cross means something is wrong (a missing comma, a bad value, a missing quiz file). Open the failed run to see the exact line. The same check lists the speed, question count and repeat rule of every entry, and any quiz file that is not in the schedule yet.
 
-Create `quizzes/<id>.json` (letters, digits, `-`, `_`). Each question is `[question, [options], correct_index, "explanation"]`, and the index starts at 0. The explanation is optional:
+## Quiz files
+
+Create `quizzes/<name>.json` (letters, digits, `-`, `_`). Each question is `[question, [options], correct_index, "explanation"]`, and the index starts at 0. The explanation is optional.
 
 ```json
 [
@@ -54,89 +47,32 @@ Create `quizzes/<id>.json` (letters, digits, `-`, `_`). Each question is `[quest
 ```
 
 - The explanation appears when someone picks a wrong answer or taps the lamp icon on the poll.
-- Limits: question up to 288 characters (room is kept for the `Q12/150:` prefix), 2 to 10 options each up to 100 characters, explanation up to 200 characters with at most 2 line breaks.
-- Invalid questions are skipped with a warning; the rest still post.
+- Limits: question up to 288 characters (room is kept for the `Q12/100:` prefix), 2 to 10 options of up to 100 characters, explanation up to 200 characters with at most 2 line breaks.
+- A question that is invalid, or repeats an earlier one in the same file (same question and same answer), is skipped with a warning. The validation check also shows it as a problem.
+- Name quizzes with the letters that decide their usual speed (see `TIMER_BY_PREFIX` below): `ows001`, `idm001`, `rsn001`, `mth001`.
 
-## Countdown per quiz type
+## Settings in quiz_bot.py
 
-The countdown comes from the **letters at the start of the quiz id**:
+Only settings that are not in `schedule.json`. To change one: open `quiz_bot.py` on GitHub, click the pencil, edit the value, commit.
 
-| Id starts with | Type | Countdown |
+| Setting | Default | Meaning |
 |---|---|---|
-| `ows` | One word substitution | 10 seconds |
-| `idm` | Idioms | 15 seconds |
-| `rsn` | Reasoning | 25 seconds |
-| `mth` | Maths | 60 seconds |
-| anything else (e.g. `syn`) | | 15 seconds (`POLL_TIMER_SECONDS`) |
+| `TIMER_BY_PREFIX` | ows 10, idm 15, rsn 25, mth 60 | Usual seconds per question, by the letters at the start of the quiz name. Used only when a schedule line has no `timer`. Add a type with a line like `"syn": 10,` |
+| `POLL_TIMER_SECONDS` | 15 | Usual seconds for any other quiz name |
+| `POLL_GAP_SECONDS` | 0 | Extra pause after a poll closes, before the next opens |
+| `DELAY_BETWEEN_POLLS` | 15 | Pause between two quizzes in the same run |
+| `REPEAT_COOLDOWN_DAYS` | 7 | Usual "do not repeat" days when a schedule line has no `no_repeat_days` |
+| `ANONYMOUS_POLLS` | False | False shows who answered (groups only) |
+| `SHUFFLE_QUESTIONS` | True | New random order every time |
+| `SHOW_QUESTION_NUMBERS` | True | Each poll starts with `Q3/10:` |
+| `POST_RESULTS` | True | Post the final result after each quiz |
+| `MARKS_CORRECT` / `MARKS_WRONG` | 2 / 0.5 | +2 right, -0.5 wrong, 0 skipped |
+| `SHOW_ANSWER_KEY` | False | Also list the correct answers in the result |
+| `POST_WEEKLY` | True | Post the weekly leaderboard |
+| `WEEK_RESET_DAY/HOUR/MINUTE` | Sunday 20:00 | When weekly scores reset (India time) |
+| `WEEKLY_POST_HOURS_BEFORE_RESET` | 1 | Leaderboard goes out at 7:00 PM |
 
-- Name your files `rsn001.json` and `mth001.json` to get the 25 and 60 second timers.
-- To add a type, add a line to `TIMER_BY_PREFIX` in `quiz_bot.py`, for example `"syn": 10,`.
-- One quiz can use its own countdown in the schedule: `{ "quiz": "mth002", "at": "...", "timer": 90 }` (5 to 600 seconds).
-- The next poll appears when the previous one closes. A set takes about (number of questions x countdown): 10 reasoning questions take about 4 minutes, 10 maths questions about 10 minutes.
-
-## Schedule
-
-```json
-[
-  { "quiz": "ows001", "at": "2026-10-17T17:15+05:30" },
-  { "quiz": "idm001", "at": "2026-10-20T16:45+05:30" }
-]
-```
-
-Every field of an entry:
-
-| Field | Required | Meaning | Example |
-|---|---|---|---|
-| `quiz` | yes | Which file in `quizzes/` | `"ows000"` |
-| `at` | yes | When to post it | `"2026-10-19T09:00+05:30"` |
-| `pick` | no | How many questions to use, chosen at random. Leave it out to post the whole file. | `10` |
-| `timer` | no | Poll seconds for this entry (5 to 600). Leave it out to use the timer for the quiz type. | `10` |
-| `strategy` | no | With `pick` only: `random` (default) or `hardest` | `"hardest"` |
-
-```json
-{ "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 }
-```
-
-- `Z` means UTC; `+05:30` is India time. A time with no zone is read as UTC.
-- **Every entry except the last needs a comma after the `}`.** A missing comma makes the whole file invalid and nothing posts.
-- A set whose time is already in the past and which is not in `sent.json` posts at the next check.
-- A set posts once. How long it takes depends on its countdown (see above).
-
-| I want to... | Do this |
-|---|---|
-| Reschedule a set that has not posted | Edit its `at` value |
-| Cancel a set | Delete its line (watch the commas) |
-| Post a set again | Add a new entry with a new time |
-| Post a set right now | Actions -> Quiz Scheduler -> Run workflow -> type the id (this changes nothing in `sent.json` or `scores.json`) |
-
-## Picking questions from a big set
-
-Keep one big file (for example `ows000.json` with hundreds of questions) and let the schedule choose from it:
-
-```json
-{ "quiz": "ows000", "at": "2026-10-21T09:00+05:30", "pick": 100, "strategy": "hardest" }
-```
-
-| Field | Meaning |
-|---|---|
-| `pick` | How many questions to use. Leave it out to post the whole file. |
-| `strategy` | `hardest` = the questions people get right least often. `random` = any questions. If you give `pick` alone, `random` is used. |
-
-- A question asked in the last 7 days is left out (`REPEAT_COOLDOWN_DAYS`), so the same hard questions do not come back every day. If the file is too small, the least recently asked fill the gap.
-- 100 questions with a 10 second countdown takes about 20 minutes. Many people prefer 10 to 20 questions per quiz.
-- The questions are still shuffled and numbered `Q1/100:` to `Q100/100:`.
-
-## Question statistics
-
-After every scheduled quiz the script adds to `stats.json`, for each question: how many people got it right, wrong or skipped, how many times it was asked, and when it was last asked. You can open the file to read it. `python quiz_bot.py --dry-run` also lists the five questions with the lowest right-answer rate.
-
-- **Only people who answered at least once in that quiz count.** The rate is right / (right + wrong). Skipped answers are counted separately and are not treated as wrong.
-- **A new question counts as 50%.** The rate is pulled towards 50% while there is little data, so one wrong answer does not make a question look hard. Reliable numbers need several quizzes with real participants.
-- **This needs polls that show names, which means a group.** In a channel, Telegram hides who answered, so only "asked" and "last asked" are recorded.
-- **Editing a question or its correct answer starts its statistics from zero**, because the old numbers no longer describe it. Fixing a typo in the explanation or in a wrong option does not.
-- Manual runs do not change `stats.json`.
-
-## Result message and scores
+## Results and the weekly leaderboard
 
 ```
 🏆 OWS001 - Final Result
@@ -145,30 +81,33 @@ After every scheduled quiz the script adds to `stats.json`, for each question: h
    ✅ 9  ❌ 1  ⏭ 0  ⏱ 1 min 12 sec
 ```
 
-- Ranked by marks, then by shorter total time. Time taken is accurate to about a second, and a skipped question counts as the full 15 seconds.
-- Names and scores need **non-anonymous polls, which Telegram allows in groups but not in channels**. Telegram never tells a bot who voted in an anonymous poll, so a channel cannot show personal scores. There the bot switches to anonymous polls automatically (a warning appears in the log) and the end message shows the answer key instead.
+- Ranked by marks, then by shorter total time. Time is accurate to about a second, and a skipped question counts as its full seconds.
+- Names and scores need **polls that show names, which Telegram allows in groups but not in channels**. Telegram never tells a bot who voted in an anonymous poll. In a channel the bot switches to anonymous polls automatically (a warning appears in the log) and the end message shows the answer key instead.
+- Weekly marks are added up from **Sunday 8:00 PM IST to the next Sunday 8:00 PM IST**. The leaderboard is posted on Sunday at 7:00 PM IST, and after 8:00 PM everyone starts again from zero. A late GitHub run still posts it within 12 hours.
+- A quiz belongs to the week of its **scheduled time**, so avoid scheduling one between 7:00 and 8:00 PM on Sunday: it counts for the old week after that week's leaderboard is out.
+- Manual runs do not count towards weekly totals.
 
-## Weekly leaderboard
+## What is remembered, and where
 
-- Marks from every scheduled quiz are added up from **Sunday 8:00 PM IST to the next Sunday 8:00 PM IST**.
-- The leaderboard is posted on **Sunday at 7:00 PM IST**. After 8:00 PM everyone starts again from zero.
-- A quiz belongs to the week of its **scheduled time**. Avoid scheduling quizzes between 7:00 and 8:00 PM on Sunday, because they count for the old week after its leaderboard is already out.
-- If GitHub runs late, the leaderboard is still posted up to 12 hours after 7:00 PM.
-- Manual runs do not count towards the weekly totals.
-- To see the current standings at any time: Actions -> Run workflow -> type `weekly`. This posts them without recording anything or resetting.
-- `scores.json` keeps the last 8 weeks. Do not edit it by hand unless you know the format.
+Nothing expires, except `scores.json`:
 
-## File checks
+| File | What it remembers | For how long |
+|---|---|---|
+| `sent.json` | Each scheduled quiz: when it was posted and **its question list** in posted order (id plus the first 60 characters) | Forever |
+| `stats.json` | Each question: times asked, right, wrong, skipped, and when it was last asked | Forever |
+| `scores.json` | Weekly totals per person (Telegram name and user ID) | Last 8 weeks |
 
-`validate.yml` runs `python quiz_bot.py --dry-run` whenever you change `quizzes/`, `schedule.json` or `quiz_bot.py`. A red cross on the commit means something is wrong, such as a missing comma, a bad question, or a scheduled quiz whose file is missing. Open the failed run to see the exact line. It also lists quiz files that are not in the schedule yet.
+- A quiz in `sent.json` is found by its name and time, for example `ows000@2026-10-20T09:00Z`.
+- Both grow slowly, roughly 1 KB per 10 questions asked. Manual runs are not recorded.
+- **Question statistics:** the rate is right / (right + wrong) among people who answered at least once; skipped answers are counted separately. A new question counts as 50%, and the rate is pulled towards 50% while there is little data, so reliable numbers need several quizzes with real participants. They need polls that show names, which means a group. Editing a question or its correct answer starts its numbers from zero. `python quiz_bot.py --dry-run` lists the five questions with the lowest rate.
+- `scores.json` holds names and IDs. In a **public** repository anyone can read it, so make the repository private before you have real members. (`stats.json` has no personal data.)
 
 ## Telegram
 
 1. The bot is **@PYQxBot**. Add it to your quiz **group**.
 2. `CHAT_ID` is the group's numeric ID (negative, like `-1001234567890`).
-3. Do not open `getUpdates` in a browser while a quiz is running. Only one program can read updates at a time, and a clash switches scoring off for that set.
-4. Do not set a webhook on this bot. It stops scoring.
-5. The script asks Telegram only for poll answers, and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
+3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot. Only one program can read updates at a time, and a clash switches scoring off for that quiz.
+4. The script asks Telegram only for poll answers, and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
 
 ## GitHub (browser only)
 
@@ -176,12 +115,11 @@ After every scheduled quiz the script adds to `stats.json`, for each question: h
 2. Settings -> Secrets and variables -> Actions: add `BOT_TOKEN` and `CHAT_ID`.
 3. Settings -> Actions -> General -> Workflow permissions: **Read and write**.
 4. Actions tab: enable workflows, then Run workflow once to test.
-5. To update a file: open it, click the pencil, select all, paste the new version, commit.
+5. To update a file: open it, click the pencil, select all, paste the new version, commit. Uploading a file with the same name also replaces it.
 
 ## Good to know
 
-- Posting starts at the first 15-minute check after the scheduled time, and GitHub can add 5 to 20 minutes of delay.
-- Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repo private, use `*/30` in the cron line of `quiz.yml`.
-- The job stops after 60 minutes (`timeout-minutes`). A set is recorded only when it finishes, so raise that number if you schedule very long sets.
-- `scores.json` stores Telegram names and user IDs for the last 8 weeks. In a **public** repository anyone can read them, so make the repository private before you have real members. (`stats.json` has no personal data.)
-- If a set is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.
+- A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay.
+- Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, use `*/30` in the cron line of `quiz.yml`.
+- The job stops after 60 minutes (`timeout-minutes`). A quiz is recorded only when it finishes, so raise that number if you schedule very long quizzes. Time is about (questions x seconds each).
+- If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.
