@@ -1,52 +1,55 @@
-# 📚 PYQxBot
+# PYQxBot — Premium Daily Quiz Platform
 
-### Daily quiz practice for SSC, Railway, Banking, and other competitive exams.
+> Smart, fast, and focused practice for competitive exams — now polished for serious aspirants and test prep teams.
 
-Practice a little every day and strengthen your preparation across multiple subjects — not just English, but also reasoning, aptitude, and general awareness.
-
-PYQxBot helps aspirants stay consistent through short, smart quizzes, instant feedback, and healthy competition.
+PYQxBot is a product-grade daily quiz engine designed to build exam instincts through short, high-impact practice sessions. Crafted for SSC, Railway, Banking and other competitive exams, PYQxBot delivers concise, 15‑second rounds across English, Reasoning, Quant, GK and Current Affairs — with instant feedback, analytics, and leaderboard-driven motivation.
 
 ---
 
-## ✨ Why learners love it
+## Product highlights
 
-- ⏱️ **15-second questions** to build speed under exam-like pressure.
-- 🎯 **Smart scoring** with +2 for correct answers and -0.5 for wrong ones.
-- 🏆 **Instant results** showing your score, right/wrong attempts, and total time taken.
-- 🥇 **Leaderboard challenge** to stay motivated and compete with friends.
-- 💡 **Learn from every answer** with the correct option shown immediately after each question.
-- 📅 **Daily quiz routine** to make revision simple, regular, and effective.
-- 🧠 **Multiple subjects covered** including English, Reasoning, Quant, GK, and Current Affairs.
-
----
-
-## 📖 What you can practice
-
-| Subject | Example |
-|---|---|
-| English Vocabulary | *One who knows many languages* → **Linguist** |
-| Idioms & Phrases | *A blessing in disguise* → **A good thing that seemed bad at first** |
-| Reasoning | *Odd one out* → **Identify the incorrect pattern** |
-| Quantitative Aptitude | *Simple interest* → **Fast calculation practice** |
-| General Knowledge | *National parks, capitals, history, science* |
-| Current Affairs | *Recent government schemes, sports, awards, and news* |
-
-More topics and subject categories are coming soon.
+- ⚡ Speed-first format: 15-second MCQs to train quick decision-making under pressure.
+- 🎯 Exam-calibrated scoring: +2 for correct, -0.5 for wrong—mirrors real exam scoring to build reliability.
+- 📊 Instant insights: per-quiz summary with score breakdown, accuracy, time taken, and question-wise feedback.
+- 🏆 Social motivation: leaderboards, streaks, and classroom/group modes to drive engagement.
+- 🔄 Daily cadence: fresh, curated quizzes delivered on a schedule to maintain momentum.
+- 🔐 Privacy-first: no sign-up required for basic play; optional identity features for groups and tracking.
 
 ---
 
-## 🚀 How it works
+## Designed for outcomes, not just clicks
 
-1. **Join** the quiz group.
-2. **Wait** for the next quiz to start.
-3. **Tap** your answer before the 15-second timer ends.
-4. **Check** your result, rank, and performance summary once the quiz ends.
-
-That’s it — no signup, no fees, and no complicated setup.
+We focus on measurable improvement: higher speed with preserved accuracy. Short sessions minimize friction, while immediate feedback and repeat exposure turn small daily efforts into reliable long-term gains.
 
 ---
 
-## 🏆 Sample result
+## Who it’s for
+
+- Individual aspirants preparing for SSC, Railway, Banking and state exams
+- Coaching institutes and trainers running timed group drills
+- Study groups that want leaderboard-based motivation and quick progress tracking
+
+---
+
+## Key features
+
+- Multi-subject coverage: English, Reasoning, Quantitative Aptitude, General Knowledge, Current Affairs
+- Timer-driven questions (15s default) with touch & tap responses
+- Per-question explanations and answer reveal immediately after attempt
+- Group/Channel mode for coordinated quiz rounds and live ranking
+- Lightweight: no heavy sign-up flow — jump straight into practice
+
+---
+
+## How it works (3 steps)
+
+1. Join the quiz group or channel.
+2. Participate in scheduled rounds and answer before the timer ends.
+3. Review instant results, compare on the leaderboard, and track your streak.
+
+---
+
+## Sample result
 
 ```text
 🏆 OWS001 - Final Result
@@ -60,24 +63,22 @@ That’s it — no signup, no fees, and no complicated setup.
 
 ---
 
-## 🎯 Built for competitive exam aspirants
+## Get started
 
-PYQxBot is designed for students preparing for:
+- Bot: **@PYQxBot**
+- Channel: *add your channel link here*
+- Quiz group: *add your group link here*
 
-- SSC CGL / CHSL / GD
-- Railway exams
-- Banking exams
-- State-level competitive exams
-- Other aptitude and recruitment-based tests
-
-Whether you want to improve English, reasoning, maths, or general knowledge, PYQxBot helps you prepare smarter every day.
+Want custom quizzes for your classroom or brand? Contact us and we’ll help you onboard groups, track performance, and run private competitions.
 
 ---
 
-## 👉 Start today
+## Roadmap & contribution
 
-📲 Bot: **@PYQxBot**
-📢 Channel: *add your channel link here*
-👥 Quiz group: *add your group link here*
+Planned upgrades: adaptive difficulty, personalized analytics, premium content packs, and multi-lingual support. Contributions welcome — open an issue or submit a PR.
 
-*Practice daily. Improve daily. Crack the exam.* 💪
+---
+
+## License
+
+MIT — see LICENSE for details.
