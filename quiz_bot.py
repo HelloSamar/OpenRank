@@ -41,7 +41,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 import requests
 
@@ -73,7 +73,9 @@ TIMER_BY_PREFIX = {
 POLL_GAP_SECONDS = 0              # extra pause after a poll closes, before the next one
 
 # Choosing questions from a big set (schedule.json: "pick" and "strategy").
-REPEAT_COOLDOWN_DAYS = 7          # do not repeat a question within this many days
+# Default for "do not repeat a question within this many days". One schedule entry
+# can set its own with "no_repeat_days" (for example 90), so no code edit is needed.
+REPEAT_COOLDOWN_DAYS = 7
 STRATEGIES = ("random", "hardest")
 
 # False  = Telegram shows who answered (and the script can build a leaderboard).
@@ -149,6 +151,7 @@ class ScheduleEntry:
     pick: Optional[int] = None      # how many questions to use (None = all of them)
     strategy: str = ""              # "random" or "hardest" (only together with pick)
     timer: Optional[int] = None     # countdown override in seconds
+    no_repeat_days: Optional[int] = None   # how long a picked question is not repeated
 
 
 @dataclass
@@ -203,6 +206,7 @@ class QuizOutcome:
     skipped: int
     board: List[Scorecard]    # final scores (empty when names are not visible)
     stats: Dict[str, QuestionResult] = field(default_factory=dict)   # by question id
+    asked: List[Tuple[str, str]] = field(default_factory=list)       # (id, text) in posted order
 
 
 # --------------------------------------------------------------------------- #
@@ -279,10 +283,111 @@ def redact(text: Any, token: str) -> str:
     return str(text).replace(token, "***")
 
 
-def read_json(path: Path) -> Any:
+_JSON_STRING = r'"(?:\\.|[^"\\])*"'
+_COMMENT_OR_STRING = re.compile(_JSON_STRING + r"|//[^\n]*|/\*.*?\*/", re.DOTALL)
+_TRAILING_COMMA_OR_STRING = re.compile(_JSON_STRING + r"|,(?=\s*[\]}])")
+
+
+def strip_json_comments(text: str) -> str:
+    """Remove // and /* */ comments, and a comma before ] or }, from JSON text.
+
+    This lets schedule.json carry notes. Quoted text is never touched, and line
+    breaks are kept so an error message still points at the right line.
+    """
+    def drop_comment(match: "re.Match[str]") -> str:
+        piece = match.group(0)
+        return piece if piece.startswith('"') else "\n" * piece.count("\n")
+
+    def drop_comma(match: "re.Match[str]") -> str:
+        piece = match.group(0)
+        return "" if piece == "," else piece
+
+    return _TRAILING_COMMA_OR_STRING.sub(drop_comma, _COMMENT_OR_STRING.sub(drop_comment, text))
+
+
+def read_json(path: Path, allow_comments: bool = False) -> Any:
     """Read and parse a JSON file (raises OSError / ValueError on problems)."""
-    with path.open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+    text = path.read_text(encoding="utf-8-sig")
+    return json.loads(strip_json_comments(text) if allow_comments else text)
+
+
+def read_json_object(path: Path, label: str) -> Optional[Dict[str, Any]]:
+    """Read a data file that must hold a JSON object; None if it does not exist yet.
+
+    A damaged file is an error. It is never treated as empty, because the next
+    save would then wipe the data.
+
+    Raises:
+        RuntimeError: if the file exists but is not a valid JSON object.
+    """
+    if not path.exists():
+        return None
+    try:
+        data = read_json(path)
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"cannot load {label}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise RuntimeError(f"{label} must contain a JSON object")
+    return data
+
+
+def write_json_atomic(path: Path, data: Any) -> None:
+    """Write a JSON file atomically (temp file, then rename)."""
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=".tmp-", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(data, handle, indent=2, sort_keys=True)
+            handle.write("\n")
+        os.replace(tmp_name, path)
+    except OSError:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
+
+
+def save_data(path: Path, data: Any, consequence: str, level: int = logging.ERROR) -> bool:
+    """Write a data file. On failure log what it means and return False."""
+    try:
+        write_json_atomic(path, data)
+    except OSError as exc:
+        logger.log(level, "Could not save %s (%s). %s", path.name, exc, consequence)
+        return False
+    return True
+
+
+def count_of(entry: Dict[str, Any], name: str) -> int:
+    """A stored counter as a whole number (0 if missing or damaged)."""
+    try:
+        return max(0, int(entry.get(name, 0)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def number_of(entry: Dict[str, Any], name: str) -> float:
+    """A stored number (0.0 if missing or damaged)."""
+    try:
+        return float(entry.get(name, 0))
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def stamp(moment: datetime, seconds: bool = False) -> str:
+    """UTC time as text: '2026-10-19T03:30Z', or with seconds '2026-10-19T03:30:00Z'."""
+    return moment.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ" if seconds
+                                                    else "%Y-%m-%dT%H:%MZ")
+
+
+def format_utc(moment: datetime) -> str:
+    """'2026-10-19 03:30 UTC' for log lines."""
+    return moment.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+
+def log_outcome(quiz_id: str, outcome: "QuizOutcome") -> None:
+    """One log line saying how a quiz set went."""
+    logger.info("%s finished: sent=%d failed=%d skipped=%d",
+                quiz_id, outcome.sent, outcome.failed, outcome.skipped)
 
 
 def normalize_timer(value: Any) -> Optional[int]:
@@ -363,20 +468,27 @@ def validate_question(item: Any) -> str:
 
 
 def filter_valid(questions: List[Any]) -> Tuple[List[Question], int]:
-    """Split a raw question list into valid questions and a skipped count.
+    """Split a raw question list into usable questions and a skipped count.
 
-    Invalid entries are logged and skipped; they never stop the program.
+    Invalid questions and repeats (same question and same answer as an earlier one)
+    are logged and skipped; they never stop the program.
     """
     valid: List[Question] = []
+    first_seen: Dict[str, int] = {}
     skipped = 0
     for number, item in enumerate(questions, start=1):
         problem = validate_question(item)
+        if not problem:
+            qid = question_id(item[0], item[1][item[2]])
+            if qid in first_seen:
+                problem = f"same question and answer as #{first_seen[qid]}"
+            else:
+                first_seen[qid] = number
         if problem:
             skipped += 1
             logger.warning("Skipping question #%d: %s", number, problem)
         else:
-            valid.append((item[0], list(item[1]), item[2],
-                          item[3] if len(item) == 4 else ""))
+            valid.append((item[0], list(item[1]), item[2], item[3] if len(item) == 4 else ""))
     return valid, skipped
 
 
@@ -424,14 +536,64 @@ def parse_time(value: Any) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def whole_number(item: Dict[str, Any], name: str, low: int, high: Optional[int],
+                 rule: str) -> Optional[int]:
+    """A whole-number field of a schedule entry (None if it is not there).
+
+    Raises:
+        ValueError: with a readable message if it is not a number in range.
+    """
+    value = item.get(name)
+    if value is None:
+        return None
+    if (not isinstance(value, int) or isinstance(value, bool) or value < low
+            or (high is not None and value > high)):
+        raise ValueError(f"'{name}' must be {rule}")
+    return value
+
+
+def parse_schedule_entry(item: Any) -> ScheduleEntry:
+    """Turn one entry of schedule.json into a ScheduleEntry.
+
+    Raises:
+        ValueError: if the entry is wrong.
+    """
+    if not isinstance(item, dict):
+        raise ValueError('entry must look like {"quiz": "ows001", "at": "..."}')
+    quiz_id = item.get("quiz")
+    if not isinstance(quiz_id, str) or not QUIZ_ID_PATTERN.match(quiz_id):
+        raise ValueError(f"invalid quiz id {quiz_id!r}")
+    when = parse_time(item.get("at"))
+
+    timer = whole_number(item, "timer", MIN_TIMER, MAX_TIMER,
+                         f"a whole number of seconds from {MIN_TIMER} to {MAX_TIMER}")
+    pick = whole_number(item, "pick", 0, None,
+                        "a whole number: 0 for all questions, or how many to choose")
+    pick = pick or None            # 0 means "all questions", the same as leaving it out
+    no_repeat = whole_number(item, "no_repeat_days", 0, 3650,
+                             "a whole number of days, 0 to 3650")
+    strategy = item.get("strategy")
+    if strategy is not None and strategy not in STRATEGIES:
+        raise ValueError("'strategy' must be one of: " + ", ".join(STRATEGIES))
+    if pick is None and (strategy is not None or no_repeat is not None):
+        raise ValueError("'strategy' and 'no_repeat_days' only work together with "
+                         "'pick' (1 or more)")
+
+    return ScheduleEntry(when=when, quiz_id=quiz_id, key=f"{quiz_id}@{stamp(when)}",
+                         pick=pick, strategy=strategy or ("random" if pick else ""),
+                         timer=timer, no_repeat_days=no_repeat)
+
+
 def load_schedule() -> List[ScheduleEntry]:
-    """Read schedule.json. Bad entries are skipped with a warning.
+    """Read schedule.json (notes with // and a comma after the last entry are allowed).
+
+    Bad entries are skipped with a warning.
 
     Raises:
         RuntimeError: if the file itself is missing or not a JSON list.
     """
     try:
-        data = read_json(SCHEDULE_FILE)
+        data = read_json(SCHEDULE_FILE, allow_comments=True)
     except (OSError, ValueError) as exc:
         raise RuntimeError(f"cannot load schedule.json: {exc}") from exc
     if not isinstance(data, list):
@@ -441,43 +603,15 @@ def load_schedule() -> List[ScheduleEntry]:
     seen = set()
     for number, item in enumerate(data, start=1):
         try:
-            if not isinstance(item, dict):
-                raise ValueError("entry must look like {\"quiz\": \"ows001\", \"at\": \"...\"}")
-            quiz_id = item.get("quiz")
-            if not isinstance(quiz_id, str) or not QUIZ_ID_PATTERN.match(quiz_id):
-                raise ValueError(f"invalid quiz id {quiz_id!r}")
-            when = parse_time(item.get("at"))
-
-            timer = item.get("timer")
-            if timer is not None and (not isinstance(timer, int) or isinstance(timer, bool)
-                                      or not MIN_TIMER <= timer <= MAX_TIMER):
-                raise ValueError(f"'timer' must be a whole number of seconds from "
-                                 f"{MIN_TIMER} to {MAX_TIMER}")
-            pick = item.get("pick")
-            if pick is not None and (not isinstance(pick, int) or isinstance(pick, bool)
-                                     or pick < 1):
-                raise ValueError("'pick' must be a whole number of questions, 1 or more")
-            strategy = item.get("strategy")
-            if strategy is not None:
-                if pick is None:
-                    raise ValueError("'strategy' needs 'pick' (how many questions to choose)")
-                if strategy not in STRATEGIES:
-                    raise ValueError("'strategy' must be one of: " + ", ".join(STRATEGIES))
-            elif pick is not None:
-                strategy = "random"
-            else:
-                strategy = ""
+            entry = parse_schedule_entry(item)
         except ValueError as exc:
             logger.warning("Skipping schedule entry #%d: %s", number, exc)
             continue
-
-        key = f"{quiz_id}@{when:%Y-%m-%dT%H:%MZ}"
-        if key in seen:
-            logger.warning("Skipping schedule entry #%d: duplicate of %s", number, key)
+        if entry.key in seen:
+            logger.warning("Skipping schedule entry #%d: duplicate of %s", number, entry.key)
             continue
-        seen.add(key)
-        entries.append(ScheduleEntry(when=when, quiz_id=quiz_id, key=key,
-                                     pick=pick, strategy=strategy, timer=timer))
+        seen.add(entry.key)
+        entries.append(entry)
 
     entries.sort(key=lambda entry: entry.when)
     return entries
@@ -486,42 +620,10 @@ def load_schedule() -> List[ScheduleEntry]:
 def load_sent() -> Dict[str, Any]:
     """Read sent.json (the record of what was already posted).
 
-    A missing file means nothing has been sent yet. A corrupt file is an
-    error: treating it as empty would re-post everything.
-
-    Raises:
-        RuntimeError: if the file exists but cannot be read as a JSON object.
+    A missing file means nothing has been sent yet. A damaged file is an error:
+    treating it as empty would re-post everything.
     """
-    if not SENT_FILE.exists():
-        return {}
-    try:
-        data = read_json(SENT_FILE)
-    except (OSError, ValueError) as exc:
-        raise RuntimeError(f"cannot load sent.json: {exc}") from exc
-    if not isinstance(data, dict):
-        raise RuntimeError("sent.json must contain a JSON object")
-    return data
-
-
-def write_json_atomic(path: Path, data: Any) -> None:
-    """Write a JSON file atomically (temp file, then rename)."""
-    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=".tmp-", suffix=".tmp")
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(data, handle, indent=2, sort_keys=True)
-            handle.write("\n")
-        os.replace(tmp_name, path)
-    except OSError:
-        try:
-            os.unlink(tmp_name)
-        except OSError:
-            pass
-        raise
-
-
-def save_sent(sent: Dict[str, Any]) -> None:
-    """Write sent.json."""
-    write_json_atomic(SENT_FILE, sent)
+    return read_json_object(SENT_FILE, "sent.json") or {}
 
 
 # --------------------------------------------------------------------------- #
@@ -587,6 +689,16 @@ def call_telegram(
             time.sleep(delay)
 
     return last
+
+
+def send_text(token: str, chat_id: str, text: str,
+              session: Optional[requests.Session] = None) -> bool:
+    """Send a plain-text message (with the usual retries). True if it was posted."""
+    payload = {"chat_id": chat_id, "text": text}
+    if session is not None:
+        return call_telegram(session, token, "sendMessage", payload).ok
+    with requests.Session() as own_session:
+        return call_telegram(own_session, token, "sendMessage", payload).ok
 
 
 def send_quiz_poll(
@@ -745,6 +857,39 @@ def format_duration(seconds: float) -> str:
     return f"{secs} sec"
 
 
+def ranked(rows: List[Any], key: Callable[[Any], Any]) -> Iterator[Tuple[int, Any]]:
+    """Yield (rank, row) for rows already sorted best first; equal keys share a rank."""
+    rank, previous = 0, None
+    for index, row in enumerate(rows, start=1):
+        row_key = key(row)
+        if row_key != previous:
+            rank, previous = index, row_key
+        yield rank, row
+
+
+def rank_marker(rank: int) -> str:
+    """A medal for the top three, otherwise '4.', '5.' ..."""
+    return MEDALS.get(rank, f"{rank}.")
+
+
+def stat_line(correct: int, wrong: int, skipped: int, seconds: float,
+              quizzes: Optional[int] = None) -> str:
+    """The indented numbers line under a name (weekly rows also show the quiz count)."""
+    played = ""
+    if quizzes is not None:
+        played = f"  \U0001F4DD {quizzes} {'quiz' if quizzes == 1 else 'quizzes'}"
+    return (f"   \u2705 {correct}  \u274C {wrong}  \u23ED {skipped}{played}"
+            f"  \u23F1 {format_duration(seconds)}")
+
+
+def join_message(lines: List[str]) -> str:
+    """Join lines into one Telegram message, cut to Telegram's length limit."""
+    text = "\n".join(lines)
+    if len(text) > MAX_MESSAGE_LENGTH:
+        text = text[:MAX_MESSAGE_LENGTH - 10].rstrip() + "\n..."
+    return text
+
+
 def build_scoreboard(polls: List[SentPoll],
                      answers: Dict[str, Dict[int, Tuple[str, List[int], float]]],
                      timer: Optional[int] = None) -> List[Scorecard]:
@@ -797,18 +942,13 @@ def build_results_message(title: str,
     if scores_available:
         lines = [f"\U0001F3C6 {title} - Final Result"]
         if board:
-            max_score = total * MARKS_CORRECT
-            rank, previous = 0, None
-            for index, card in enumerate(board[:RESULTS_MAX_ROWS], start=1):
-                key = (card.score, round(card.seconds))
-                if key != previous:          # same score and time share a rank
-                    rank, previous = index, key
-                marker = MEDALS.get(rank, f"{rank}.")
+            max_score = format_marks(total * MARKS_CORRECT)
+            for rank, card in ranked(board[:RESULTS_MAX_ROWS],
+                                     lambda c: (c.score, round(c.seconds))):
                 lines += [
                     "",
-                    f"{marker} {card.name}: {format_marks(card.score)}/{format_marks(max_score)}",
-                    f"   \u2705 {card.correct}  \u274C {card.wrong}  \u23ED {card.skipped}"
-                    f"  \u23F1 {format_duration(card.seconds)}",
+                    f"{rank_marker(rank)} {card.name}: {format_marks(card.score)}/{max_score}",
+                    stat_line(card.correct, card.wrong, card.skipped, card.seconds),
                 ]
             if len(board) > RESULTS_MAX_ROWS:
                 lines += ["", f"...and {len(board) - RESULTS_MAX_ROWS} more"]
@@ -821,11 +961,7 @@ def build_results_message(title: str,
     if SHOW_ANSWER_KEY or not scores_available:
         lines += ["", "Answer key"]
         lines += [f"Q{number}: {poll.correct_text}" for number, poll in enumerate(polls, start=1)]
-
-    text = "\n".join(lines)
-    if len(text) > MAX_MESSAGE_LENGTH:
-        text = text[:MAX_MESSAGE_LENGTH - 10].rstrip() + "\n..."
-    return text
+    return join_message(lines)
 
 
 def post_results(session: requests.Session, token: str, chat_id: str, title: str,
@@ -847,12 +983,12 @@ def post_results(session: requests.Session, token: str, chat_id: str, title: str
         logger.info("Collected answers from %d participant(s).", len(board))
 
     text = build_results_message(title, polls, board, scores_available, reason)
-    result = call_telegram(session, token, "sendMessage", {"chat_id": chat_id, "text": text})
-    if result.ok:
+    posted = send_text(token, chat_id, text, session)
+    if posted:
         logger.info("SUCCESS: result message posted.")
     else:
         logger.warning("The result message could not be posted.")
-    return result.ok, board
+    return posted, board
 
 
 def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "quiz",
@@ -875,9 +1011,16 @@ def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "qui
         before = len(valid)
         if entry.strategy == "hardest" and stats is None:
             logger.warning("Question statistics are not available; picking randomly instead.")
+        cooldown = (entry.no_repeat_days if entry.no_repeat_days is not None
+                    else REPEAT_COOLDOWN_DAYS)
         valid = select_questions(valid, entry.pick, entry.strategy, stats,
-                                 now or datetime.now(timezone.utc))
-        logger.info("Selected %d of %d questions (%s).", len(valid), before, entry.strategy)
+                                 now or datetime.now(timezone.utc), cooldown)
+        if entry.pick > before:
+            logger.info("'pick' is %d but the quiz has only %d questions, so all are used.",
+                        entry.pick, before)
+        else:
+            logger.info("Selected %d of %d questions (%s, no repeats within %d days).",
+                        len(valid), before, entry.strategy, cooldown)
 
     if SHUFFLE_QUESTIONS and len(valid) > 1:
         random.shuffle(valid)
@@ -953,7 +1096,8 @@ def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "qui
         question_stats = build_question_stats(sent_polls, collector)
 
     return QuizOutcome(sent=sent, failed=failed, skipped=skipped, board=board,
-                       stats=question_stats)
+                       stats=question_stats,
+                       asked=[(poll.qid, poll.question) for poll in sent_polls])
 
 
 # --------------------------------------------------------------------------- #
@@ -981,53 +1125,30 @@ def week_start_for(moment: datetime) -> datetime:
 
 def week_key(start: datetime) -> str:
     """Stable text id for a week, e.g. '2026-10-11T14:30Z'."""
-    return start.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+    return stamp(start)
 
 
 def load_scores() -> Dict[str, Any]:
-    """Read scores.json (weekly totals). A missing file means no scores yet.
-
-    Raises:
-        RuntimeError: if the file exists but is not valid.
-    """
-    if not SCORES_FILE.exists():
-        return {"weeks": {}, "weekly_posted": []}
-    try:
-        data = read_json(SCORES_FILE)
-    except (OSError, ValueError) as exc:
-        raise RuntimeError(f"cannot load scores.json: {exc}") from exc
-    if not isinstance(data, dict):
-        raise RuntimeError("scores.json must contain a JSON object")
-    weeks = data.get("weeks")
-    posted = data.get("weekly_posted")
-    return {
-        "weeks": weeks if isinstance(weeks, dict) else {},
-        "weekly_posted": posted if isinstance(posted, list) else [],
-    }
-
-
-def save_scores(scores: Dict[str, Any]) -> None:
-    """Write scores.json."""
-    write_json_atomic(SCORES_FILE, scores)
+    """Read scores.json (weekly totals). A missing file means no scores yet."""
+    data = read_json_object(SCORES_FILE, "scores.json") or {}
+    weeks, posted = data.get("weeks"), data.get("weekly_posted")
+    return {"weeks": weeks if isinstance(weeks, dict) else {},
+            "weekly_posted": posted if isinstance(posted, list) else []}
 
 
 def add_to_scores(scores: Dict[str, Any], board: List[Scorecard], when: datetime) -> None:
     """Add one quiz's final scores to the week that `when` falls in."""
     key = week_key(week_start_for(when))
-    week = scores["weeks"].setdefault(key, {"users": {}})
-    users = week.setdefault("users", {})
+    users = scores["weeks"].setdefault(key, {}).setdefault("users", {})
     for card in board:
-        entry = users.setdefault(str(card.user_id), {
-            "name": card.name, "points": 0.0, "correct": 0, "wrong": 0,
-            "skipped": 0, "seconds": 0.0, "quizzes": 0,
-        })
+        entry = users.setdefault(str(card.user_id), {})
         entry["name"] = card.name
-        entry["points"] = round(float(entry.get("points", 0)) + card.score, 2)
-        entry["correct"] = int(entry.get("correct", 0)) + card.correct
-        entry["wrong"] = int(entry.get("wrong", 0)) + card.wrong
-        entry["skipped"] = int(entry.get("skipped", 0)) + card.skipped
-        entry["seconds"] = round(float(entry.get("seconds", 0)) + card.seconds, 1)
-        entry["quizzes"] = int(entry.get("quizzes", 0)) + 1
+        entry["points"] = round(number_of(entry, "points") + card.score, 2)
+        entry["correct"] = count_of(entry, "correct") + card.correct
+        entry["wrong"] = count_of(entry, "wrong") + card.wrong
+        entry["skipped"] = count_of(entry, "skipped") + card.skipped
+        entry["seconds"] = round(number_of(entry, "seconds") + card.seconds, 1)
+        entry["quizzes"] = count_of(entry, "quizzes") + 1
     for old_key in sorted(scores["weeks"])[:-WEEKS_TO_KEEP]:
         del scores["weeks"][old_key]
 
@@ -1036,30 +1157,22 @@ def build_weekly_message(week_start: datetime, users: Dict[str, Any], now: datet
     """Compose the plain-text weekly leaderboard."""
     week_end = week_start + timedelta(days=7)
     rows = [entry for entry in users.values() if isinstance(entry, dict)]
-    rows.sort(key=lambda e: (-float(e.get("points", 0)),
-                             round(float(e.get("seconds", 0))),
+    rows.sort(key=lambda e: (-number_of(e, "points"), round(number_of(e, "seconds")),
                              str(e.get("name", "")).lower()))
 
     lines = [
         "\U0001F3C6 Weekly Leaderboard",
         f"{format_local(week_start)} to {format_local(week_end)} {LOCAL_TZ_NAME}",
     ]
-    rank, previous = 0, None
-    for index, entry in enumerate(rows[:WEEKLY_MAX_ROWS], start=1):
-        points = float(entry.get("points", 0))
-        seconds = float(entry.get("seconds", 0))
-        key = (points, round(seconds))
-        if key != previous:              # same marks and time share a rank
-            rank, previous = index, key
-        marker = MEDALS.get(rank, f"{rank}.")
-        quizzes = int(entry.get("quizzes", 0))
-        word = "quiz" if quizzes == 1 else "quizzes"
+    for rank, entry in ranked(rows[:WEEKLY_MAX_ROWS],
+                              lambda e: (number_of(e, "points"), round(number_of(e, "seconds")))):
         lines += [
             "",
-            f"{marker} {entry.get('name', 'Unknown')}: {format_marks(points)} pts",
-            f"   \u2705 {int(entry.get('correct', 0))}  \u274C {int(entry.get('wrong', 0))}"
-            f"  \u23ED {int(entry.get('skipped', 0))}  \U0001F4DD {quizzes} {word}"
-            f"  \u23F1 {format_duration(seconds)}",
+            f"{rank_marker(rank)} {entry.get('name', 'Unknown')}: "
+            f"{format_marks(number_of(entry, 'points'))} pts",
+            stat_line(count_of(entry, "correct"), count_of(entry, "wrong"),
+                      count_of(entry, "skipped"), number_of(entry, "seconds"),
+                      count_of(entry, "quizzes")),
         ]
     if len(rows) > WEEKLY_MAX_ROWS:
         lines += ["", f"...and {len(rows) - WEEKLY_MAX_ROWS} more"]
@@ -1069,11 +1182,7 @@ def build_weekly_message(week_start: datetime, users: Dict[str, Any], now: datet
         lines.append(f"Scores reset on {format_local(week_end)} {LOCAL_TZ_NAME}.")
     else:
         lines.append("A new week has started.")
-
-    text = "\n".join(lines)
-    if len(text) > MAX_MESSAGE_LENGTH:
-        text = text[:MAX_MESSAGE_LENGTH - 10].rstrip() + "\n..."
-    return text
+    return join_message(lines)
 
 
 def week_users(scores: Dict[str, Any], start: datetime) -> Dict[str, Any]:
@@ -1108,24 +1217,15 @@ def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
             return True
 
         logger.info("=== Posting the weekly leaderboard ===")
-        text = build_weekly_message(start, users, now)
-        with requests.Session() as session:
-            result = call_telegram(session, token, "sendMessage",
-                                   {"chat_id": chat_id, "text": text})
-        if not result.ok:
+        if not send_text(token, chat_id, build_weekly_message(start, users, now)):
             logger.error("The weekly leaderboard could not be posted; it will be "
                          "retried on the next run.")
             return False
         logger.info("SUCCESS: weekly leaderboard posted.")
 
         scores["weekly_posted"] = (list(scores["weekly_posted"]) + [key])[-WEEKS_TO_KEEP:]
-        try:
-            save_scores(scores)
-        except OSError as exc:
-            logger.critical("Could not save scores.json (%s); the leaderboard may be "
-                            "posted again.", exc)
-            return False
-        return True
+        return save_data(SCORES_FILE, scores, "The leaderboard may be posted again.",
+                         logging.CRITICAL)
     return True
 
 
@@ -1144,34 +1244,10 @@ def question_id(question: str, correct_text: str) -> str:
 
 
 def load_stats() -> Dict[str, Any]:
-    """Read stats.json (per-question results). A missing file means no data yet.
-
-    Raises:
-        RuntimeError: if the file exists but is not valid.
-    """
-    if not STATS_FILE.exists():
-        return {"questions": {}}
-    try:
-        data = read_json(STATS_FILE)
-    except (OSError, ValueError) as exc:
-        raise RuntimeError(f"cannot load stats.json: {exc}") from exc
-    if not isinstance(data, dict):
-        raise RuntimeError("stats.json must contain a JSON object")
+    """Read stats.json (per-question results). A missing file means no data yet."""
+    data = read_json_object(STATS_FILE, "stats.json") or {}
     questions = data.get("questions")
     return {"questions": questions if isinstance(questions, dict) else {}}
-
-
-def save_stats(stats: Dict[str, Any]) -> None:
-    """Write stats.json."""
-    write_json_atomic(STATS_FILE, stats)
-
-
-def count_of(entry: Dict[str, Any], name: str) -> int:
-    """A stored counter as a whole number (0 if missing or damaged)."""
-    try:
-        return max(0, int(entry.get(name, 0)))
-    except (TypeError, ValueError):
-        return 0
 
 
 def smoothed_rate(entry: Dict[str, Any]) -> float:
@@ -1229,7 +1305,7 @@ def record_question_stats(stats: Dict[str, Any], results: Dict[str, QuestionResu
                           quiz_id: str, when: datetime) -> None:
     """Add one quiz's per-question results to the running totals."""
     questions = stats.setdefault("questions", {})
-    stamp = when.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    asked_at = stamp(when, seconds=True)
     for qid, result in results.items():
         entry = questions.setdefault(qid, {})
         entry["q"] = result.question[:80]
@@ -1238,17 +1314,19 @@ def record_question_stats(stats: Dict[str, Any], results: Dict[str, QuestionResu
         entry["correct"] = count_of(entry, "correct") + result.correct
         entry["wrong"] = count_of(entry, "wrong") + result.wrong
         entry["skipped"] = count_of(entry, "skipped") + result.skipped
-        entry["last_asked"] = stamp
+        entry["last_asked"] = asked_at
 
 
 def select_questions(valid: List[Question], count: int, strategy: str,
-                     stats: Optional[Dict[str, Any]], now: datetime) -> List[Question]:
+                     stats: Optional[Dict[str, Any]], now: datetime,
+                     cooldown_days: Optional[int] = None) -> List[Question]:
     """Choose `count` questions from a bigger set.
 
     "hardest": the lowest right-answer rate first (new questions count as 50%).
     "random":  any questions.
-    Questions asked within the last REPEAT_COOLDOWN_DAYS are left out, unless
-    there are not enough others, in which case the least recently asked fill in.
+    Questions asked within the last `cooldown_days` (default REPEAT_COOLDOWN_DAYS)
+    are left out, unless there are not enough others, in which case the least
+    recently asked fill in.
     """
     if count >= len(valid):
         return list(valid)
@@ -1259,7 +1337,8 @@ def select_questions(valid: List[Question], count: int, strategy: str,
         entry = known.get(question_id(item[0], item[1][item[2]]))
         return entry if isinstance(entry, dict) else {}
 
-    cutoff = now - timedelta(days=REPEAT_COOLDOWN_DAYS)
+    days = REPEAT_COOLDOWN_DAYS if cooldown_days is None else cooldown_days
+    cutoff = now - timedelta(days=days)
     fresh: List[Question] = []
     recent: List[Question] = []
     for item in valid:
@@ -1326,10 +1405,17 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
             status = "upcoming"
         detail, bad = describe(entry.quiz_id, quiz_timer(entry.quiz_id, entry.timer))
         if entry.pick is not None:
-            detail += f", picks {entry.pick} ({entry.strategy})"
+            days = (entry.no_repeat_days if entry.no_repeat_days is not None
+                    else REPEAT_COOLDOWN_DAYS)
+            detail += f", picks {entry.pick} ({entry.strategy}), no repeats for {days} d"
+            available = checked[entry.quiz_id][0]
+            if entry.pick > available > 0:
+                detail += f" - the quiz has only {available}, so all are used"
+        else:
+            detail += ", runs all questions"
         problems += bad
         logger.info("%s | %-10s | %-14s | %s",
-                    entry.when.strftime("%Y-%m-%d %H:%M UTC"), entry.quiz_id, status, detail)
+                    format_utc(entry.when), entry.quiz_id, status, detail)
 
     unscheduled = [quiz_id for quiz_id in sorted(quiz_files) if quiz_id not in scheduled_ids]
     if unscheduled:
@@ -1406,7 +1492,7 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
         upcoming = [e for e in schedule if e.when > start_time and e.key not in sent_record]
         if upcoming:
             logger.info("Nothing due. Next: %s at %s.", upcoming[0].quiz_id,
-                        upcoming[0].when.strftime("%Y-%m-%d %H:%M UTC"))
+                        format_utc(upcoming[0].when))
         else:
             logger.info("Nothing due and nothing upcoming.")
     else:
@@ -1414,7 +1500,7 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
 
     for index, entry in enumerate(due, start=1):
         logger.info("=== Posting %s (scheduled for %s) ===", entry.quiz_id,
-                    entry.when.strftime("%Y-%m-%d %H:%M UTC"))
+                    format_utc(entry.when))
         try:
             questions = load_quiz(entry.quiz_id)
         except ValueError as exc:
@@ -1424,53 +1510,43 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
 
         outcome = run_quiz(questions, token, chat_id, entry.quiz_id, entry=entry,
                            stats=stats, now=current_time())
-        sent, failed, skipped = outcome.sent, outcome.failed, outcome.skipped
-        logger.info("%s finished: sent=%d failed=%d skipped=%d",
-                    entry.quiz_id, sent, failed, skipped)
+        log_outcome(entry.quiz_id, outcome)
 
-        if sent == 0:
+        if outcome.sent == 0:
             # Nothing reached the chat, so leave it unrecorded and retry next run.
             logger.error("Nothing was posted for %s; it stays due and will be "
                          "retried on the next run.", entry.quiz_id)
             exit_code = 1
         else:
-            if failed:
+            if outcome.failed:
                 logger.warning("%s was only partly posted (%d failed). It is "
                                "recorded as sent; remove it from sent.json to "
-                               "post it again.", entry.quiz_id, failed)
+                               "post it again.", entry.quiz_id, outcome.failed)
                 exit_code = 1
             sent_record[entry.key] = {
-                "posted_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "sent": sent,
-                "failed": failed,
-                "skipped": skipped,
+                "posted_at": stamp(datetime.now(timezone.utc), seconds=True),
+                "sent": outcome.sent,
+                "failed": outcome.failed,
+                "skipped": outcome.skipped,
+                "questions": [{"id": qid, "q": text[:60]} for qid, text in outcome.asked],
             }
-            try:
-                save_sent(sent_record)
-            except OSError as exc:
-                # Without a record this set could be posted twice, so stop here.
-                logger.critical("Could not save sent.json (%s). Stopping to avoid "
-                                "duplicate posts.", exc)
+            # Without this record the set could be posted twice, so stop if it fails.
+            if not save_data(SENT_FILE, sent_record,
+                             "Stopping to avoid duplicate posts.", logging.CRITICAL):
                 return 1
 
             # Add this quiz to the weekly totals (the week is decided by its scheduled time).
             if scores is not None and outcome.board:
-                try:
-                    add_to_scores(scores, outcome.board, entry.when)
-                    save_scores(scores)
-                except OSError as exc:
-                    logger.error("Could not save scores.json (%s). This quiz was not "
-                                 "added to the weekly totals.", exc)
+                add_to_scores(scores, outcome.board, entry.when)
+                if not save_data(SCORES_FILE, scores,
+                                 "This quiz was not added to the weekly totals."):
                     exit_code = 1
 
             # Remember how each question did and when it was asked.
             if stats is not None and outcome.stats:
-                try:
-                    record_question_stats(stats, outcome.stats, entry.quiz_id, entry.when)
-                    save_stats(stats)
-                except OSError as exc:
-                    logger.error("Could not save stats.json (%s). Question statistics "
-                                 "for this quiz were not saved.", exc)
+                record_question_stats(stats, outcome.stats, entry.quiz_id, entry.when)
+                if not save_data(STATS_FILE, stats,
+                                 "Question statistics for this quiz were not saved."):
                     exit_code = 1
 
         if index < len(due):
@@ -1503,9 +1579,7 @@ def run_weekly_preview(token: str, chat_id: str, dry_run: bool) -> int:
     if dry_run:
         logger.info("Weekly leaderboard preview:\n%s", text)
         return 0
-    with requests.Session() as session:
-        result = call_telegram(session, token, "sendMessage", {"chat_id": chat_id, "text": text})
-    if result.ok:
+    if send_text(token, chat_id, text):
         logger.info("SUCCESS: this week's standings were posted.")
         return 0
     logger.error("The standings could not be posted.")
@@ -1535,8 +1609,7 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool) -> int:
     logger.info("Manual run: posting %s now (schedule, sent record, weekly scores and "
                 "question statistics are unchanged).", quiz_id)
     outcome = run_quiz(questions, token, chat_id, quiz_id)
-    logger.info("%s finished: sent=%d failed=%d skipped=%d",
-                quiz_id, outcome.sent, outcome.failed, outcome.skipped)
+    log_outcome(quiz_id, outcome)
     return 0 if outcome.sent > 0 and outcome.failed == 0 else 1
 
 
