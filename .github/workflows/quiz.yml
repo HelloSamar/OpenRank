@@ -31,6 +31,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
+          # Always use the newest main, so a run that waited in the queue still
+          # sees the latest sent.json and cannot post the same quiz twice.
           ref: main
 
       - name: Set up Python
@@ -54,14 +56,16 @@ jobs:
             python quiz_bot.py
           fi
 
-      - name: Save sent record
+      - name: Save records
         if: always()
         run: |
-          if [ -n "$(git status --porcelain sent.json)" ]; then
+          for f in sent.json scores.json; do
+            if [ -f "$f" ]; then git add "$f"; fi
+          done
+          if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add sent.json
-            git commit -m "Update sent record"
+            git commit -m "Update records"
             git pull --rebase
             git push
           fi
