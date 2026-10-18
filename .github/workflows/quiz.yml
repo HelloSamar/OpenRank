@@ -59,7 +59,7 @@ jobs:
       - name: Save records
         if: always()
         run: |
-          for f in sent.json scores.json; do
+          for f in sent.json scores.json stats.json; do
             if [ -f "$f" ]; then git add "$f"; fi
           done
           if ! git diff --cached --quiet; then
