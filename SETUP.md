@@ -12,7 +12,7 @@ Each question is a poll with a countdown; the next poll appears when the previou
 
 | File | Purpose |
 |---|---|
-| `schedule.json` | Which quiz runs when, how many questions, how many seconds. **Explained in the comments at the top of the file.** |
+| `schedule.json` | Which quiz runs when, how many questions, how many seconds. Plain JSON (no comments); fields are listed below |
 | `quizzes/*.json` | The questions, one file per quiz |
 | `quiz_bot.py` | The script and its settings |
 | `sent.json` | What was posted, with the question list of each quiz (automatic) |
@@ -23,12 +23,14 @@ Each question is a poll with a countdown; the next poll appears when the previou
 
 ## schedule.json
 
-Everything about a run is set here, and every field is explained in the comments at the top of the file, so it is not repeated in this guide. Edit it on GitHub: open the file, click the pencil, change a line, commit.
+Everything about a run is set here. The file must be **strict JSON** (no `//` comments, no trailing commas). Edit it on GitHub: open the file, click the pencil, change a line, commit.
+
+Fields of each entry: `quiz` (file name without `.json`), `at` (e.g. `"2026-10-19T12:00+05:30"` or `...Z`), and optionally `timer` (5-600 seconds), `pick` (how many questions to choose; 0 or missing = all), `strategy` (`"random"` or `"hardest"`, needs `pick`), `no_repeat_days` (0-3650, needs `pick`) and `intro` (text posted before the first poll).
 
 | I want to... | Do this |
 |---|---|
 | Reschedule a quiz that has not run | Change its `at` |
-| Cancel a quiz | Delete its line, or put `//` in front of it |
+| Cancel a quiz | Delete its line |
 | Run a quiz again | Add a new line with a new time |
 | Run a quiz right now | Actions -> Quiz Scheduler -> Run workflow -> type the quiz name. This posts the whole quiz and records nothing. |
 | See the current weekly standings | Same, but type `weekly` |
@@ -106,7 +108,7 @@ Nothing expires, except `scores.json`:
 
 1. The bot is **@PYQxBot**. Add it to your quiz **group**.
 2. `CHAT_ID` is the group's numeric ID (negative, like `-1001234567890`).
-3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot. Only one program can read updates at a time, and a clash switches scoring off for that quiz.
+3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot unless you also set `WEBHOOK_ENABLED=true` (then Telegram must post updates to `WEBHOOK_PORT`, optionally protected by `WEBHOOK_SECRET`). Otherwise only one program can read updates at a time, and a clash switches scoring off for that quiz.
 4. The script asks Telegram only for poll answers, and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
 
 ## GitHub (browser only)
@@ -121,7 +123,7 @@ Nothing expires, except `scores.json`:
 
 - A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay. A time that has already passed runs at the next check.
 - Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, use `*/30` in the cron line of `quiz.yml`.
-- A quiz takes about (questions x seconds each). One run can last up to 330 minutes; the check marks a longer quiz as TOO LONG, and the script will not start it. Private repositories pay for every minute, so very long quizzes use up the monthly allowance.
-- **Interrupted quizzes:** a quiz is marked `started` in `sent.json` before its first poll. If the run is killed half-way, the quiz is never posted a second time by itself, and the check shows it as INTERRUPTED. Delete its entry in `sent.json` to run it again.
-- If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, the marker is removed and it is retried on the next run.
+- A quiz takes about (questions x seconds each); the workflow stops a run after 350 minutes. Private repositories pay for every minute, so very long quizzes use up the monthly allowance.
+- **Interrupted quizzes:** if a run is cancelled (SIGINT/SIGTERM) the bot stops posting, posts the partial result and does not start further quizzes. A quiz that had at least one poll posted is recorded in `sent.json` and is not posted again; delete its entry in `sent.json` to run it again.
+- If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.
 - If Telegram creates a poll but the answer is lost on the way, the retry can post that one question twice. Telegram offers no way to prevent this.

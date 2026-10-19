@@ -10,7 +10,7 @@ Practice daily, sharpen your instincts, and stay ahead with quick-fire quizzes c
 
 ## Why PYQxBot?
 
-- ⚡ **Speed-first learning** with 15-second questions
+- ⚡ **Speed-first learning** with short, timed questions (10-60 seconds depending on the section)
 - 🎯 **Exam-like scoring**: +2 for correct, -0.5 for wrong
 - 🏆 **Real-time leaderboard** to compete with friends
 - 💡 **Instant feedback** after every question

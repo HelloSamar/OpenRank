@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.updates_offset
+.webhook_last.json
+.tmp-*
