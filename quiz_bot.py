@@ -69,7 +69,7 @@ MARKS_WRONG = 0.5
 SHOW_ANSWER_KEY = False
 RESULTS_MAX_ROWS = 20
 RESULT_GRACE_SECONDS = 3
-MAX_LONG_POLL = 20
+MAX_LONG_POLL = 3               # keep short: a shutdown request waits for the current poll
 
 POST_WEEKLY = True
 LOCAL_TZ_NAME = "IST"
@@ -99,7 +99,7 @@ SCORES_FILE = BASE_DIR / "scores.json"
 STATS_FILE = BASE_DIR / "stats.json"
 UPDATES_OFFSET_FILE = BASE_DIR / ".updates_offset"
 
-QUIZ_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
+QUIZ_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,64}")
 
 Question = Tuple[str, List[str], int, str]
 
@@ -415,7 +415,7 @@ def filter_valid(questions: List[Any]) -> Tuple[List[Question], int]:
 
 
 def load_quiz(quiz_id: str) -> List[Any]:
-    if not QUIZ_ID_PATTERN.match(quiz_id):
+    if not QUIZ_ID_PATTERN.fullmatch(quiz_id):
         raise ValueError(
             f"invalid quiz id {quiz_id!r} (use letters, digits, '-' and '_' only)"
         )
@@ -459,7 +459,7 @@ def parse_schedule_entry(item: Any) -> ScheduleEntry:
     if not isinstance(item, dict):
         raise ValueError('entry must look like {"quiz": "ows001", "at": "..."}')
     quiz_id = item.get("quiz")
-    if not isinstance(quiz_id, str) or not QUIZ_ID_PATTERN.match(quiz_id):
+    if not isinstance(quiz_id, str) or not QUIZ_ID_PATTERN.fullmatch(quiz_id):
         raise ValueError(f"invalid quiz id {quiz_id!r}")
     when = parse_time(item.get("at"))
 
@@ -655,7 +655,8 @@ class AnswerCollector:
                 if text:
                     self.offset = int(text)
         except Exception:
-            logger.warning("Could not load updates offset; starting from current getUpdates position.")
+            logger.warning("Could not load updates offset; "
+                           "starting from current getUpdates position.")
 
     def _save_offset(self) -> None:
         try:
@@ -678,7 +679,7 @@ class AnswerCollector:
             if remaining <= 0:
                 return
             if not self.enabled:
-                time.sleep(remaining)
+                shutdown_event.wait(remaining)
                 return
             self._read_once(remaining)
 
@@ -742,7 +743,8 @@ class AnswerCollector:
         if not isinstance(user_id, int):
             return
         option_ids = poll_answer.get("option_ids")
-        chosen = [o for o in option_ids if isinstance(o, int)] if isinstance(option_ids, list) else []
+        chosen = ([o for o in option_ids if isinstance(o, int)]
+                  if isinstance(option_ids, list) else [])
         self.answers.setdefault(poll_id, {})[user_id] = (
             display_name(user), chosen, time.monotonic())
 
@@ -759,7 +761,7 @@ def format_marks(value: float) -> str:
 
 
 def format_duration(seconds: float) -> str:
-    total = int(round(seconds))
+    total = round(seconds)
     hours, rest = divmod(total, 3600)
     minutes, secs = divmod(rest, 60)
     if hours:
@@ -949,7 +951,8 @@ def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "qui
 
         results_posted = False
         try:
-            for position, (question, options, correct_index, explanation) in enumerate(valid, start=1):
+            for position, (question, options, correct_index, explanation) in enumerate(
+                    valid, start=1):
                 if shutdown_event.is_set():
                     logger.warning("Shutdown requested — stopping quiz early.")
                     break
@@ -1145,7 +1148,7 @@ def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
             return False
         logger.info("SUCCESS: weekly leaderboard posted.")
 
-        scores["weekly_posted"] = (list(scores["weekly_posted"]) + [key])[-WEEKS_TO_KEEP:]
+        scores["weekly_posted"] = [*scores["weekly_posted"], key][-WEEKS_TO_KEEP:]
         return save_data(SCORES_FILE, scores, "The leaderboard may be posted again.",
                          logging.CRITICAL)
     return True
