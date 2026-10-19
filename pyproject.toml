@@ -1,0 +1,11 @@
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "C", "B", "RUF"]
+ignore = ["D100", "D101"]
+
+[tool.isort]
+profile = "black"
