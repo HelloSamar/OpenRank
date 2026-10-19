@@ -25,7 +25,7 @@ concurrency:
 jobs:
   post-quizzes:
     runs-on: ubuntu-latest
-    # A run can last up to 5.5 hours (MAX_RUN_MINUTES = 330 in quiz_bot.py); stop it a little after that.
+    # A run lasts about (questions x seconds per question); stop anything that hangs for far longer.
     timeout-minutes: 350
 
     steps:
