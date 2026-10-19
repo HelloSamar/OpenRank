@@ -1,0 +1,18 @@
+{
+  "weekly_posted": [],
+  "weeks": {
+    "2026-10-18T14:30Z": {
+      "users": {
+        "8630381516": {
+          "correct": 5,
+          "name": "samar",
+          "points": 5.5,
+          "quizzes": 1,
+          "seconds": 926.9,
+          "skipped": 86,
+          "wrong": 9
+        }
+      }
+    }
+  }
+}
