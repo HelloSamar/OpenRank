@@ -97,10 +97,6 @@ SHOW_ANSWER_KEY = False         # also list the correct answers in the result
 RESULTS_MAX_ROWS = 20           # most names shown in the leaderboard
 RESULT_GRACE_SECONDS = 3        # extra wait after the last poll closes
 MAX_LONG_POLL = 20              # longest single wait when reading answers
-CONFLICT_RETRIES = 5            # harmless 'Conflict' replies tolerated before scoring is dropped
-CONFLICT_PAUSE = 5              # seconds between those retries (a cancelled run's request lasts up to 20 s)
-# One run can last this long. quiz.yml stops the job at 350 minutes, so keep this below it.
-MAX_RUN_MINUTES = 330
 
 # Weekly leaderboard (India time). Marks are added up from Sunday 8:00 PM to the
 # next Sunday 8:00 PM; the leaderboard is posted one hour before that reset.
@@ -142,6 +138,7 @@ QUIZ_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 Question = Tuple[str, List[str], int, str]
 
 logger = logging.getLogger("quiz_bot")
+QUESTION_ID_CACHE: Dict[Tuple[str, str], str] = {}
 
 MEDALS = {1: "\U0001F947", 2: "\U0001F948", 3: "\U0001F949"}
 
@@ -340,7 +337,7 @@ def write_json_atomic(path: Path, data: Any) -> None:
     fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=".tmp-", suffix=".tmp")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(data, handle, indent=2, sort_keys=True)
+            json.dump(data, handle, indent=2, sort_keys=True, ensure_ascii=False)
             handle.write("\n")
         os.replace(tmp_name, path)
     except OSError:
@@ -421,13 +418,6 @@ def quiz_timer(quiz_id: str, override: Optional[int] = None) -> Optional[int]:
     return normalize_timer(POLL_TIMER_SECONDS)
 
 
-def estimate_minutes(entry: ScheduleEntry, question_count: int) -> float:
-    """Roughly how long a quiz takes: each question's seconds plus about 1 second."""
-    polls = min(entry.pick, question_count) if entry.pick else question_count
-    each = (quiz_timer(entry.quiz_id, entry.timer) or DELAY_BETWEEN_POLLS) + POLL_GAP_SECONDS + 1
-    return (polls * each + RESULT_GRACE_SECONDS + 10) / 60
-
-
 # --------------------------------------------------------------------------- #
 # Quiz files
 # --------------------------------------------------------------------------- #
@@ -458,8 +448,6 @@ def validate_question(item: Any) -> str:
             return "every option must be a non-empty string"
         if len(opt) > MAX_OPTION_LENGTH:
             return f"an option exceeds {MAX_OPTION_LENGTH} characters"
-    if len({" ".join(opt.lower().split()) for opt in options}) != len(options):
-        return "two options are the same (Telegram refuses a poll like that)"
 
     # bool is a subclass of int, so exclude it explicitly.
     if not isinstance(correct_index, int) or isinstance(correct_index, bool):
@@ -530,26 +518,22 @@ def load_quiz(quiz_id: str) -> List[Any]:
 # --------------------------------------------------------------------------- #
 
 def parse_time(value: Any) -> datetime:
-    """Parse an ISO-8601 time that has a time of day and a zone into UTC.
+    """Parse an ISO-8601 time into an aware UTC datetime.
 
-    Accepts "2026-10-19T09:00+05:30" (India time) and "2026-10-19T03:30Z" (UTC).
-    A date alone, or a time without a zone, is refused: it would silently be read
-    in the wrong zone.
+    Accepts "2026-10-19T09:00", "2026-10-19T09:00Z" and offsets such as
+    "2026-10-19T14:30+05:30". A time with no zone is treated as UTC.
 
     Raises:
         ValueError: if the value cannot be parsed.
     """
     if not isinstance(value, str):
-        raise ValueError("'at' must be text like 2026-10-19T09:00+05:30")
+        raise ValueError("'at' must be text like 2026-10-19T09:00Z")
     text = value.strip()
-    if not re.search(r"\d[T ]\d{2}:\d{2}", text):
-        raise ValueError("'at' needs a time as well, like 2026-10-19T09:00+05:30")
     if text.endswith(("Z", "z")):
         text = text[:-1] + "+00:00"
     parsed = datetime.fromisoformat(text)
     if parsed.tzinfo is None:
-        raise ValueError("'at' needs a time zone: end it with +05:30 for India time "
-                         "(or Z for UTC), like 2026-10-19T09:00+05:30")
+        parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc)
 
 
@@ -588,7 +572,7 @@ def parse_schedule_entry(item: Any) -> ScheduleEntry:
                         "a whole number: 0 for all questions, or how many to choose")
     pick = pick or None            # 0 means "all questions", the same as leaving it out
     no_repeat = whole_number(item, "no_repeat_days", 0, 3650,
-                             "a whole number of days, 0 to 3650")
+                              "a whole number of days, 0 to 3650")
     strategy = item.get("strategy")
     if strategy is not None and strategy not in STRATEGIES:
         raise ValueError("'strategy' must be one of: " + ", ".join(STRATEGIES))
@@ -778,7 +762,6 @@ class AnswerCollector:
         self.token = token
         self.enabled = enabled
         self.offset: Optional[int] = None
-        self.conflicts = 0          # 'Conflict' replies in a row
         # poll_id -> {user_id: (display_name, option_ids, time_received)}
         self.answers: Dict[str, Dict[int, Tuple[str, List[int], float]]] = {}
 
@@ -800,7 +783,6 @@ class AnswerCollector:
             self._read_once(remaining)
 
     def _read_once(self, remaining: float) -> None:
-        started = time.monotonic()
         long_poll = max(1, min(int(remaining), MAX_LONG_POLL))
         payload: Dict[str, Any] = {"timeout": long_poll, "allowed_updates": ["poll_answer"]}
         if self.offset is not None:
@@ -822,17 +804,8 @@ class AnswerCollector:
             data = {}
 
         if response.status_code == 409:
-            # A webhook is permanent. Another reader (for example a request left over
-            # from a cancelled run) usually goes away within seconds, so try again.
-            self.conflicts += 1
-            if "webhook" in str(data.get("description", "")).lower() \
-                    or self.conflicts > CONFLICT_RETRIES:
-                self.disable("Cannot read answers (a webhook is set, or something else is "
-                             "reading this bot's updates). Scores will not be shown.")
-            else:
-                logger.warning("Something else is reading this bot's updates; trying again "
-                               "in %d seconds.", CONFLICT_PAUSE)
-                time.sleep(min(CONFLICT_PAUSE, remaining))
+            self.disable("Cannot read answers (a webhook is set, or something else is "
+                         "reading this bot's updates). Scores will not be shown.")
             return
         if response.status_code != 200 or data.get("ok") is not True:
             logger.warning("Could not read answers: HTTP %d: %s", response.status_code,
@@ -840,21 +813,13 @@ class AnswerCollector:
             time.sleep(min(2, remaining))
             return
 
-        self.conflicts = 0
-        updates = data.get("result") or []
-        for update in updates:
+        for update in data.get("result") or []:
             if not isinstance(update, dict):
                 continue
             update_id = update.get("update_id")
             if isinstance(update_id, int):
                 self.offset = update_id + 1   # confirms this update to Telegram
             self._record(update.get("poll_answer"))
-
-        # Telegram normally holds the request open. If it answered instantly with
-        # nothing, pause briefly so we never hammer it in a tight loop.
-        elapsed = time.monotonic() - started
-        if not updates and elapsed < 1.0:
-            time.sleep(min(1.0, max(0.0, remaining - elapsed)))
 
     def _record(self, poll_answer: Any) -> None:
         if not isinstance(poll_answer, dict):
@@ -927,39 +892,46 @@ def join_message(lines: List[str]) -> str:
 
 
 def build_scoreboard(polls: List[SentPoll],
-                     answers: Dict[str, Dict[int, Tuple[str, List[int], float]]],
-                     timer: Optional[int] = None) -> List[Scorecard]:
+                    answers: Dict[str, Dict[int, Tuple[str, List[int], float]]],
+                    timer: Optional[int] = None) -> List[Scorecard]:
     """Score everyone who answered at least once, best first.
 
     Marks: +MARKS_CORRECT per right answer, -MARKS_WRONG per wrong one, 0 if
     skipped. Ties are broken by the shorter total time.
     """
     limit = float(timer or 0)
+    total_polls = len(polls)
 
     names: Dict[int, str] = {}
+    answered_counts: Dict[int, int] = {}
+    correct_counts: Dict[int, int] = {}
+    wrong_counts: Dict[int, int] = {}
+    elapsed_totals: Dict[int, float] = {}
+
     for poll in polls:
         if poll.poll_id is None:
             continue
-        for user_id, (name, chosen, _received) in answers.get(poll.poll_id, {}).items():
-            if chosen:
-                names[user_id] = name
+        poll_answers = answers.get(poll.poll_id, {})
+        for user_id, (name, chosen, received) in poll_answers.items():
+            if not chosen:
+                continue
+            names[user_id] = name
+            answered_counts[user_id] = answered_counts.get(user_id, 0) + 1
+            if chosen == [poll.correct_index]:
+                correct_counts[user_id] = correct_counts.get(user_id, 0) + 1
+            else:
+                wrong_counts[user_id] = wrong_counts.get(user_id, 0) + 1
+            elapsed = max(0.0, received - poll.sent_at)
+            elapsed_totals[user_id] = elapsed_totals.get(user_id, 0.0) + (
+                min(elapsed, limit) if limit else elapsed
+            )
 
     cards: List[Scorecard] = []
     for user_id, name in names.items():
-        correct = wrong = skipped = 0
-        seconds = 0.0
-        for poll in polls:
-            record = answers.get(poll.poll_id, {}).get(user_id) if poll.poll_id else None
-            if record and record[1]:
-                if record[1] == [poll.correct_index]:
-                    correct += 1
-                else:
-                    wrong += 1
-                elapsed = max(0.0, record[2] - poll.sent_at)
-                seconds += min(elapsed, limit) if limit else elapsed
-            else:
-                skipped += 1
-                seconds += limit
+        correct = correct_counts.get(user_id, 0)
+        wrong = wrong_counts.get(user_id, 0)
+        skipped = total_polls - answered_counts.get(user_id, 0)
+        seconds = elapsed_totals.get(user_id, 0.0) + skipped * (limit if limit else 0.0)
         score = correct * MARKS_CORRECT - wrong * MARKS_WRONG
         cards.append(Scorecard(user_id, name, correct, wrong, skipped, score, seconds))
 
@@ -1194,7 +1166,7 @@ def build_weekly_message(week_start: datetime, users: Dict[str, Any], now: datet
     week_end = week_start + timedelta(days=7)
     rows = [entry for entry in users.values() if isinstance(entry, dict)]
     rows.sort(key=lambda e: (-number_of(e, "points"), round(number_of(e, "seconds")),
-                             str(e.get("name", "")).lower()))
+                              str(e.get("name", "")).lower()))
 
     lines = [
         "\U0001F3C6 Weekly Leaderboard",
@@ -1229,7 +1201,7 @@ def week_users(scores: Dict[str, Any], start: datetime) -> Dict[str, Any]:
 
 
 def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
-                       now: datetime) -> bool:
+                      now: datetime) -> bool:
     """Post the weekly leaderboard when its time has come (once per week).
 
     Returns:
@@ -1275,8 +1247,16 @@ def question_id(question: str, correct_text: str) -> str:
     It changes if the question text or the correct answer is edited, because the
     old numbers would no longer describe the edited question.
     """
-    text = " ".join(question.lower().split()) + "|" + " ".join(correct_text.lower().split())
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
+    normalized_question = " ".join(question.lower().split())
+    normalized_answer = " ".join(correct_text.lower().split())
+    key = (normalized_question, normalized_answer)
+    cached = QUESTION_ID_CACHE.get(key)
+    if cached is not None:
+        return cached
+    text = f"{normalized_question}|{normalized_answer}"
+    value = hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
+    QUESTION_ID_CACHE[key] = value
+    return value
 
 
 def load_stats() -> Dict[str, Any]:
@@ -1308,36 +1288,34 @@ def parse_stamp(value: Any) -> Optional[datetime]:
 
 
 def build_question_stats(polls: List[SentPoll],
-                         collector: AnswerCollector) -> Dict[str, QuestionResult]:
+                          collector: AnswerCollector) -> Dict[str, QuestionResult]:
     """Right/wrong/skipped counts per question, among people who answered at least once.
 
-    The counts are only trusted if answers were read for the WHOLE quiz. If reading
-    was off, or was switched off half-way, every count is zero (a half-read quiz would
-    show people as having "skipped" questions that were simply not being read). The
-    questions are still listed so that 'last asked' can be recorded.
+    When names are not visible (anonymous polls) the counts are zero, but the
+    question is still listed so that 'last asked' can be recorded.
     """
-    reading_ok = collector.enabled
-    participants = set()
-    if reading_ok:
-        for poll in polls:
-            if poll.poll_id:
-                for user_id, (_name, chosen, _received) in collector.answers.get(poll.poll_id, {}).items():
-                    if chosen:
-                        participants.add(user_id)
+    participants: set[int] = set()
+    for poll in polls:
+        if not poll.poll_id:
+            continue
+        for user_id, (_name, chosen, _received) in collector.answers.get(poll.poll_id, {}).items():
+            if chosen:
+                participants.add(user_id)
 
     results: Dict[str, QuestionResult] = {}
     for poll in polls:
         result = results.setdefault(poll.qid, QuestionResult(poll.question, 0, 0, 0))
-        answers = collector.answers.get(poll.poll_id, {}) if (reading_ok and poll.poll_id) else {}
-        for user_id in participants:
-            record = answers.get(user_id)
-            if record and record[1]:
-                if record[1] == [poll.correct_index]:
-                    result.correct += 1
-                else:
-                    result.wrong += 1
+        answered: set[int] = set()
+        answers = collector.answers.get(poll.poll_id, {}) if poll.poll_id else {}
+        for user_id, (_name, chosen, _received) in answers.items():
+            if not chosen:
+                continue
+            answered.add(user_id)
+            if chosen == [poll.correct_index]:
+                result.correct += 1
             else:
-                result.skipped += 1
+                result.wrong += 1
+        result.skipped += len(participants - answered)
     return results
 
 
@@ -1437,11 +1415,7 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
     if not schedule:
         logger.info("schedule.json has no valid entries.")
     for entry in schedule:
-        record = sent_record.get(entry.key)
-        interrupted = isinstance(record, dict) and record.get("status") == "started"
-        if interrupted:
-            status = "INTERRUPTED"
-        elif entry.key in sent_record:
+        if entry.key in sent_record:
             status = "already posted"
         elif entry.when <= now:
             status = "DUE"
@@ -1457,15 +1431,6 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
                 detail += f" - the quiz has only {available}, so all are used"
         else:
             detail += ", runs all questions"
-        if checked[entry.quiz_id][0]:
-            minutes = estimate_minutes(entry, checked[entry.quiz_id][0])
-            detail += f", about {minutes:.0f} min"
-            if minutes > MAX_RUN_MINUTES:
-                detail += f" - TOO LONG: one run can last {MAX_RUN_MINUTES} min, lower 'pick' or 'timer'"
-                bad = True
-        if interrupted:
-            detail += " - started but never finished; delete its entry in sent.json to run it again"
-            bad = True
         problems += bad
         logger.info("%s | %-10s | %-14s | %s",
                     format_utc(entry.when), entry.quiz_id, status, detail)
@@ -1501,16 +1466,16 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
         tried.sort(key=smoothed_rate)
         if tried:
             logger.info("Lowest right-answer rate first:")
-        for row in tried[:5]:
-            right, wrong = count_of(row, "correct"), count_of(row, "wrong")
+        for entry in tried[:5]:
+            right, wrong = count_of(entry, "correct"), count_of(entry, "wrong")
             logger.info("  %3d%% right (%d of %d) - %s",
                         round(100 * right / (right + wrong)), right, right + wrong,
-                        row.get("q", "?"))
+                        entry.get("q", "?"))
     return problems
 
 
 def run_scheduled(token: str, chat_id: str, dry_run: bool,
-                  now: Optional[datetime] = None) -> int:
+                 now: Optional[datetime] = None) -> int:
     """Post every scheduled quiz that is due, then the weekly leaderboard if due."""
     schedule = load_schedule()
     sent_record = load_sent()
@@ -1561,35 +1526,15 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
             exit_code = 1
             continue
 
-        minutes = estimate_minutes(entry, len(questions))
-        if minutes > MAX_RUN_MINUTES:
-            logger.error("%s would take about %d minutes, more than one run can last (%d). "
-                         "Lower 'pick' or 'timer' in schedule.json.",
-                         entry.quiz_id, minutes, MAX_RUN_MINUTES)
-            exit_code = 1
-            continue
-
-        # Mark the quiz as started BEFORE the first poll. If this run is killed half-way
-        # (time limit, crash), the quiz is then never posted a second time.
-        sent_record[entry.key] = {"status": "started",
-                                  "started_at": stamp(datetime.now(timezone.utc), seconds=True)}
-        if not save_data(SENT_FILE, sent_record,
-                         "Not posting, to avoid duplicate posts.", logging.CRITICAL):
-            return 1
-
         outcome = run_quiz(questions, token, chat_id, entry.quiz_id, entry=entry,
                            stats=stats, now=current_time())
         log_outcome(entry.quiz_id, outcome)
 
         if outcome.sent == 0:
-            # Nothing reached the chat: take the marker off again so it is retried next run.
+            # Nothing reached the chat, so leave it unrecorded and retry next run.
             logger.error("Nothing was posted for %s; it stays due and will be "
                          "retried on the next run.", entry.quiz_id)
             exit_code = 1
-            del sent_record[entry.key]
-            if not save_data(SENT_FILE, sent_record, "It will not be retried until you "
-                             "delete its entry from sent.json.", logging.CRITICAL):
-                return 1
         else:
             if outcome.failed:
                 logger.warning("%s was only partly posted (%d failed). It is "
@@ -1617,7 +1562,7 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
 
             # Remember how each question did and when it was asked.
             if stats is not None and outcome.stats:
-                record_question_stats(stats, outcome.stats, entry.quiz_id, current_time())
+                record_question_stats(stats, outcome.stats, entry.quiz_id, entry.when)
                 if not save_data(STATS_FILE, stats,
                                  "Question statistics for this quiz were not saved."):
                     exit_code = 1
