@@ -3,6 +3,13 @@ name: Validate quiz files
 # Runs whenever quizzes, the schedule or the script change, and shows a red cross
 # if something is broken (for example a missing comma in schedule.json).
 on:
+  pull_request:
+    paths:
+      - "quizzes/**"
+      - "schedule.json"
+      - "quiz_bot.py"
+      - "requirements.txt"
+      - "tests/**"
   push:
     paths:
       - "quizzes/**"
