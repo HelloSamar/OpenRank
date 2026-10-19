@@ -4,7 +4,7 @@ on:
   schedule:
     # Wakes up every 15 minutes (UTC) and posts whatever is due in schedule.json.
     # The quiz times are NOT set here - edit schedule.json to change them.
-    - cron: "*/15 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
     inputs:
       quiz:
