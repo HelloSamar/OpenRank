@@ -13,9 +13,11 @@ All other behaviour remains as in the original project.
 
 import argparse
 import hashlib
+import hmac
 import json
 import logging
 import os
+import queue
 import random
 import re
 import sys
@@ -110,8 +112,21 @@ shutdown_event = threading.Event()
 
 # Webhook configuration (opt-in)
 WEBHOOK_ENABLED = os.environ.get("WEBHOOK_ENABLED", "false").lower() in ("1", "true", "yes")
-WEBHOOK_PORT = int(os.environ.get("WEBHOOK_PORT", "8080"))
+
+
+def _env_port(name: str, default: int) -> int:
+    try:
+        port = int(os.environ.get(name, str(default)))
+    except ValueError:
+        return default
+    return port if 0 < port < 65536 else default
+
+
+WEBHOOK_PORT = _env_port("WEBHOOK_PORT", 8080)
 WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "")  # optional shared secret header
+MAX_WEBHOOK_BODY = 1_000_000  # bytes; Telegram updates are far smaller
+# poll_answer objects received by the webhook server, drained by AnswerCollector.
+WEBHOOK_UPDATES: "queue.Queue[Dict[str, Any]]" = queue.Queue()
 
 # --------------------------------------------------------------------------- #
 # Data classes
@@ -267,7 +282,7 @@ def write_json_atomic(path: Path, data: Any) -> None:
             json.dump(data, handle, indent=2, sort_keys=True, ensure_ascii=False)
             handle.write("\n")
         os.replace(tmp_name, path)
-    except OSError:
+    except BaseException:
         try:
             os.unlink(tmp_name)
         except OSError:
@@ -629,6 +644,7 @@ class AnswerCollector:
         self.offset: Optional[int] = None
         self.answers: Dict[str, Dict[int, Tuple[str, List[int], float]]] = {}
         self.offset_file = offset_file
+        self.use_webhook = WEBHOOK_ENABLED
         # Load persisted offset if available
         self._load_offset()
 
@@ -667,6 +683,15 @@ class AnswerCollector:
             self._read_once(remaining)
 
     def _read_once(self, remaining: float) -> None:
+        if self.use_webhook:
+            # Answers arrive through the webhook server; getUpdates would conflict.
+            try:
+                update = WEBHOOK_UPDATES.get(timeout=max(0.0, min(1.0, remaining)))
+            except queue.Empty:
+                return
+            self.record_update(update)
+            return
+
         long_poll = max(1, min(int(remaining), MAX_LONG_POLL))
         payload: Dict[str, Any] = {"timeout": long_poll, "allowed_updates": ["poll_answer"]}
         if self.offset is not None:
@@ -917,7 +942,7 @@ def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "qui
             intro_text = entry.intro
         elif manual_intro:
             intro_text = manual_intro
-        if intro_text:
+        if intro_text and valid and not shutdown_event.is_set():
             text = f"\U0001F4DD {title} - Starting now\n\n{intro_text}"
             if not send_text(token, chat_id, text, session):
                 logger.warning("Could not post the intro message for %s.", quiz_id)
@@ -1081,6 +1106,49 @@ def build_weekly_message(week_start: datetime, users: Dict[str, Any], now: datet
     else:
         lines.append("A new week has started.")
     return join_message(lines)
+
+def week_users(scores: Dict[str, Any], start: datetime) -> Dict[str, Any]:
+    """The per-user totals stored for the week starting at `start` (may be empty)."""
+    week = scores["weeks"].get(week_key(start))
+    users = week.get("users") if isinstance(week, dict) else None
+    return users if isinstance(users, dict) else {}
+
+
+def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
+                       now: datetime) -> bool:
+    """Post the weekly leaderboard when its time has come (once per week).
+
+    Returns:
+        False only if posting was attempted and failed.
+    """
+    if not POST_WEEKLY:
+        return True
+
+    current = week_start_for(now)
+    for start in (current, current - timedelta(days=7)):
+        key = week_key(start)
+        week_end = start + timedelta(days=7)
+        post_time = week_end - timedelta(hours=WEEKLY_POST_HOURS_BEFORE_RESET)
+        if post_time > now or now - post_time > timedelta(hours=WEEKLY_CATCHUP_HOURS):
+            continue
+        if key in scores["weekly_posted"]:
+            return True
+        users = week_users(scores, start)
+        if not users:
+            logger.info("The weekly leaderboard is due but nobody has scored this week.")
+            return True
+
+        logger.info("=== Posting the weekly leaderboard ===")
+        if not send_text(token, chat_id, build_weekly_message(start, users, now)):
+            logger.error("The weekly leaderboard could not be posted; it will be "
+                         "retried on the next run.")
+            return False
+        logger.info("SUCCESS: weekly leaderboard posted.")
+
+        scores["weekly_posted"] = (list(scores["weekly_posted"]) + [key])[-WEEKS_TO_KEEP:]
+        return save_data(SCORES_FILE, scores, "The leaderboard may be posted again.",
+                         logging.CRITICAL)
+    return True
 
 # --------------------------------------------------------------------------- #
 # Question statistics and selection
@@ -1330,6 +1398,10 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
         logger.info("%d quiz set(s) due: %s", len(due), ", ".join(e.quiz_id for e in due))
 
     for index, entry in enumerate(due, start=1):
+        if shutdown_event.is_set():
+            logger.warning("Shutdown requested - not starting %s.", entry.quiz_id)
+            exit_code = 1
+            break
         logger.info("=== Posting %s (scheduled for %s) ===", entry.quiz_id,
                     format_utc(entry.when))
         try:
@@ -1376,10 +1448,10 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
                                  "Question statistics for this quiz were not saved."):
                     exit_code = 1
 
-        if index < len(due):
+        if index < len(due) and not shutdown_event.is_set():
             logger.info("Waiting %d seconds before the next quiz set...",
                         DELAY_BETWEEN_POLLS)
-            time.sleep(DELAY_BETWEEN_POLLS)
+            shutdown_event.wait(DELAY_BETWEEN_POLLS)
 
     if scores is not None and not post_weekly_if_due(token, chat_id, scores, current_time()):
         exit_code = 1
@@ -1451,30 +1523,40 @@ def run_manual(quiz_id: str, token: str, chat_id: str, dry_run: bool, intro: Opt
 # --------------------------------------------------------------------------- #
 
 class WebhookHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
+    def _reply(self, status: int) -> None:
+        self.send_response(status)
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
+    def do_POST(self) -> None:
         if WEBHOOK_SECRET:
-            secret = self.headers.get("X-Webhook-Secret", "")
-            if secret != WEBHOOK_SECRET:
-                self.send_response(403)
-                self.end_headers()
+            # Telegram's own header for setWebhook(secret_token=...) is accepted too.
+            secret = (self.headers.get("X-Webhook-Secret")
+                      or self.headers.get("X-Telegram-Bot-Api-Secret-Token") or "")
+            if not hmac.compare_digest(secret.encode("utf-8"), WEBHOOK_SECRET.encode("utf-8")):
+                self._reply(403)
                 return
-        length = int(self.headers.get("content-length", 0))
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            self._reply(400)
+            return
+        if length < 0:
+            self._reply(400)
+            return
+        if length > MAX_WEBHOOK_BODY:
+            self._reply(413)
+            return
         raw = self.rfile.read(length) if length else b""
         try:
             payload = json.loads(raw.decode("utf-8")) if raw else {}
         except ValueError:
             payload = {}
-        # We expect a body like {"poll_answer": {...}}
-        poll_answer = payload.get("poll_answer")
-        if poll_answer and isinstance(poll_answer, dict):
-            # Store it for the running instance via a temporary file the main run reads
-            tmp = BASE_DIR / ".webhook_last.json"
-            try:
-                tmp.write_text(json.dumps(poll_answer))
-            except Exception:
-                pass
-        self.send_response(200)
-        self.end_headers()
+        # We expect a Telegram update such as {"update_id": 1, "poll_answer": {...}}
+        poll_answer = payload.get("poll_answer") if isinstance(payload, dict) else None
+        if isinstance(poll_answer, dict):
+            WEBHOOK_UPDATES.put(poll_answer)
+        self._reply(200)
 
 
 def run_webhook_server() -> HTTPServer:
@@ -1541,6 +1623,7 @@ def main(argv: Any = None) -> int:
     finally:
         if webhook_server:
             webhook_server.shutdown()
+            webhook_server.server_close()
 
 
 if __name__ == "__main__":
