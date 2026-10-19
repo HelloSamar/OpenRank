@@ -25,7 +25,8 @@ concurrency:
 jobs:
   post-quizzes:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # A run can last up to 5.5 hours (MAX_RUN_MINUTES = 330 in quiz_bot.py); stop it a little after that.
+    timeout-minutes: 350
 
     steps:
       - name: Check out repository
