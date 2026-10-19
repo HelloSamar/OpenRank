@@ -1,6 +1,1 @@
-[
-  { "quiz": "ows000", "at": "2026-10-19T09:00+05:30", "pick": 10, "timer": 10 },
-  { "quiz": "ows000", "at": "2026-10-20T09:00+05:30", "pick": 10, "timer": 10 },
-  { "quiz": "idm001", "at": "2026-10-21T17:00+05:30", "pick": 5, "timer": 20 },
-  { "quiz": "ows000", "at": "2026-10-20T09:00Z", "pick": 100, "timer": 15, "strategy": "hardest", "no_repeat_days": 0 }
 ]
