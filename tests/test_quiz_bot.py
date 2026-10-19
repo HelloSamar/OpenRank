@@ -8,6 +8,8 @@ import json
 import queue
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
@@ -209,6 +211,24 @@ class ScheduledRunTests(SandboxCase):
         with self.assertRaises(TypeError):
             qb.write_json_atomic(target, {"bad": object()})
         self.assertEqual([p.name for p in self.tmp.glob(".tmp-*")], [])
+
+
+class ShutdownTests(SandboxCase):
+    def test_disabled_collector_wakes_on_shutdown(self):
+        collector = qb.AnswerCollector(mock.Mock(), "tok", False, self.tmp / ".offset")
+        threading.Timer(0.2, qb.shutdown_event.set).start()
+        started = time.monotonic()
+        collector.wait(10)
+        self.assertLess(time.monotonic() - started, 2)
+
+    def test_long_poll_is_short_enough_for_github_cancel(self):
+        self.assertLessEqual(qb.MAX_LONG_POLL, 5)
+
+    def test_quiz_id_with_trailing_newline_rejected(self):
+        with self.assertRaises(ValueError):
+            qb.load_quiz("ows000\n")
+        with self.assertRaises(ValueError):
+            qb.parse_schedule_entry({"quiz": "ows000\n", "at": "2026-10-19T00:00Z"})
 
 
 class WebhookTests(SandboxCase):
