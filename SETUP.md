@@ -119,7 +119,9 @@ Nothing expires, except `scores.json`:
 
 ## Good to know
 
-- A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay.
+- A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay. A time that has already passed runs at the next check.
 - Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, use `*/30` in the cron line of `quiz.yml`.
-- The job stops after 60 minutes (`timeout-minutes`). A quiz is recorded only when it finishes, so raise that number if you schedule very long quizzes. Time is about (questions x seconds each).
-- If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.
+- A quiz takes about (questions x seconds each). One run can last up to 330 minutes; the check marks a longer quiz as TOO LONG, and the script will not start it. Private repositories pay for every minute, so very long quizzes use up the monthly allowance.
+- **Interrupted quizzes:** a quiz is marked `started` in `sent.json` before its first poll. If the run is killed half-way, the quiz is never posted a second time by itself, and the check shows it as INTERRUPTED. Delete its entry in `sent.json` to run it again.
+- If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, the marker is removed and it is retried on the next run.
+- If Telegram creates a poll but the answer is lost on the way, the retry can post that one question twice. Telegram offers no way to prevent this.
