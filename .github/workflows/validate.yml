@@ -8,6 +8,7 @@ on:
       - "quizzes/**"
       - "schedule.json"
       - "quiz_bot.py"
+      - "chat_bot.py"
       - "requirements.txt"
       - "tests/**"
   push:
@@ -15,6 +16,7 @@ on:
       - "quizzes/**"
       - "schedule.json"
       - "quiz_bot.py"
+      - "chat_bot.py"
       - "tests/**"
       - "requirements.txt"
   workflow_dispatch:
