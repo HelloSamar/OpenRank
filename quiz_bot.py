@@ -101,13 +101,10 @@ MAX_MESSAGE_LENGTH = 4000
 BASE_DIR = Path(__file__).resolve().parent
 QUIZ_DIR = BASE_DIR / "quizzes"
 SCHEDULE_FILE = BASE_DIR / "schedule.json"
-# DATA_DIR lets a hosted bot keep its records on a persistent disk (set DATA_DIR);
-# by default everything stays next to the script, as before.
-DATA_DIR = Path(os.environ.get("DATA_DIR") or BASE_DIR)
-SENT_FILE = DATA_DIR / "sent.json"
-SCORES_FILE = DATA_DIR / "scores.json"
-STATS_FILE = DATA_DIR / "stats.json"
-UPDATES_OFFSET_FILE = DATA_DIR / ".updates_offset"
+SENT_FILE = BASE_DIR / "sent.json"
+SCORES_FILE = BASE_DIR / "scores.json"
+STATS_FILE = BASE_DIR / "stats.json"
+UPDATES_OFFSET_FILE = BASE_DIR / ".updates_offset"
 
 QUIZ_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,64}")
 
@@ -137,9 +134,6 @@ WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "")  # optional shared secret 
 MAX_WEBHOOK_BODY = 1_000_000  # bytes; Telegram updates are far smaller
 # poll_answer objects received by the webhook server, drained by AnswerCollector.
 WEBHOOK_UPDATES: "queue.Queue[Dict[str, Any]]" = queue.Queue()
-# True when another part of the same program (chat_bot.py) reads Telegram's updates and
-# pushes poll answers into WEBHOOK_UPDATES; the collector then must not call getUpdates.
-EXTERNAL_UPDATES = False
 
 # --------------------------------------------------------------------------- #
 # Data classes
@@ -657,7 +651,7 @@ class AnswerCollector:
         self.offset: Optional[int] = None
         self.answers: Dict[str, Dict[int, Tuple[str, List[int], float]]] = {}
         self.offset_file = offset_file
-        self.use_webhook = WEBHOOK_ENABLED or EXTERNAL_UPDATES
+        self.use_webhook = WEBHOOK_ENABLED
         # Load persisted offset if available
         self._load_offset()
 

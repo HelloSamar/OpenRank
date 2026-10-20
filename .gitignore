@@ -1,8 +1,5 @@
 __pycache__/
 *.pyc
 .updates_offset
-.chat_offset
 .webhook_last.json
 .tmp-*
-# private user data of the practice mode - never commit
-practice.json
