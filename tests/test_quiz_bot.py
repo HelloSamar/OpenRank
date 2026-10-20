@@ -20,6 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import quiz_bot as qb
 
 REPO = Path(__file__).resolve().parent.parent
+# SandboxCase replaces these to avoid waiting; a few tests need the real ones.
+REAL_WAIT = qb.AnswerCollector.wait
+REAL_SLEEP = time.sleep
 
 
 class FakeResponse:
@@ -213,12 +216,33 @@ class ScheduledRunTests(SandboxCase):
         self.assertEqual([p.name for p in self.tmp.glob(".tmp-*")], [])
 
 
+class QuizListTests(SandboxCase):
+    def test_catalog_and_text(self):
+        self.make_quiz("ows900", 4)
+        self.make_quiz("idm900", 2)
+        self.write("schedule.json", [{"quiz": "ows900", "at": "2099-01-01T00:00Z"}])
+        rows = {row["id"]: row for row in qb.quiz_catalog()}
+        self.assertEqual(rows["ows900"]["questions"], 4)
+        self.assertEqual(rows["ows900"]["topic"], "One Word Substitution")
+        self.assertEqual(rows["ows900"]["upcoming"], 1)
+        self.assertEqual(rows["idm900"]["upcoming"], 0)
+        text = qb.format_quiz_list(list(rows.values()))
+        self.assertIn("ows900", text)
+        self.assertIn("not scheduled", text)
+
+    def test_list_flag_needs_no_token(self):
+        self.write("schedule.json", [])
+        self.assertEqual(qb.main(["--list"]), 0)
+
+
 class ShutdownTests(SandboxCase):
     def test_disabled_collector_wakes_on_shutdown(self):
         collector = qb.AnswerCollector(mock.Mock(), "tok", False, self.tmp / ".offset")
         threading.Timer(0.2, qb.shutdown_event.set).start()
         started = time.monotonic()
-        collector.wait(10)
+        with mock.patch.object(qb.AnswerCollector, "wait", REAL_WAIT), \
+                mock.patch.object(qb.time, "sleep", REAL_SLEEP):
+            collector.wait(10)
         self.assertLess(time.monotonic() - started, 2)
 
     def test_long_poll_is_short_enough_for_github_cancel(self):
