@@ -71,6 +71,13 @@ RESULTS_MAX_ROWS = 20
 RESULT_GRACE_SECONDS = 3
 MAX_LONG_POLL = 3               # keep short: a shutdown request waits for the current poll
 
+SUBJECT_BY_PREFIX = {
+    "ows": "One Word Substitution",
+    "idm": "Idioms",
+    "rsn": "Reasoning",
+    "mth": "Maths",
+}
+
 POST_WEEKLY = True
 LOCAL_TZ_NAME = "IST"
 LOCAL_TZ = timezone(timedelta(hours=5, minutes=30))
@@ -94,10 +101,13 @@ MAX_MESSAGE_LENGTH = 4000
 BASE_DIR = Path(__file__).resolve().parent
 QUIZ_DIR = BASE_DIR / "quizzes"
 SCHEDULE_FILE = BASE_DIR / "schedule.json"
-SENT_FILE = BASE_DIR / "sent.json"
-SCORES_FILE = BASE_DIR / "scores.json"
-STATS_FILE = BASE_DIR / "stats.json"
-UPDATES_OFFSET_FILE = BASE_DIR / ".updates_offset"
+# DATA_DIR lets a hosted bot keep its records on a persistent disk (set DATA_DIR);
+# by default everything stays next to the script, as before.
+DATA_DIR = Path(os.environ.get("DATA_DIR") or BASE_DIR)
+SENT_FILE = DATA_DIR / "sent.json"
+SCORES_FILE = DATA_DIR / "scores.json"
+STATS_FILE = DATA_DIR / "stats.json"
+UPDATES_OFFSET_FILE = DATA_DIR / ".updates_offset"
 
 QUIZ_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,64}")
 
@@ -127,6 +137,9 @@ WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "")  # optional shared secret 
 MAX_WEBHOOK_BODY = 1_000_000  # bytes; Telegram updates are far smaller
 # poll_answer objects received by the webhook server, drained by AnswerCollector.
 WEBHOOK_UPDATES: "queue.Queue[Dict[str, Any]]" = queue.Queue()
+# True when another part of the same program (chat_bot.py) reads Telegram's updates and
+# pushes poll answers into WEBHOOK_UPDATES; the collector then must not call getUpdates.
+EXTERNAL_UPDATES = False
 
 # --------------------------------------------------------------------------- #
 # Data classes
@@ -644,7 +657,7 @@ class AnswerCollector:
         self.offset: Optional[int] = None
         self.answers: Dict[str, Dict[int, Tuple[str, List[int], float]]] = {}
         self.offset_file = offset_file
-        self.use_webhook = WEBHOOK_ENABLED
+        self.use_webhook = WEBHOOK_ENABLED or EXTERNAL_UPDATES
         # Load persisted offset if available
         self._load_offset()
 
@@ -1462,6 +1475,56 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     return exit_code
 
 
+def quiz_catalog(now: Optional[datetime] = None) -> List[Dict[str, Any]]:
+    """Every quiz file with its topic, question count, timer and schedule status."""
+    now = now or datetime.now(timezone.utc)
+    try:
+        schedule = load_schedule()
+    except RuntimeError:
+        schedule = []
+    upcoming: Dict[str, int] = {}
+    for entry in schedule:
+        if entry.when > now:
+            upcoming[entry.quiz_id] = upcoming.get(entry.quiz_id, 0) + 1
+
+    rows: List[Dict[str, Any]] = []
+    for quiz_id in sorted(path.stem for path in QUIZ_DIR.glob("*.json")):
+        valid, invalid, error = inspect_quiz(quiz_id)
+        rows.append({
+            "id": quiz_id,
+            "topic": SUBJECT_BY_PREFIX.get(quiz_prefix(quiz_id), "General"),
+            "questions": valid,
+            "invalid": invalid,
+            "timer": quiz_timer(quiz_id),
+            "upcoming": upcoming.get(quiz_id, 0),
+            "error": error,
+        })
+    return rows
+
+
+def format_quiz_list(rows: List[Dict[str, Any]]) -> str:
+    if not rows:
+        return "No quizzes found in the quizzes/ folder."
+    lines = ["Available quizzes", ""]
+    width = max(len(row["topic"]) for row in rows)
+    for row in rows:
+        timer = f"{row['timer']} s" if row["timer"] else "no timer"
+        status = (f"{row['upcoming']} scheduled" if row["upcoming"] else "not scheduled")
+        if row["error"]:
+            detail = f"PROBLEM: {row['error']}"
+        else:
+            detail = f"{row['questions']:>5} questions | {timer:>8} | {status}"
+            if row["invalid"]:
+                detail += f" | {row['invalid']} invalid"
+        lines.append(f"{row['id']:<10} {row['topic']:<{width}}  {detail}")
+    return "\n".join(lines)
+
+
+def run_list() -> int:
+    print(format_quiz_list(quiz_catalog()))
+    return 0
+
+
 def run_weekly_preview(token: str, chat_id: str, dry_run: bool) -> int:
     try:
         scores = load_scores()
@@ -1581,6 +1644,8 @@ def parse_args(argv: Any = None) -> argparse.Namespace:
                         help="post this quiz set now, ignoring the schedule (e.g. ows001)")
     parser.add_argument("--dry-run", action="store_true",
                         help="validate files and show what would happen; send nothing")
+    parser.add_argument("--list", action="store_true",
+                        help="show the available quizzes and exit")
     parser.add_argument("--intro", metavar="TEXT",
                         help="show this intro when running a manual quiz")
     return parser.parse_args(argv)
@@ -1602,6 +1667,9 @@ def main(argv: Any = None) -> int:
     except Exception:
         # Windows may not have SIGTERM
         pass
+
+    if args.list:
+        return run_list()
 
     token = chat_id = ""
     if not args.dry_run:
