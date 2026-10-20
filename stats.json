@@ -18,6 +18,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "023626b711c5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Cost an arm and a leg' mean?",
+      "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "03ed43d5187c": {
       "asked": 1,
       "correct": 1,
@@ -126,6 +135,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "13391cecfe87": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Break the ice' mean?",
+      "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "1375ba536349": {
       "asked": 1,
       "correct": 1,
@@ -134,6 +152,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "1458d3b3aa44": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Hit the nail on the head' mean?",
+      "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
     },
     "15b67e0b5efc": {
       "asked": 1,
@@ -276,6 +303,15 @@
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Present everywhere",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "2ee05fd38e06": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Bite the bullet' mean?",
+      "quiz": "idm000",
       "skipped": 1,
       "wrong": 0
     },
@@ -483,6 +519,15 @@
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Killing (a person or animal) by squeezing the throat",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "598d5f361249": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Once in a blue moon' mean?",
+      "quiz": "idm000",
       "skipped": 1,
       "wrong": 0
     },
@@ -810,6 +855,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "7cf1568f2d49": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'The ball is in your court' mean?",
+      "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "7de10c63483d": {
       "asked": 1,
       "correct": 1,
@@ -897,6 +951,15 @@
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "An ability to make good judgements and take quick decisions",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "84e7cb25c2d7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Burn the midnight oil' mean?",
+      "quiz": "idm000",
       "skipped": 1,
       "wrong": 0
     },
@@ -990,6 +1053,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8c7d6f509efe": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Spill the beans' mean?",
+      "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "8de9cc0ca035": {
       "asked": 1,
       "correct": 0,
@@ -1016,6 +1088,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "903ce80e310c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Under the weather' mean?",
+      "quiz": "idm000",
+      "skipped": 0,
+      "wrong": 1
     },
     "912253870668": {
       "asked": 1,
@@ -1779,6 +1860,15 @@
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "One for whom money is the most important thing",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "fb3cfc26d3d0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-19T06:31:00Z",
+      "q": "What does the idiom 'Piece of cake' mean?",
+      "quiz": "idm000",
       "skipped": 1,
       "wrong": 0
     },
