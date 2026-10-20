@@ -52,6 +52,7 @@ TIMER_BY_PREFIX = {
     "idm": 15,    # idioms
     "rsn": 25,    # reasoning
     "mth": 60,    # maths
+    "cmp": 15,    # computer knowledge
 }
 POLL_GAP_SECONDS = 0              # extra pause after a poll closes, before the next one
 
