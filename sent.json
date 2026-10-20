@@ -419,6 +419,414 @@
     "sent": 100,
     "skipped": 0
   },
+  "ows000@2026-10-20T06:30Z": {
+    "failed": 0,
+    "posted_at": "2026-10-20T06:58:03Z",
+    "questions": [
+      {
+        "id": "ea63332b314d",
+        "q": "Materials that are flowing out"
+      },
+      {
+        "id": "2dbe72d36825",
+        "q": "Pay attention"
+      },
+      {
+        "id": "0f3d5980a258",
+        "q": "Not following any moral values"
+      },
+      {
+        "id": "762967bf4d22",
+        "q": "That will be successful"
+      },
+      {
+        "id": "9e7774a62fd5",
+        "q": "An attack on the reputation and integrity of someone or some"
+      },
+      {
+        "id": "f9cfcca227c3",
+        "q": "One for whom money is the most important thing"
+      },
+      {
+        "id": "aa18b047baf4",
+        "q": "Loving and admiring oneself and especially one's own appeara"
+      },
+      {
+        "id": "65d06200e27b",
+        "q": "Search for something"
+      },
+      {
+        "id": "00c4afb8a56f",
+        "q": "Consequences or after effects of a significant and unpleasan"
+      },
+      {
+        "id": "7e216215761f",
+        "q": "Rules about the proper and polite way to communicate with ot"
+      },
+      {
+        "id": "55b252779c4f",
+        "q": "To come to an end"
+      },
+      {
+        "id": "e6333479ebb6",
+        "q": "Sound reflected back as in mountains"
+      },
+      {
+        "id": "5af8fe6eb8da",
+        "q": "The scientific study of skin diseases"
+      },
+      {
+        "id": "cdf869aaab1a",
+        "q": "One who shows sustained enthusiastic action with unflagging "
+      },
+      {
+        "id": "16982c028174",
+        "q": "A song or music in praise of god"
+      },
+      {
+        "id": "a4f1c2a7ad13",
+        "q": "To move along with quick, short twisting movements"
+      },
+      {
+        "id": "465eb5e52ff7",
+        "q": "Something that is expressed in a confusing way"
+      },
+      {
+        "id": "28f43ec0ad4f",
+        "q": "Devoted to a particular religion"
+      },
+      {
+        "id": "657a48e45dc4",
+        "q": "Government not connected with religious or spiritual matters"
+      },
+      {
+        "id": "e2cbb6c23a4f",
+        "q": "One who believes in the presence of god"
+      },
+      {
+        "id": "3798e5b6219d",
+        "q": "Not active or growing"
+      },
+      {
+        "id": "b8741d69a0ae",
+        "q": "Use of machines to do work that was previously done by peopl"
+      },
+      {
+        "id": "88addf4ef119",
+        "q": "Not liking to work or be active"
+      },
+      {
+        "id": "d1572d3031dc",
+        "q": "Public disgrace arising from shameful conduct"
+      },
+      {
+        "id": "aac7a1dbbee8",
+        "q": "Annoyance or distress at having failed or been humiliated"
+      },
+      {
+        "id": "0df3680557db",
+        "q": "Lack of respect or dislike for someone or something"
+      },
+      {
+        "id": "d5ce5d4c087d",
+        "q": "One who studies the occult meanings of numbers and their sup"
+      },
+      {
+        "id": "986b814e6edc",
+        "q": "Close-knit group of interrelated families, large family, or "
+      },
+      {
+        "id": "8b196f9ca07a",
+        "q": "Defeating and gaining control of (someone or something) by t"
+      },
+      {
+        "id": "a714981e5a69",
+        "q": "No longer existing or being used"
+      },
+      {
+        "id": "e8d5654ae351",
+        "q": "One who loves to speak"
+      },
+      {
+        "id": "8af2058a7e75",
+        "q": "Person who is the natural successor to ancestral property"
+      },
+      {
+        "id": "fb66371c26ea",
+        "q": "A collection of poems, stories, novels, etc"
+      },
+      {
+        "id": "6161dd8cdef2",
+        "q": "A system in which advancement is based on ability and merit"
+      },
+      {
+        "id": "459de48c9e0c",
+        "q": "A building in which aircraft are housed"
+      },
+      {
+        "id": "4287a6b5bb6b",
+        "q": "A feeling of intense longing for something"
+      },
+      {
+        "id": "03ed43d5187c",
+        "q": "Interval between two events"
+      },
+      {
+        "id": "7a79469083e3",
+        "q": "A large gathering of people of a particular type"
+      },
+      {
+        "id": "cbc4ba5dcaeb",
+        "q": "A person who is fanatical and uncompromising in pursuit of r"
+      },
+      {
+        "id": "5c95aac050b5",
+        "q": "The practice of worshipping statues as gods"
+      },
+      {
+        "id": "65eec79a3c63",
+        "q": "Bringing about a gentle and painless death for someone with "
+      },
+      {
+        "id": "a70c9ab68fc5",
+        "q": "Feeling nervous because the ending is not known until the fi"
+      },
+      {
+        "id": "d436cfc6b257",
+        "q": "An idea or theory that is not proven but leads to further st"
+      },
+      {
+        "id": "42f1a63c3f89",
+        "q": "Lack of solidity or substance; thinness"
+      },
+      {
+        "id": "3413bd59f4e7",
+        "q": "Having a good or helpful result, especially after something "
+      },
+      {
+        "id": "9f83ea8ffdf2",
+        "q": "Trouble and annoy continually"
+      },
+      {
+        "id": "c32287c65a58",
+        "q": "Belonging to a foreign country, supposedly from another worl"
+      },
+      {
+        "id": "12aaf2e0b0dd",
+        "q": "The practice of taking someone else's work or ideas and pass"
+      },
+      {
+        "id": "f6678cef9051",
+        "q": "Japanese form of self defence and martial art"
+      },
+      {
+        "id": "d44d6cb33c7a",
+        "q": "Love for mankind"
+      },
+      {
+        "id": "b3f0a2713cd0",
+        "q": "The greatest achievement of an artist, or a writer"
+      },
+      {
+        "id": "0857ae700924",
+        "q": "Collection of things that have been gathered together and pr"
+      },
+      {
+        "id": "ca3ef64a29e0",
+        "q": "A group of singers in a church"
+      },
+      {
+        "id": "12681d446fc9",
+        "q": "Dry, heavily eroded terrain with little vegetation"
+      },
+      {
+        "id": "598ee3dc5e68",
+        "q": "Ways that a room or the inside of a building is decorated"
+      },
+      {
+        "id": "2dd962aa30c5",
+        "q": "To sweep over something so as to surround it"
+      },
+      {
+        "id": "a897afbe83ed",
+        "q": "The study of rocks and soil"
+      },
+      {
+        "id": "d0890d8eabcc",
+        "q": "Preserve a right, tradition, or idea in a form that ensures "
+      },
+      {
+        "id": "b7e9939dd604",
+        "q": "A young person tending to commit minor crimes"
+      },
+      {
+        "id": "bf85de79e520",
+        "q": "Repetition of an initial sound in two or more words in a lin"
+      },
+      {
+        "id": "5ccf28429457",
+        "q": "The state of being deprived of a right or privilege"
+      },
+      {
+        "id": "19954c9f4226",
+        "q": "A person or thing that came before another in a job, positio"
+      },
+      {
+        "id": "bfea266c97f7",
+        "q": "Journalists who are not on the regular staff of a newspaper "
+      },
+      {
+        "id": "5f92a0589406",
+        "q": "Expel someone from a property, especially with the support o"
+      },
+      {
+        "id": "9f48add3e3b7",
+        "q": "Passing out of use"
+      },
+      {
+        "id": "e760eb7ce1fa",
+        "q": "A female ballet dancer"
+      },
+      {
+        "id": "c6706cf346cf",
+        "q": "An arrangement to meet somebody at a particular time and pla"
+      },
+      {
+        "id": "4755814cadea",
+        "q": "Not strong or stable and likely to break"
+      },
+      {
+        "id": "a668ed8dd9dc",
+        "q": "An entrance hall in a building used by the public, especiall"
+      },
+      {
+        "id": "5cfc2cff0cfc",
+        "q": "Changing the direction of one's path suddenly"
+      },
+      {
+        "id": "75b9d121e504",
+        "q": "Having no legal power"
+      },
+      {
+        "id": "a2ed31eb7769",
+        "q": "An adversary"
+      },
+      {
+        "id": "6424165d2ad3",
+        "q": "A person weak and disabled by illness"
+      },
+      {
+        "id": "1c98642814b6",
+        "q": "Funny plays or movies about ridiculous situations"
+      },
+      {
+        "id": "ac92d39ac47e",
+        "q": "Revel in and make most of something"
+      },
+      {
+        "id": "1375ba536349",
+        "q": "An act when people vote in order to make a decision about a "
+      },
+      {
+        "id": "6bc0dcd8fc54",
+        "q": "Not producing the desired effect"
+      },
+      {
+        "id": "c9249a04bee8",
+        "q": "A squirrel's nest"
+      },
+      {
+        "id": "9b62c53ba563",
+        "q": "A long musical composition for a full orchestra, usually in "
+      },
+      {
+        "id": "ef3f05d77142",
+        "q": "Control or affect (something, such as a game or election) in"
+      },
+      {
+        "id": "e630d72b5b97",
+        "q": "Very big and powerful companies or organisations"
+      },
+      {
+        "id": "7e341c065458",
+        "q": "Changing (something) slightly in order to improve it; to mak"
+      },
+      {
+        "id": "fee08f246b3e",
+        "q": "One who hates men"
+      },
+      {
+        "id": "6ec75a744f1f",
+        "q": "An obviously true or hackneyed statement"
+      },
+      {
+        "id": "8380c1e0acb0",
+        "q": "Not speaking frequently"
+      },
+      {
+        "id": "9c5ed2acb7c1",
+        "q": "Comprising or relating to all sorts or varieties"
+      },
+      {
+        "id": "8790e4b31c9a",
+        "q": "Consisting of things or people that are all the same or all "
+      },
+      {
+        "id": "2861da984e6a",
+        "q": "End or failure of an institution, an idea, a company"
+      },
+      {
+        "id": "912253870668",
+        "q": "Be an expression of or give a tangible or visible form to an"
+      },
+      {
+        "id": "a8d4dfb48aaa",
+        "q": "A person aged between 80 and 89"
+      },
+      {
+        "id": "9bb68f950fd7",
+        "q": "Pertaining to an individual from birth"
+      },
+      {
+        "id": "1888332bfb72",
+        "q": "A man who has casual love affairs with women"
+      },
+      {
+        "id": "8b6eda037367",
+        "q": "An event which happens once in five years"
+      },
+      {
+        "id": "0e52450e2683",
+        "q": "A piece of land entirely surrounded by water"
+      },
+      {
+        "id": "7e8a293dc2e9",
+        "q": "Cause (someone or something) to receive or take in a large a"
+      },
+      {
+        "id": "41a4444f1636",
+        "q": "Lists of items required, things to be done, or points to be "
+      },
+      {
+        "id": "7de10c63483d",
+        "q": "Money that is less than the amount that is needed"
+      },
+      {
+        "id": "b9151cf4d95b",
+        "q": "Giving somebody a signal using your finger or hand, especial"
+      },
+      {
+        "id": "09b518e90ca2",
+        "q": "Flowing out of something in a fast and forceful way"
+      },
+      {
+        "id": "3b1a52f5ce7a",
+        "q": "Rebellious or opposing the authority"
+      }
+    ],
+    "sent": 100,
+    "skipped": 0
+  },
   "ows001@2026-10-17T11:45Z": {
     "failed": 0,
     "posted_at": "2026-10-17T12:05:24Z",

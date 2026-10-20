@@ -4,13 +4,22 @@
     "2026-10-18T14:30Z": {
       "users": {
         "8630381516": {
-          "correct": 5,
+          "correct": 70,
           "name": "samar",
-          "points": 5.5,
+          "points": 121.5,
+          "quizzes": 2,
+          "seconds": 1452.9,
+          "skipped": 93,
+          "wrong": 37
+        },
+        "8838949600": {
+          "correct": 32,
+          "name": "S",
+          "points": 54.5,
           "quizzes": 1,
-          "seconds": 926.9,
-          "skipped": 86,
-          "wrong": 9
+          "seconds": 808.2,
+          "skipped": 49,
+          "wrong": 19
         }
       }
     }
