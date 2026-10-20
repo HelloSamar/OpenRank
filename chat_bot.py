@@ -88,12 +88,7 @@ HELP_TEXT = (
     "\u2022 Questions you have not seen yet come first, then the ones you saw longest ago.\n"
     "\u2022 /stop ends your quiz early, /score shows your marks and rank.")
 
-COMMANDS = [
-    ("quizzes", "See all available quizzes"),
-    ("quiz", "Start a practice quiz"),
-    ("score", "Your marks and rank"),
-    ("help", "How the bot works"),
-]
+COMMANDS = []
 
 ApiFunc = Callable[[str, Dict[str, Any]], qb.TelegramResult]
 
@@ -288,7 +283,7 @@ class PracticeBot:
             lines.append(f"\u2022 {row['id']} \u2013 {row['topic']}\n"
                          f"   {row['questions']} questions, {timer}")
         lines += ["", "Start one with /quiz (all questions) or a shorter one like "
-                      f"/quiz {rows[0]['id']} {EXAMPLE_COUNT}"]
+                       f"/quiz {rows[0]['id']} {EXAMPLE_COUNT}"]
         self.say(chat_id, "\n".join(lines))
 
     def quiz_command(self, user: Dict[str, Any], chat_id: int, args: List[str]) -> None:
@@ -372,8 +367,8 @@ class PracticeBot:
             if len(questions) > LONG_QUIZ_QUESTIONS:
                 longest = len(questions) * (session.timer or NO_TIMER_SECONDS)
                 text += (f"\n\nThis is a long one (up to {approx_duration(longest)}). Answer as "
-                         "many as you like, then send /stop to finish and save your score. "
-                         f"For a shorter practice use e.g. /quiz {real_id} {EXAMPLE_COUNT}.")
+                          "many as you like, then send /stop to finish and save your score. "
+                          f"For a shorter practice use e.g. /quiz {real_id} {EXAMPLE_COUNT}.")
             self.say(chat_id, text)
             self._send_next(session)
 
@@ -473,8 +468,8 @@ class PracticeBot:
             return
         score = session.correct * qb.MARKS_CORRECT - session.wrong * qb.MARKS_WRONG
         self.store.record_session(session.user_id, session.name, session.quiz_id,
-                                  session.correct, session.wrong, session.skipped,
-                                  session.seconds, score, done, session.qids)
+                                   session.correct, session.wrong, session.skipped,
+                                   session.seconds, score, done, session.qids)
         rank, total = self.store.rank(session.user_id)
         points = qb.number_of(self.store.get(session.user_id) or {}, "points")
         title = "stopped" if stopped else "complete"
@@ -485,8 +480,8 @@ class PracticeBot:
         if answered:
             lines.append(f"   \U0001F3AF Accuracy {round(100 * session.correct / answered)}%")
         lines += ["", f"\U0001F3C5 Overall rank: #{rank} of {total} "
-                      f"({qb.format_marks(points)} points)",
-                  "", "Practise again: /quiz    Your stats: /score"]
+                       f"({qb.format_marks(points)} points)",
+                   "", "Practise again: /quiz    Your stats: /score"]
         self.say(session.chat_id, "\n".join(lines))
 
 
@@ -517,7 +512,7 @@ class Dispatcher:
         url = f"{qb.TELEGRAM_API_BASE}/bot{self.token}/getUpdates"
         try:
             response = self.session.post(url, json=payload,
-                                         timeout=(10, LONG_POLL_SECONDS + 10))
+                                          timeout=(10, LONG_POLL_SECONDS + 10))
             data = response.json()
         except (requests.RequestException, ValueError) as exc:
             logger.warning("getUpdates failed: %s", qb.redact(exc, self.token))
