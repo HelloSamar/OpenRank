@@ -24,10 +24,6 @@ concurrency:
 
 jobs:
   post-quizzes:
-    # Set the repository variable HOSTED_BOT to "true" (Settings > Secrets and variables >
-    # Actions > Variables) once chat_bot.py runs on your own host: only ONE program may read
-    # the bot's updates, so this scheduler must then stay off. See HOSTING.md.
-    if: ${{ vars.HOSTED_BOT != 'true' }}
     runs-on: ubuntu-latest
     # A run lasts about (questions x seconds per question); stop anything that hangs for far longer.
     timeout-minutes: 350
