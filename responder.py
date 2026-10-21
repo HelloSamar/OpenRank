@@ -53,9 +53,8 @@ CONTACT_PLACEHOLDER = "Your message to the owner"
 CONTACT_MENU_TEXT = (
     f"{MENU_MARKER}\n\n"
     "Want a quiz on a specific exam topic or subject, or have a question?\n\n"
-    "1. Tap the button below to chat with the owner directly.\n"
-    "2. Or send it here, like: /contact Please add an SSC CGL reasoning quiz on syllogisms\n\n"
-    "Messages sent here reach the owner within about 15 minutes.")
+    "Tap the button below to chat with the owner directly.\n"
+    "The owner will respond soon! Thanks for reaching out. Please share with friends so we can grow together!")
 CONTACT_DIRECT_TEXT = (
     f"{MENU_MARKER}\n\n"
     "Want a quiz on a specific exam topic or subject, or have a question? "
