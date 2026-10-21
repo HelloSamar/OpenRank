@@ -9,11 +9,29 @@
       "skipped": 0,
       "wrong": 1
     },
+    "007f5ac75e40": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Ceremony held in a university or college when students receive their degrees",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "00c4afb8a56f": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "Consequences or after effects of a significant and unpleasant event",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "01fae0e25ead": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Having or showing no moral principles",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -24,6 +42,15 @@
       "last_asked": "2026-10-19T06:31:00Z",
       "q": "What does the idiom 'Cost an arm and a leg' mean?",
       "quiz": "idm000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "03ca785abd05": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Disguising of military personnel, equipment, and installations by painting or co",
+      "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
     },
@@ -45,6 +72,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "08a7829dbe61": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A small piece of burning or glowing coal or wood in a dying fire",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "095943b85205": {
       "asked": 1,
       "correct": 0,
@@ -59,6 +95,15 @@
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "Flowing out of something in a fast and forceful way",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "0b157c7a4324": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A small building used for Christian worship in a school, prison, etc",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -90,6 +135,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0d328f613ced": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Lists of the people or things that belong to a particular group",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "0d90fca9cec8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Ideas or beliefs that people are born again with a different body after death",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "0df3680557db": {
       "asked": 1,
       "correct": 0,
@@ -113,6 +176,15 @@
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "Not following any moral values",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "1196fa49ea7b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Dull and ordinary",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -152,6 +224,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "13a8a4ed1353": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Formations of clear and distinct sounds in speech",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "1458d3b3aa44": {
       "asked": 1,
@@ -225,6 +306,33 @@
       "skipped": 0,
       "wrong": 1
     },
+    "1dc81833e9bf": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Covered passages with arches along one or both sides",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "1e65d98808b3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Lines in a newspaper naming the writer of an article",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "1f4777eedee7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Government by military class",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "1f96c8aced2d": {
       "asked": 1,
       "correct": 0,
@@ -239,6 +347,33 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Heavy automatic guns that fire shells from an aircraft or tank",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "20bbdc523b94": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Be deprived of a property or a right",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "216081e9afd9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Sudden involuntary muscular contraction",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "23f7a289042c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who wastes money on luxury",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -279,6 +414,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "2ad820014401": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "In a confused and careless way",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "2bb4fb8dde7b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Person or thing that represents an idea",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "2dbe72d36825": {
       "asked": 1,
       "correct": 1,
@@ -296,6 +449,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "2df68ff860d6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Showing a skilful use of underhand tactics to achieve goals",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "2ea17fa496c4": {
       "asked": 1,
@@ -351,6 +513,33 @@
       "skipped": 1,
       "wrong": 1
     },
+    "3456f8d28632": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A hollow object used to contain something",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "3545212c25b3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The study of the human mind",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "36016e7acc5d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Movement of people or animals from one area to another",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "3798e5b6219d": {
       "asked": 1,
       "correct": 1,
@@ -396,6 +585,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "40bded6de97a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Love for dogs",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "41a4444f1636": {
       "asked": 1,
       "correct": 1,
@@ -422,6 +620,42 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "43e500e60462": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "One who loves men",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "44946288a212": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A flat shape with at least three straight sides and three angles, and usually fi",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "45135a1a4c1d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who regards the whole world as his country",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "452e062aadf0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "To agree to a request",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "459de48c9e0c": {
       "asked": 1,
@@ -459,6 +693,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "47bb09339785": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Marked by extreme enthusiasm",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "4868da761afe": {
       "asked": 1,
       "correct": 0,
@@ -473,6 +716,24 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "A box or cage, typically with a wire mesh front, for keeping rabbits or other sm",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "48ea5be89a5f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A very famous or successful person",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "4f669d534849": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who loves food and finds pleasure in eating and drinking",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -504,6 +765,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "538bc78a27fb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "An act of refusing to obey the orders of somebody in authority",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "54d979f596dc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Substitution of a mild for a very blunt expression",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "55b252779c4f": {
       "asked": 1,
       "correct": 1,
@@ -518,6 +797,24 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Killing (a person or animal) by squeezing the throat",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "57f4fa642aff": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Parts of cheques, tickets, etc., that can be kept as a record when torn off",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "581b58048428": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Not willing to tell people about things",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -540,11 +837,38 @@
       "skipped": 0,
       "wrong": 1
     },
+    "59fca0facdf1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "One who loads and unloads ships",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "5a0d2ff82954": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Vivacious and lively; brilliantly exciting",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "5af8fe6eb8da": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "The scientific study of skin diseases",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "5afa6d7800d7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Fondness towards women",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -565,6 +889,15 @@
       "q": "An area around or near a particular place",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "5c5a11452921": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Annoy (someone) by often complaining about his or her behaviour, appearance",
+      "quiz": "ows000",
+      "skipped": 0,
       "wrong": 0
     },
     "5c95aac050b5": {
@@ -630,6 +963,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "60ea1e52a611": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Ornaments or small pieces of jewellery thought to give protection against evil, ",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "61467e1e5632": {
       "asked": 1,
       "correct": 0,
@@ -657,6 +999,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "63a91336ddaf": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A quick look or glance",
+      "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6424165d2ad3": {
       "asked": 1,
       "correct": 0,
@@ -671,6 +1022,15 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Foolish talk or ideas",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "650491f6cfd1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Beginning to exist and evolve",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -702,6 +1062,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "66c2555ca18c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Barely sufficient or adequate",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "675408d2b149": {
       "asked": 1,
       "correct": 0,
@@ -729,6 +1098,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "69dfc709e8e9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Sections or tables of subsidiary matter at the end of a book or document",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "6b24b3445b63": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Related to the moon",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "6bc0dcd8fc54": {
       "asked": 1,
       "correct": 2,
@@ -743,6 +1130,15 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Transfix or pierce with a sharp instrument",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "6e3ec52c7a9d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The main body of an aircraft",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -783,6 +1179,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "73336f8e25c9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person between the ages of 70 and 79",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "7392a7b95b2b": {
       "asked": 1,
       "correct": 0,
@@ -815,6 +1220,24 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Attractively tall, graceful, and dignified (of a woman)",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "748e375e5b0d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A group of birds of one kind",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "74a6266a6bcb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Condition in which a part of one's body becomes red, swollen, and painful",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -853,6 +1276,24 @@
       "q": "A large gathering of people of a particular type",
       "quiz": "ows000",
       "skipped": 0,
+      "wrong": 0
+    },
+    "7ad9a98ef616": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Information about a person and about what they have done in their life",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "7b63d9f173de": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A woman whose husband is dead and who has not remarried",
+      "quiz": "ows000",
+      "skipped": 1,
       "wrong": 0
     },
     "7cf1568f2d49": {
@@ -900,11 +1341,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "7f7806cbf1c0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "General or basic quality or meaning of something",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "804bcad69a6e": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Detailed examination of something complex",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "81d2ede42031": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Involving only one group or country",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -923,6 +1382,15 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "A quick summary or report of a situation",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "829d5122a386": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A portable radio set",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1053,6 +1521,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8c1c9df5798c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Periods of time that are very important in history",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "8c7d6f509efe": {
       "asked": 1,
       "correct": 0,
@@ -1116,6 +1593,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "91717f24e01b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who dislikes humankind and avoids human society",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "94508e772068": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Add notes to (a text or diagram) giving explanation or comment",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "9469b894e5d2": {
       "asked": 1,
       "correct": 0,
@@ -1124,6 +1619,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "959241466e04": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "General view of a person's character",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "986b814e6edc": {
       "asked": 1,
@@ -1143,11 +1647,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "99e95e998840": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Changing an earlier statement, opinion or promise because of pressure from someb",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "9b0d57f4ec15": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Lack of agreements between people, ideas, etc",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "9b507ba7127b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Right or advantage available to a person",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1170,11 +1692,47 @@
       "skipped": 1,
       "wrong": 1
     },
+    "9c597c93995a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Belonging to a particular place rather than coming to it from somewhere else",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "9c5ed2acb7c1": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "Comprising or relating to all sorts or varieties",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "9d2992d9d3f6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Route or journey longer than the most direct way",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "9d2bacf42403": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A place where bees are kept; a collection of beehives",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "9d46bff81bf4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Original copies of a play, book, piece of music, etc., before those have been pr",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1224,6 +1782,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "a1faa837cf45": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Belief that war and violence are unjustified",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "a20e0bd7207e": {
       "asked": 1,
       "correct": 0,
@@ -1269,6 +1836,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "a4dfc49984a6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Complete freedom to act as one wishes",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "a4f1c2a7ad13": {
       "asked": 1,
       "correct": 0,
@@ -1277,6 +1853,24 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 1
+    },
+    "a5db16da0640": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Existing as a basic part of a person's nature or character",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "a639ffb5cd6f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Chief of a group of workmen",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "a668ed8dd9dc": {
       "asked": 1,
@@ -1314,6 +1908,15 @@
       "skipped": 1,
       "wrong": 1
     },
+    "a74f2d3c5934": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Excessive sexual desire in a woman for men",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "a897afbe83ed": {
       "asked": 1,
       "correct": 0,
@@ -1350,6 +1953,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "a914e08759bd": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Complex situation or a mix-up",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "a9de78f05691": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The act of making something less severe without curing it",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "a9fed463ead4": {
       "asked": 1,
       "correct": 0,
@@ -1377,6 +1998,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "abc663187268": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Not showing enough care and attention",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "ac160d961de4": {
       "asked": 1,
       "correct": 0,
@@ -1394,6 +2024,24 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "acadb563c196": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Morbid compulsion to keep on consuming alcohol",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "ae94ce6d8b71": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "An accidental good fortune",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "b08970310155": {
       "asked": 1,
@@ -1422,6 +2070,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "b855638a748b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Art consisting of a design made of small pieces of coloured stone",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "b8741d69a0ae": {
       "asked": 1,
       "correct": 0,
@@ -1440,11 +2097,29 @@
       "skipped": 1,
       "wrong": 1
     },
+    "b99a31383d25": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A partner in crime",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "ba156bc01ed8": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "A situation requiring a choice between equally undesirable alternatives",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "bbd32f683a99": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "An act that has disastrous consequences",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1467,11 +2142,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "bc5ce9f27401": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Insufficient feeding or nourishing",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "bf4b84d3da2f": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Morbid compulsion to steal",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "bf80e9f5ef18": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Lines on a weather map that join places that have the same air pressure at a par",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1484,6 +2177,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 0
+    },
+    "bfc9a3adbaec": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Fear of closed spaces",
+      "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 1
     },
     "bfea266c97f7": {
       "asked": 1,
@@ -1502,6 +2204,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "c39a99f5e6c9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Become liquid during decomposition",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "c5a6f243f55d": {
       "asked": 1,
@@ -1530,11 +2241,29 @@
       "skipped": 0,
       "wrong": 1
     },
+    "c7b206fb528a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A group of three people holding power together",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "c7dec6883527": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "A government official who represents his or her country in a foreign country",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "c8681425bb22": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who lives outside his native country",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1553,6 +2282,15 @@
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Morbid compulsion to steal books",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "c9816dc7f0e5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Continuing for a long time",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1583,6 +2321,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "cdea2a8eb8e3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Very eager or curious to hear or see something",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "cdf869aaab1a": {
       "asked": 1,
@@ -1665,6 +2412,24 @@
       "skipped": 1,
       "wrong": 1
     },
+    "d704125b8506": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The sound of dolphins",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "da23943cac24": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "An action of marrying a person of a superior caste or class",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "daf0631ec8e9": {
       "asked": 1,
       "correct": 0,
@@ -1674,11 +2439,47 @@
       "skipped": 1,
       "wrong": 0
     },
+    "dbb45a997fdb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Marks that are left on one's skin after a wound heals",
+      "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "dc493bed69c9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "One who has fixed opinions and beliefs",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "e08e42e5c7a7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who actively uses the internet, especially in a proper and responsible ",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "e179ac01e73e": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Shine with a bright but brief or irregular light",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "e17fc3edb9a8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Involving a chance that something bad or unpleasant could happen",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1719,6 +2520,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e54c258873c0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person of intellectual or erudite tastes",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "e630d72b5b97": {
       "asked": 1,
       "correct": 0,
@@ -1737,11 +2547,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e635081efd94": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Group of people living together in the same locality",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "e66b879e738a": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Killing or wounding of people, typically on a large scale during a conflict",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "e6f0ad0e3d25": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A dead person who leaves the grave at night to bite and suck the blood of living",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1754,6 +2582,24 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "e79e12b3f3c7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Curved paths along which something (such as a rocket) moves through the air or t",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "e7c6f8a6dcf7": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The occurrence of events by chance in a happy or beneficial way",
+      "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 0
     },
     "e8d5654ae351": {
       "asked": 1,
@@ -1782,6 +2628,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "e99211b51239": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Change in form, nature, or substance",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "ea63332b314d": {
       "asked": 1,
       "correct": 0,
@@ -1789,6 +2644,15 @@
       "q": "Materials that are flowing out",
       "quiz": "ows000",
       "skipped": 2,
+      "wrong": 0
+    },
+    "ec84197f802c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "A person who looks after horses at an inn",
+      "quiz": "ows000",
+      "skipped": 1,
       "wrong": 0
     },
     "ed553fd13036": {
@@ -1818,6 +2682,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "effa6e7978f0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Metals made by combining two or more metallic elements",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "f376e75c1acf": {
       "asked": 1,
       "correct": 0,
@@ -1845,11 +2718,29 @@
       "skipped": 0,
       "wrong": 2
     },
+    "f80784ae72a6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Very careful about doing something in an extremely accurate and exact way",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
     "f810d9d389c7": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "Affecting or relating to cows",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "f84d4d2e416f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "The firing of many guns at the same time to mark an occasion",
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
@@ -1880,6 +2771,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 2
+    },
+    "fdbcc893e40d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-21T06:30:00Z",
+      "q": "Written by light",
+      "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
     },
     "fee08f246b3e": {
       "asked": 1,
