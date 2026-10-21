@@ -52,7 +52,8 @@ Create `quizzes/<name>.json` (letters, digits, `-`, `_`). Each question is `[que
 - The explanation appears when someone picks a wrong answer or taps the lamp icon on the poll.
 - Limits: question up to 288 characters (room is kept for the `Q12/100:` prefix), 2 to 10 options of up to 100 characters, explanation up to 200 characters with at most 2 line breaks.
 - A question that is invalid, or repeats an earlier one in the same file (same question and same answer), is skipped with a warning. The validation check also shows it as a problem.
-- Name quizzes with the letters that decide their usual speed (see `TIMER_BY_PREFIX` below): `ows001`, `idm001`, `rsn001`, `mth001`.
+- Name quizzes `prefix_quizname`, for example `ows_synonyms` or `idm_idioms_set1`. The letters before the first underscore decide the usual speed (see `TIMER_BY_PREFIX` below): `ows`, `idm`, `rsn`, `mth`, `cmp`. People see only the name after the prefix, with underscores shown as spaces (`/quizlists` shows `idioms set1`). A name without that pattern, such as `ows000`, is shown whole.
+- **Renaming a quiz file changes its ID, and the ID is used in `schedule.json` and in `sent.json`.** If you rename a file and only update `schedule.json`, every earlier entry of that quiz looks as if it was never posted, and the next check posts all of them at once. When you rename a quiz, change the old ID to the new one in all three places: the file name, the `"quiz"` lines in `schedule.json`, and the keys in `sent.json` (they look like `ows000@2026-10-19T06:30Z`; change only the part before the `@`). Then run the validation check: no past entry should be listed as due.
 
 ## Settings in quiz_bot.py
 
@@ -105,27 +106,25 @@ Nothing expires, except `scores.json`:
 - **Question statistics:** the rate is right / (right + wrong) among people who answered at least once; skipped answers are counted separately. A new question counts as 50%, and the rate is pulled towards 50% while there is little data, so reliable numbers need several quizzes with real participants. They need polls that show names, which means a group. Editing a question or its correct answer starts its numbers from zero. `python quiz_bot.py --dry-run` lists the five questions with the lowest rate.
 - `scores.json` holds names and IDs. In a **public** repository anyone can read it, so make the repository private before you have real members. (`stats.json` has no personal data.)
 
-## Commands: /start, /quizlists, /request, /contact
+## Commands: /start, /quizlists, /contact
 
-The bot answers four commands. It has no always-on server: every 15-minute check (see `quiz.yml`) also reads the waiting messages and replies, so **an answer takes up to about 15 minutes** (longer while a quiz is being posted, because the check waits for it).
+The bot answers three commands. It has no always-on server: every 15-minute check (see `quiz.yml`) also reads the waiting messages and replies, so **an answer takes up to about 15 minutes** (longer while a quiz is being posted, because the check waits for it).
 
 | Command | What it does |
 |---|---|
-| `/start` | Welcome message with the list of commands |
-| `/quizlists` | Every stored quiz: topic, number of questions, seconds per question |
-| `/request` | The person asks for a quiz on an exam topic or subject. `/request SSC CGL - Reasoning` sends it straight away; `/request` alone asks the person to reply with the details |
-| `/contact` | The same, as a free message to the owner |
+| `/start` | Asks the person to join the group; the words "join our group" are a hyperlink to `https://t.me/GovtScore`. To use another group, change `GROUP_URL` at the top of `responder.py`. |
+| `/quizlists` | One line per stored quiz with only its name and number of questions, nothing else. The letters before the first underscore (`ows_`, `idm_`, ...) are not shown. |
+| `/contact` | For asking for a quiz on an exam topic or subject, or for anything else. It shows a button that opens a direct chat with the owner. The person can also send `/contact your message`, which is passed on to the owner. (`/request` still works as another name for it.) |
 
-- **Set up (once):** (1) In @BotFather send `/setcommands`, choose the bot and paste the four lines below. (2) Open the bot yourself and press **START**; Telegram only lets a bot message you after that. (3) Find your numeric Telegram ID (for example by sending `/start` to @userinfobot) and add it in Settings -> Secrets and variables -> Actions as the secret `OWNER_CHAT_ID`. Without this secret, `/request` and `/contact` tell the person that they are not available.
+- **Set up (once):** (1) In @BotFather send `/setcommands`, choose the bot and paste the three lines below (this replaces the old list). (2) Open the bot yourself and press **START**; Telegram only lets a bot message you after that. (3) Add your numeric Telegram ID (for example from @userinfobot) as the **secret** `OWNER_CHAT_ID`, and your username without the `@` as the **variable** `OWNER_USERNAME` (Settings -> Secrets and variables -> Actions; secrets and variables are separate tabs). `OWNER_CHAT_ID` is how messages reach you; `OWNER_USERNAME` is only for the direct-chat button. Without the secret, `/contact` can only offer the direct chat; without the variable, it asks the person to reply with their message instead of showing the button; without both it says it is not available.
 
 ```
-start - Start the bot and see what it can do
-quizlists - See the list of all stored quizzes
-request - Ask for a quiz on a specific exam topic or subject
-contact - Contact the owner of the bot directly
+start - Join our group
+quizlists - See all quizzes and how many questions each has
+contact - Request a quiz or chat with the owner directly
 ```
 
-- **Answering people:** each request or message reaches you in the bot's chat with the person's name, username and ID. Reply to that message (use Reply) and your answer is passed on to the person. Only your replies are passed on.
+- **Answering people:** a message sent through `/contact` reaches you in the bot's chat with the person's name, username and ID. Reply to that message (use Reply) and your answer is passed on to the person. Only your replies are passed on.
 - **In the group:** the bot does not answer commands there; it points the person to a private chat with the bot, once per run.
 - **Limits:** at most 5 commands per person per run, messages up to 1000 characters. Only messages that are commands, replies or sent in a private chat are read. Nothing is stored: handled messages are confirmed to Telegram and dropped.
 - **Turn it off:** in Settings -> Secrets and variables -> Actions -> **Variables**, add a variable named `DISABLE_COMMANDS` with the value `true`. Quiz posting and scoring are never affected by this feature: a problem in the command handling is only logged.
