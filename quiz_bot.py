@@ -31,6 +31,7 @@ from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 import threading
 
 import requests
+import responder
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # --------------------------------------------------------------------------- #
@@ -77,6 +78,7 @@ SUBJECT_BY_PREFIX = {
     "idm": "Idioms",
     "rsn": "Reasoning",
     "mth": "Maths",
+    "cmp": "Computer Knowledge",
 }
 
 POST_WEEKLY = True
@@ -135,6 +137,14 @@ WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "")  # optional shared secret 
 MAX_WEBHOOK_BODY = 1_000_000  # bytes; Telegram updates are far smaller
 # poll_answer objects received by the webhook server, drained by AnswerCollector.
 WEBHOOK_UPDATES: "queue.Queue[Dict[str, Any]]" = queue.Queue()
+
+# Commands (/start, /quizlists, /request, /contact): see responder.py.
+# Both the answer collector and the responder ask for messages as well as poll answers,
+# so Telegram keeps messages that arrive while a quiz is running.
+ALLOWED_UPDATES = ["poll_answer", "message"]
+COMMAND_INBOX: List[Dict[str, Any]] = []   # command messages the collector saw during a quiz
+MAX_COMMAND_INBOX = 1000
+MAX_COMMAND_FETCHES = 5                    # x100 updates per run; the rest waits for the next run
 
 # --------------------------------------------------------------------------- #
 # Data classes
@@ -702,7 +712,7 @@ class AnswerCollector:
             return
 
         long_poll = max(1, min(int(remaining), MAX_LONG_POLL))
-        payload: Dict[str, Any] = {"timeout": long_poll, "allowed_updates": ["poll_answer"]}
+        payload: Dict[str, Any] = {"timeout": long_poll, "allowed_updates": ALLOWED_UPDATES}
         if self.offset is not None:
             payload["offset"] = self.offset
         url = f"{TELEGRAM_API_BASE}/bot{self.token}/getUpdates"
@@ -739,6 +749,8 @@ class AnswerCollector:
                 self.offset = update_id + 1
                 self._save_offset()
             self._record(update.get("poll_answer"))
+            if responder.wanted(update) and len(COMMAND_INBOX) < MAX_COMMAND_INBOX:
+                COMMAND_INBOX.append(update)
 
     def _record(self, poll_answer: Any) -> None:
         if not isinstance(poll_answer, dict):
@@ -1396,6 +1408,8 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     if dry_run:
         return 1 if dry_run_report(schedule, sent_record, scores, stats, current_time()) else 0
 
+    process_commands(token)
+
     start_time = current_time()
     due = [e for e in schedule if e.when <= start_time and e.key not in sent_record]
     if not due:
@@ -1467,7 +1481,107 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     if scores is not None and not post_weekly_if_due(token, chat_id, scores, current_time()):
         exit_code = 1
 
+    if due or COMMAND_INBOX:
+        process_commands(token)         # messages that arrived while a quiz was running
+
     return exit_code
+
+
+def quiz_list_text() -> str:
+    """The /quizlists reply: every stored quiz with its topic, question count and timer."""
+    rows = [r for r in quiz_catalog() if not r["error"] and r["questions"] > 0]
+    if not rows:
+        return "No quizzes are stored yet."
+    lines: List[str] = []
+    for row in rows:
+        timer = f"{row['timer']} s per question" if row["timer"] else "no timer"
+        lines.append(f"\u2022 {row['id']} \u2013 {row['topic']}\n"
+                     f"   {row['questions']} questions, {timer}")
+    footer = ("\n\nQuizzes are posted in the group on a schedule. "
+              "Want one on a topic? Use /request.")
+    shown = lines
+    while len("\n".join(shown)) + len(footer) + 60 > MAX_MESSAGE_LENGTH and len(shown) > 1:
+        shown = shown[:-1]
+    extra = f"\n\u2026and {len(lines) - len(shown)} more." if len(shown) < len(lines) else ""
+    return "\U0001F4DA Stored quizzes\n\n" + "\n".join(shown) + extra + footer
+
+
+def owner_chat_id() -> Optional[int]:
+    raw = os.environ.get("OWNER_CHAT_ID", "").strip()
+    return int(raw) if re.fullmatch(r"-?\d{1,20}", raw) else None
+
+
+def commands_enabled() -> bool:
+    off = os.environ.get("DISABLE_COMMANDS", "").strip().lower() in ("1", "true", "yes", "on")
+    return not (WEBHOOK_ENABLED or off)
+
+
+def process_commands(token: str) -> bool:
+    """Answer the commands people have sent to the bot. Never raises.
+
+    Reads the waiting messages, replies, then tells Telegram they were handled (so they are
+    not delivered again). A problem here is logged but never affects the quizzes.
+    """
+    if not commands_enabled() or shutdown_event.is_set():
+        COMMAND_INBOX.clear()
+        return True
+    try:
+        _process_commands(token)
+        return True
+    except Exception:
+        logger.exception("Could not answer commands (quiz posting is not affected).")
+        return False
+
+
+def _process_commands(token: str) -> None:
+    updates: Dict[int, Dict[str, Any]] = {
+        u["update_id"]: u for u in COMMAND_INBOX if isinstance(u.get("update_id"), int)}
+    COMMAND_INBOX.clear()
+
+    with requests.Session() as session:
+        def api(method: str, payload: Dict[str, Any]) -> TelegramResult:
+            return call_telegram(session, token, method, payload)
+
+        offset: Optional[int] = None
+        for _ in range(MAX_COMMAND_FETCHES):
+            payload: Dict[str, Any] = {"timeout": 0, "limit": 100,
+                                       "allowed_updates": ALLOWED_UPDATES}
+            if offset is not None:
+                payload["offset"] = offset
+            result = api("getUpdates", payload)
+            if not result.ok:
+                logger.warning("Could not read commands%s: %s",
+                               " (a webhook is set, or something else reads this bot's "
+                               "updates)" if result.status == 409 else "",
+                               redact(result.description, token))
+                break
+            batch = result.data.get("result")
+            if not isinstance(batch, list) or not batch:
+                break
+            ids = [u["update_id"] for u in batch
+                   if isinstance(u, dict) and isinstance(u.get("update_id"), int)]
+            for update in batch:
+                if isinstance(update, dict) and isinstance(update.get("update_id"), int):
+                    updates[update["update_id"]] = update
+            if not ids:
+                break
+            offset = max(ids) + 1
+            if len(batch) < 100:
+                break
+
+        todo = [updates[i] for i in sorted(updates) if responder.wanted(updates[i])]
+        if todo:
+            logger.info("Answering %d command message(s)...", len(todo))
+            replier = responder.Responder(api, quiz_list_text, owner_chat_id())
+            for update in todo:
+                try:
+                    replier.handle(update)
+                except Exception:
+                    logger.exception("Could not answer one command message.")
+        if offset is not None:
+            # Confirm what was read, otherwise Telegram would deliver it again next run.
+            api("getUpdates", {"offset": offset, "limit": 1, "timeout": 0,
+                               "allowed_updates": ALLOWED_UPDATES})
 
 
 def quiz_catalog(now: Optional[datetime] = None) -> List[Dict[str, Any]]:

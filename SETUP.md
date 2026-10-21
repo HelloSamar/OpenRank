@@ -15,6 +15,7 @@ Each question is a poll with a countdown; the next poll appears when the previou
 | `schedule.json` | Which quiz runs when, how many questions, how many seconds. Plain JSON (no comments); fields are listed below |
 | `quizzes/*.json` | The questions, one file per quiz |
 | `quiz_bot.py` | The script and its settings |
+| `responder.py` | Answers the bot's commands (`/start`, `/quizlists`, `/request`, `/contact`) |
 | `sent.json` | What was posted, with the question list of each quiz (automatic) |
 | `stats.json` | How each question did and when it was last asked (automatic) |
 | `scores.json` | Weekly totals per person (automatic) |
@@ -104,12 +105,38 @@ Nothing expires, except `scores.json`:
 - **Question statistics:** the rate is right / (right + wrong) among people who answered at least once; skipped answers are counted separately. A new question counts as 50%, and the rate is pulled towards 50% while there is little data, so reliable numbers need several quizzes with real participants. They need polls that show names, which means a group. Editing a question or its correct answer starts its numbers from zero. `python quiz_bot.py --dry-run` lists the five questions with the lowest rate.
 - `scores.json` holds names and IDs. In a **public** repository anyone can read it, so make the repository private before you have real members. (`stats.json` has no personal data.)
 
+## Commands: /start, /quizlists, /request, /contact
+
+The bot answers four commands. It has no always-on server: every 15-minute check (see `quiz.yml`) also reads the waiting messages and replies, so **an answer takes up to about 15 minutes** (longer while a quiz is being posted, because the check waits for it).
+
+| Command | What it does |
+|---|---|
+| `/start` | Welcome message with the list of commands |
+| `/quizlists` | Every stored quiz: topic, number of questions, seconds per question |
+| `/request` | The person asks for a quiz on an exam topic or subject. `/request SSC CGL - Reasoning` sends it straight away; `/request` alone asks the person to reply with the details |
+| `/contact` | The same, as a free message to the owner |
+
+- **Set up (once):** (1) In @BotFather send `/setcommands`, choose the bot and paste the four lines below. (2) Open the bot yourself and press **START**; Telegram only lets a bot message you after that. (3) Find your numeric Telegram ID (for example by sending `/start` to @userinfobot) and add it in Settings -> Secrets and variables -> Actions as the secret `OWNER_CHAT_ID`. Without this secret, `/request` and `/contact` tell the person that they are not available.
+
+```
+start - Start the bot and see what it can do
+quizlists - See the list of all stored quizzes
+request - Ask for a quiz on a specific exam topic or subject
+contact - Contact the owner of the bot directly
+```
+
+- **Answering people:** each request or message reaches you in the bot's chat with the person's name, username and ID. Reply to that message (use Reply) and your answer is passed on to the person. Only your replies are passed on.
+- **In the group:** the bot does not answer commands there; it points the person to a private chat with the bot, once per run.
+- **Limits:** at most 5 commands per person per run, messages up to 1000 characters. Only messages that are commands, replies or sent in a private chat are read. Nothing is stored: handled messages are confirmed to Telegram and dropped.
+- **Turn it off:** in Settings -> Secrets and variables -> Actions -> **Variables**, add a variable named `DISABLE_COMMANDS` with the value `true`. Quiz posting and scoring are never affected by this feature: a problem in the command handling is only logged.
+- Messages sent before this feature was switched on are not delivered; Telegram keeps unanswered messages for about 24 hours.
+
 ## Telegram
 
 1. The bot is **@PYQxBot**. Add it to your quiz **group**.
 2. `CHAT_ID` is the group's numeric ID (negative, like `-1001234567890`).
 3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot unless you also set `WEBHOOK_ENABLED=true` (then Telegram must post updates to `WEBHOOK_PORT`, optionally protected by `WEBHOOK_SECRET`). Otherwise only one program can read updates at a time, and a clash switches scoring off for that quiz.
-4. The script asks Telegram only for poll answers, and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
+4. The script asks Telegram for poll answers and for messages (the commands below), and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
 
 ## GitHub (browser only)
 
