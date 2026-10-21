@@ -1487,28 +1487,42 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     return exit_code
 
 
+def quiz_display_name(quiz_id: str) -> str:
+    """The name shown to people: 'ows_synonyms_set1' -> 'synonyms set1'.
+
+    The letters before the first underscore (ows, idm, cmp ...) only decide the speed and are
+    not shown. An id that does not follow the 'prefix_name' pattern is shown as it is.
+    """
+    prefix = quiz_prefix(quiz_id)
+    rest = quiz_id[len(prefix):]
+    if prefix and rest.startswith("_") and len(rest) > 1:
+        return rest[1:].replace("_", " ")
+    return quiz_id
+
+
 def quiz_list_text() -> str:
-    """The /quizlists reply: every stored quiz with its topic, question count and timer."""
+    """The /quizlists reply: one line per stored quiz, with only its name and question count."""
     rows = [r for r in quiz_catalog() if not r["error"] and r["questions"] > 0]
     if not rows:
         return "No quizzes are stored yet."
-    lines: List[str] = []
-    for row in rows:
-        timer = f"{row['timer']} s per question" if row["timer"] else "no timer"
-        lines.append(f"\u2022 {row['id']} \u2013 {row['topic']}\n"
-                     f"   {row['questions']} questions, {timer}")
-    footer = ("\n\nQuizzes are posted in the group on a schedule. "
-              "Want one on a topic? Use /request.")
+    lines = [f"\u2022 {quiz_display_name(r['id'])} \u2013 {r['questions']} "
+             f"question{'' if r['questions'] == 1 else 's'}" for r in rows]
     shown = lines
-    while len("\n".join(shown)) + len(footer) + 60 > MAX_MESSAGE_LENGTH and len(shown) > 1:
+    while len("\n".join(shown)) + 40 > MAX_MESSAGE_LENGTH and len(shown) > 1:
         shown = shown[:-1]
     extra = f"\n\u2026and {len(lines) - len(shown)} more." if len(shown) < len(lines) else ""
-    return "\U0001F4DA Stored quizzes\n\n" + "\n".join(shown) + extra + footer
+    return "\n".join(shown) + extra
 
 
 def owner_chat_id() -> Optional[int]:
     raw = os.environ.get("OWNER_CHAT_ID", "").strip()
     return int(raw) if re.fullmatch(r"-?\d{1,20}", raw) else None
+
+
+def owner_username() -> Optional[str]:
+    """The owner's Telegram username (OWNER_USERNAME), used for the direct-chat button."""
+    raw = os.environ.get("OWNER_USERNAME", "").strip().lstrip("@")
+    return raw if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{4,31}", raw) else None
 
 
 def commands_enabled() -> bool:
@@ -1572,7 +1586,8 @@ def _process_commands(token: str) -> None:
         todo = [updates[i] for i in sorted(updates) if responder.wanted(updates[i])]
         if todo:
             logger.info("Answering %d command message(s)...", len(todo))
-            replier = responder.Responder(api, quiz_list_text, owner_chat_id())
+            replier = responder.Responder(api, quiz_list_text, owner_chat_id(),
+                                          owner_username=owner_username())
             for update in todo:
                 try:
                     replier.handle(update)
