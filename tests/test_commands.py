@@ -124,7 +124,7 @@ class ProcessCommandsTests(CommandCase):
         qb.process_commands("tok")
         note = self.fake.texts(OWNER)[0]
         self.assertIn("SSC CGL reasoning quiz", note)
-        self.assertIn("Your request was sent", self.fake.texts(42)[0])
+        self.assertIn("Your message was sent", self.fake.texts(42)[0])
         owner_reply = private(2, "Added for Friday", user_id=OWNER, name="Owner", reply_to_message={
             "from": {"id": 1, "is_bot": True}, "text": note})
         self.fake.add(owner_reply)
@@ -258,17 +258,45 @@ class ScheduledRunTests(CommandCase):
 
 
 class QuizListTextTests(CommandCase):
-    def test_lists_topic_count_and_timer(self):
-        self.make_quiz("idm900", 2)
+    def drop_default_quiz(self):
+        (self.tmp / "quizzes" / "ows900.json").unlink()
+
+    def test_only_the_name_and_the_number_of_questions_without_the_prefix(self):
+        self.drop_default_quiz()
+        self.make_quiz("ows_synonyms", 3)
+        self.make_quiz("idm_idioms_set1", 1)
+        self.make_quiz("cmp_basics", 2)
+        self.assertEqual(qb.quiz_list_text(),
+                         "\u2022 basics \u2013 2 questions\n"
+                         "\u2022 idioms set1 \u2013 1 question\n"
+                         "\u2022 synonyms \u2013 3 questions")
+
+    def test_nothing_else_is_added(self):
+        self.drop_default_quiz()
+        self.make_quiz("ows_synonyms", 3)
         text = qb.quiz_list_text()
-        self.assertIn("ows900 \u2013 One Word Substitution\n   3 questions, 10 s per question",
-                      text)
-        self.assertIn("idm900 \u2013 Idioms\n   2 questions, 15 s per question", text)
-        self.assertIn("/request", text)
+        for extra in ("Stored", "ows", "per question", "/request", "Computer", "One Word",
+                      "scheduled"):
+            self.assertNotIn(extra, text)
+
+    def test_names_that_do_not_follow_the_pattern_are_shown_whole(self):
+        self.assertEqual(qb.quiz_display_name("ows_quizname"), "quizname")
+        self.assertEqual(qb.quiz_display_name("ows_two_words_here"), "two words here")
+        self.assertEqual(qb.quiz_display_name("ows000"), "ows000")
+        self.assertEqual(qb.quiz_display_name("ows_"), "ows_")
+        self.assertEqual(qb.quiz_display_name("quiz"), "quiz")
+        self.assertEqual(qb.quiz_display_name("ows-synonyms"), "ows-synonyms")
+
+    def test_quizzes_named_ows_name_still_get_their_usual_speed_and_topic(self):
+        self.make_quiz("ows_synonyms", 2)
+        rows = {r["id"]: r for r in qb.quiz_catalog()}
+        self.assertEqual(rows["ows_synonyms"]["timer"], 10)
+        self.assertEqual(rows["ows_synonyms"]["topic"], "One Word Substitution")
+        self.assertEqual(rows["ows_synonyms"]["questions"], 2)
 
     def test_long_lists_are_cut_to_fit_one_message(self):
         for i in range(250):
-            self.make_quiz(f"gen{i:03d}", 2)
+            self.make_quiz(f"gen_quiz_number_{i:03d}", 2)
         text = qb.quiz_list_text()
         self.assertLessEqual(len(text), qb.MAX_MESSAGE_LENGTH)
         self.assertRegex(text, r"and \d+ more")
@@ -277,6 +305,29 @@ class QuizListTextTests(CommandCase):
         for path in (self.tmp / "quizzes").glob("*.json"):
             path.unlink()
         self.assertEqual(qb.quiz_list_text(), "No quizzes are stored yet.")
+
+    def test_owner_username_parsing(self):
+        for raw, expected in (("@SamarOwner", "SamarOwner"), (" Samar_1 ", "Samar_1"),
+                              ("", None), ("abc", None), ("1abcde", None), ("has space", None)):
+            with mock.patch.dict(os.environ, {"OWNER_USERNAME": raw}):
+                self.assertEqual(qb.owner_username(), expected)
+
+
+class ContactThroughTheRunTests(CommandCase):
+    def test_contact_menu_offers_the_direct_chat_button(self):
+        self.fake.add(private(1, "/contact"))
+        with mock.patch.dict(os.environ, {"OWNER_USERNAME": "SamarOwner"}):
+            qb.process_commands("tok")
+        payload = next(m for m in self.fake.sent if m["chat_id"] == 42)
+        self.assertEqual(payload["reply_markup"]["inline_keyboard"][0][0]["url"],
+                         "https://t.me/SamarOwner")
+
+    def test_start_links_to_the_group(self):
+        self.fake.add(private(1, "/start"))
+        qb.process_commands("tok")
+        payload = next(m for m in self.fake.sent if m["chat_id"] == 42)
+        self.assertIn('<a href="https://t.me/GovtScore">', payload["text"])
+        self.assertEqual(payload["parse_mode"], "HTML")
 
 
 if __name__ == "__main__":
