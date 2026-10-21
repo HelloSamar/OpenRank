@@ -49,6 +49,8 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          OWNER_CHAT_ID: ${{ secrets.OWNER_CHAT_ID }}
+          DISABLE_COMMANDS: ${{ vars.DISABLE_COMMANDS }}
           MANUAL_QUIZ: ${{ inputs.quiz }}
         run: |
           if [ -n "$MANUAL_QUIZ" ]; then
