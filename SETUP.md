@@ -1,4 +1,4 @@
-# PYQxBot - setup and operations guide
+# OpenRank - setup and operations guide
 
 (Your own `README.md` stays as the public description. This file is the technical guide.)
 
@@ -15,11 +15,13 @@ Each question is a poll with a countdown; the next poll appears when the previou
 | `schedule.json` | Which quiz runs when, how many questions, how many seconds. Plain JSON (no comments); fields are listed below |
 | `quizzes/*.json` | The questions, one file per quiz |
 | `quiz_bot.py` | The script and its settings |
-| `responder.py` | Answers the bot's commands (`/start`, `/quizlists`, `/request`, `/contact`) |
+| `responder.py` | Answers the bot's commands (`/start`, `/quizlists`, `/contact`) |
 | `sent.json` | What was posted, with the question list of each quiz (automatic) |
 | `stats.json` | How each question did and when it was last asked (automatic) |
-| `scores.json` | Weekly totals per person (automatic) |
-| `.github/workflows/quiz.yml` | Posts quizzes every 15 minutes, or manually |
+| `scores.json` | Weekly totals per person, under an anonymous key (automatic) |
+| `alerts.json` | When each problem was last reported to you, so you are not told every 15 minutes (automatic) |
+| `.github/workflows/quiz.yml` | Checks every 15 minutes (at :07, :22, :37 and :52) and posts what is due, or posts a quiz manually |
+| `.github/workflows/rename-quiz.yml` | The safe way to rename a quiz (button in the Actions tab) |
 | `.github/workflows/validate.yml` | Checks your files whenever you edit them |
 
 ## schedule.json
@@ -40,7 +42,7 @@ Every edit is checked by `validate.yml`: a green tick means fine, a red cross me
 
 ## Quiz files
 
-Create `quizzes/<name>.json` (letters, digits, `-`, `_`). Each question is `[question, [options], correct_index, "explanation"]`, and the index starts at 0. The explanation is optional.
+Create `quizzes/Quiz Name_ows.json` (see the naming rule below). Each question is `[question, [options], correct_index, "explanation"]`, and the index starts at 0. The explanation is optional.
 
 ```json
 [
@@ -52,8 +54,8 @@ Create `quizzes/<name>.json` (letters, digits, `-`, `_`). Each question is `[que
 - The explanation appears when someone picks a wrong answer or taps the lamp icon on the poll.
 - Limits: question up to 288 characters (room is kept for the `Q12/100:` prefix), 2 to 10 options of up to 100 characters, explanation up to 200 characters with at most 2 line breaks.
 - A question that is invalid, or repeats an earlier one in the same file (same question and same answer), is skipped with a warning. The validation check also shows it as a problem.
-- Name quizzes `prefix_quizname`, for example `ows_synonyms` or `idm_idioms_set1`. The letters before the first underscore decide the usual speed (see `TIMER_BY_PREFIX` below): `ows`, `idm`, `rsn`, `mth`, `cmp`. People see only the name after the prefix, with underscores shown as spaces (`/quizlists` shows `idioms set1`). A name without that pattern, such as `ows000`, is shown whole.
-- **Renaming a quiz file changes its ID, and the ID is used in `schedule.json` and in `sent.json`.** If you rename a file and only update `schedule.json`, every earlier entry of that quiz looks as if it was never posted, and the next check posts all of them at once. When you rename a quiz, change the old ID to the new one in all three places: the file name, the `"quiz"` lines in `schedule.json`, and the keys in `sent.json` (they look like `ows000@2026-10-19T06:30Z`; change only the part before the `@`). Then run the validation check: no past entry should be listed as due.
+- **Naming: `Quiz Name_prefix.json`**, for example `Synonyms Set 1_ows.json` or `Idioms_idm.json`. The quiz name comes first and may contain spaces and special characters (letters of any language, `&`, `(`, `%` ...) but should not contain an underscore; after the underscore comes the prefix, which decides the usual speed (see `TIMER_BY_PREFIX` below): `ows`, `idm`, `rsn`, `mth`, `cmp`. The part after the last underscore is the prefix. People see only the name, exactly as written: `/quizlists` shows `Synonyms Set 1`, and the group's messages say `Synonyms Set 1 - Final Result`. A file name without an underscore, such as `ows000`, still works: it is shown whole and its leading letters are the prefix. Not allowed in a name: `/`, `\`, line breaks, a space or dot at the start, a space at the end, more than 100 characters. Tip: on Windows and many tools the characters `: * ? " < > |` cannot be used in file names, so avoid them. Also avoid look-alike characters (a non-breaking hyphen `‑` looks like `-` but is a different character): the name in `schedule.json` must match the file name exactly.
+- **Renaming a quiz file changes its ID** (the whole file name without `.json`), and the ID is used in `schedule.json` and `sent.json`. **Do not rename by hand: use the Rename quiz workflow** (Actions -> Rename quiz -> Run workflow, see "Safety nets" below). It changes the file and all references in one commit. If you did rename a file by hand, run the workflow anyway: it then only updates the references.
 
 ## Settings in quiz_bot.py
 
@@ -75,6 +77,10 @@ Only settings that are not in `schedule.json`. To change one: open `quiz_bot.py`
 | `POST_WEEKLY` | True | Post the weekly leaderboard |
 | `WEEK_RESET_DAY/HOUR/MINUTE` | Sunday 20:00 | When weekly scores reset (India time) |
 | `WEEKLY_POST_HOURS_BEFORE_RESET` | 1 | Leaderboard goes out at 7:00 PM |
+| `MAX_LATE_HOURS` | 12 | A quiz later than this is skipped, not posted (0 = never skip) |
+| `SCHEDULE_WARN_DAYS` | 14 | You are alerted when fewer days of quizzes are scheduled |
+| `ALERT_REPEAT_HOURS` | 6 | A problem that is still there is repeated this often |
+| `PIN_WEEKLY_LEADERBOARD` | False | Pin the weekly leaderboard (the bot needs the pin right) |
 
 ## Results and the weekly leaderboard
 
@@ -99,9 +105,9 @@ Nothing expires, except `scores.json`:
 |---|---|---|
 | `sent.json` | Each scheduled quiz: when it was posted and **its question list** in posted order (id plus the first 60 characters) | Forever |
 | `stats.json` | Each question: times asked, right, wrong, skipped, and when it was last asked | Forever |
-| `scores.json` | Weekly totals per person (Telegram name and user ID) | Last 8 weeks |
+| `scores.json` | Weekly totals per person: Telegram name and an anonymous key (a keyed hash; the Telegram ID is not stored) | Last 8 weeks |
 
-- A quiz in `sent.json` is found by its name and time, for example `ows000@2026-10-20T09:00Z`.
+- A quiz in `sent.json` is found by its ID and time, for example `Idioms_idm@2026-10-20T09:00Z`.
 - Both grow slowly, roughly 1 KB per 10 questions asked. Manual runs are not recorded.
 - **Question statistics:** the rate is right / (right + wrong) among people who answered at least once; skipped answers are counted separately. A new question counts as 50%, and the rate is pulled towards 50% while there is little data, so reliable numbers need several quizzes with real participants. They need polls that show names, which means a group. Editing a question or its correct answer starts its numbers from zero. `python quiz_bot.py --dry-run` lists the five questions with the lowest rate.
 - `scores.json` holds names and IDs. In a **public** repository anyone can read it, so make the repository private before you have real members. (`stats.json` has no personal data.)
@@ -113,7 +119,7 @@ The bot answers three commands. It has no always-on server: every 15-minute chec
 | Command | What it does |
 |---|---|
 | `/start` | Asks the person to join the group; the words "join our group" are a hyperlink to `https://t.me/GovtScore`. To use another group, change `GROUP_URL` at the top of `responder.py`. |
-| `/quizlists` | One line per stored quiz with only its name and number of questions, nothing else. The letters before the first underscore (`ows_`, `idm_`, ...) are not shown. |
+| `/quizlists` | One line per stored quiz with only its name and number of questions, nothing else. The prefix after the underscore (`_ows`, `_idm`, ...) is not shown; names appear exactly as written in the file name, sorted alphabetically. |
 | `/contact` | For asking for a quiz on an exam topic or subject, or for anything else. It shows a button that opens a direct chat with the owner. The person can also send `/contact your message`, which is passed on to the owner. (`/request` still works as another name for it.) |
 
 - **Set up (once):** (1) In @BotFather send `/setcommands`, choose the bot and paste the three lines below (this replaces the old list). (2) Open the bot yourself and press **START**; Telegram only lets a bot message you after that. (3) Add your numeric Telegram ID (for example from @userinfobot) as the **secret** `OWNER_CHAT_ID`, and your username without the `@` as the **variable** `OWNER_USERNAME` (Settings -> Secrets and variables -> Actions; secrets and variables are separate tabs). `OWNER_CHAT_ID` is how messages reach you; `OWNER_USERNAME` is only for the direct-chat button. Without the secret, `/contact` can only offer the direct chat; without the variable, it asks the person to reply with their message instead of showing the button; without both it says it is not available.
@@ -130,9 +136,27 @@ contact - Request a quiz or chat with the owner directly
 - **Turn it off:** in Settings -> Secrets and variables -> Actions -> **Variables**, add a variable named `DISABLE_COMMANDS` with the value `true`. Quiz posting and scoring are never affected by this feature: a problem in the command handling is only logged.
 - Messages sent before this feature was switched on are not delivered; Telegram keeps unanswered messages for about 24 hours.
 
+## Safety nets: alerts, late quizzes, renaming, test chat
+
+**Alerts.** The bot sends you a Telegram message (to `OWNER_CHAT_ID`; you must have pressed START on the bot) when something needs you: a due quiz cannot be loaded (for example a name in `schedule.json` does not match a file) or nothing could be posted; a quiz was only partly posted; the weekly leaderboard failed; `schedule.json` is broken; fewer than 14 days of quizzes are left (once a day, `SCHEDULE_WARN_DAYS`); the record of posted quizzes could not be saved; or late quizzes were skipped. A problem that is still there is repeated at most every 6 hours (`ALERT_REPEAT_HOURS`). `alerts.json` remembers what was sent. If a name only differs from a file name by letter case or a look-alike dash, the message tells you which file it found.
+
+**Late quizzes.** A quiz that is more than 12 hours late (`MAX_LATE_HOURS`) is skipped, not posted, and you are told. This stops a burst of old quizzes after an outage or a rename mistake. It is recorded in `sent.json` with `"late": true`, so it does not come back. To post one anyway: Actions -> Quiz Scheduler -> Run workflow, and type its name. Set `MAX_LATE_HOURS = 0` to switch the limit off.
+
+**Renaming a quiz.** Actions -> **Rename quiz** -> Run workflow. *old* is the current name (as `schedule.json` spells it), *new* is the new name (`Quiz Name_prefix`). It renames the file and updates `schedule.json`, `sent.json` and `stats.json` in one commit, so nothing is posted twice. Tick *preview* to see what would change first. Never rename by hand.
+
+**Test chat.** Make a private test group, add the bot, and add its ID (it starts with `-100`) as the secret `TEST_CHAT_ID`. Then Actions -> Quiz Scheduler -> Run workflow, type a quiz name and tick *test_chat*: the quiz goes only to the test group and nothing is recorded (no sent, score or statistics change). Use it before trusting any change.
+
+**Anonymous scores.** `scores.json` no longer stores Telegram IDs. Each person is stored under a keyed hash; names stay (they are visible in the group anyway). Old entries are converted at the first run. Add a secret `SCORES_SALT` (any long random text) and never change it; without it the bot token is used, and a new token would start everyone on a fresh row. Note: older versions of `scores.json` remain in the repository history. If the repository is public, anyone can still read them there; removing them completely means making the repository private or recreating it.
+
+**Weekly pin.** `PIN_WEEKLY_LEADERBOARD = True` pins the weekly leaderboard after it is posted. The bot needs the *Pin messages* right in the group. It is off by default; a refused pin is only logged.
+
+**What the validation check looks for:** missing or invalid quiz files, quiz files whose names differ only by upper/lower case (a problem), look-alike characters in names such as a non-breaking hyphen (a note), entries that would be skipped as late, and how many days the schedule still covers.
+
+**Making changes safely.** Change one thing at a time. When you upload files, choose *Create a new branch and start a pull request* in GitHub's commit box and merge only when the validation check is green; the bot keeps running on `main` whatever state it is in. Try new quizzes in the test chat first. Treat quiz names as permanent once they are scheduled.
+
 ## Telegram
 
-1. The bot is **@PYQxBot**. Add it to your quiz **group**.
+1. The bot is **OpenRank**. Add it to your quiz **group**.
 2. `CHAT_ID` is the group's numeric ID (negative, like `-1001234567890`).
 3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot unless you also set `WEBHOOK_ENABLED=true` (then Telegram must post updates to `WEBHOOK_PORT`, optionally protected by `WEBHOOK_SECRET`). Otherwise only one program can read updates at a time, and a clash switches scoring off for that quiz.
 4. The script asks Telegram for poll answers and for messages (the commands below), and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
@@ -148,7 +172,7 @@ contact - Request a quiz or chat with the owner directly
 ## Good to know
 
 - A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay. A time that has already passed runs at the next check.
-- Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, use `*/30` in the cron line of `quiz.yml`.
+- Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, check fewer times, for example `7,37 * * * *` in the cron line of `quiz.yml`.
 - A quiz takes about (questions x seconds each); the workflow stops a run after 350 minutes. Private repositories pay for every minute, so very long quizzes use up the monthly allowance.
 - **Interrupted quizzes:** if a run is cancelled (SIGINT/SIGTERM) the bot stops posting, posts the partial result and does not start further quizzes. A quiz that had at least one poll posted is recorded in `sent.json` and is not posted again; delete its entry in `sent.json` to run it again.
 - If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.

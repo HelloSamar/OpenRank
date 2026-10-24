@@ -1,5 +1,5 @@
 {
-  "idm000@2026-10-19T06:31Z": {
+  "Idioms_idm@2026-10-19T06:31Z": {
     "failed": 0,
     "posted_at": "2026-10-20T16:33:20Z",
     "questions": [
@@ -53,13 +53,13 @@
     "sent": 10,
     "skipped": 0
   },
-  "ows000@2026-10-17T17:00Z": {
+  "One‑Word-Substitutions_ows@2026-10-17T17:00Z": {
     "failed": 0,
     "posted_at": "2026-10-17T20:17:46Z",
     "sent": 150,
     "skipped": 0
   },
-  "ows000@2026-10-19T06:30Z": {
+  "One‑Word-Substitutions_ows@2026-10-19T06:30Z": {
     "failed": 0,
     "posted_at": "2026-10-19T07:57:01Z",
     "questions": [
@@ -467,7 +467,7 @@
     "sent": 100,
     "skipped": 0
   },
-  "ows000@2026-10-20T06:30Z": {
+  "One‑Word-Substitutions_ows@2026-10-20T06:30Z": {
     "failed": 0,
     "posted_at": "2026-10-20T06:58:03Z",
     "questions": [
@@ -875,7 +875,7 @@
     "sent": 100,
     "skipped": 0
   },
-  "ows000@2026-10-21T06:30Z": {
+  "One‑Word-Substitutions_ows@2026-10-21T06:30Z": {
     "failed": 0,
     "posted_at": "2026-10-21T08:11:18Z",
     "questions": [

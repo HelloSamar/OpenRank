@@ -24,6 +24,7 @@ import sys
 import tempfile
 import time
 import signal
+import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -81,6 +82,12 @@ SUBJECT_BY_PREFIX = {
     "cmp": "Computer Knowledge",
 }
 
+# --- Safety nets ----------------------------------------------------------------
+MAX_LATE_HOURS = 12             # a quiz later than this is skipped, not posted (0 = never skip)
+SCHEDULE_WARN_DAYS = 14         # tell the owner when less than this many days are scheduled
+ALERT_REPEAT_HOURS = 6          # a problem that is still there is repeated this often
+PIN_WEEKLY_LEADERBOARD = False  # True: pin the weekly leaderboard (the bot needs the "pin" right)
+
 POST_WEEKLY = True
 LOCAL_TZ_NAME = "IST"
 LOCAL_TZ = timezone(timedelta(hours=5, minutes=30))
@@ -108,8 +115,23 @@ SENT_FILE = BASE_DIR / "sent.json"
 SCORES_FILE = BASE_DIR / "scores.json"
 STATS_FILE = BASE_DIR / "stats.json"
 UPDATES_OFFSET_FILE = BASE_DIR / ".updates_offset"
+ALERTS_FILE = BASE_DIR / "alerts.json"      # when each problem was last reported to the owner
 
-QUIZ_ID_PATTERN = re.compile(r"[A-Za-z0-9_-]{1,64}")
+MAX_QUIZ_ID_LENGTH = 100
+
+
+def valid_quiz_id(quiz_id: Any) -> bool:
+    """A quiz id is the file name without '.json', for example 'Synonyms Set 1_ows'.
+
+    Spaces and special characters are fine. Not allowed: nothing at all, more than 100
+    characters, '/' or '\\', control characters (a line break, for example), a space at the
+    start or end, or a dot at the start.
+    """
+    if not isinstance(quiz_id, str) or not 1 <= len(quiz_id) <= MAX_QUIZ_ID_LENGTH:
+        return False
+    if quiz_id != quiz_id.strip() or quiz_id.startswith("."):
+        return False
+    return not any(ch in "/\\" or unicodedata.category(ch) == "Cc" for ch in quiz_id)
 
 Question = Tuple[str, List[str], int, str]
 
@@ -355,9 +377,29 @@ def normalize_timer(value: Any) -> Optional[int]:
     return None
 
 
-def quiz_prefix(quiz_id: str) -> str:
+def split_quiz_id(quiz_id: str) -> Tuple[str, str]:
+    """Split a quiz id into (name, prefix).
+
+    The id is 'Quiz Name_ows': the name comes first (spaces and special characters are fine),
+    then an underscore and the prefix that decides the speed. The underscore that counts is the
+    last one. An id without that pattern, such as the older 'ows000', is returned whole as its
+    own name, with its leading letters as the prefix.
+    """
+    name, underscore, tail = quiz_id.rpartition("_")
+    if underscore and name.strip() and tail.strip():
+        return name.strip(), tail.strip().lower()
     match = re.match(r"[A-Za-z]+", quiz_id)
-    return match.group(0).lower() if match else ""
+    return quiz_id, (match.group(0).lower() if match else "")
+
+
+def quiz_prefix(quiz_id: str) -> str:
+    return split_quiz_id(quiz_id)[1]
+
+
+def quiz_title(quiz_id: str) -> str:
+    """The name used in the group's messages: the quiz name as written, without the prefix."""
+    name = split_quiz_id(quiz_id)[0]
+    return quiz_id.upper() if name == quiz_id else name
 
 
 def quiz_timer(quiz_id: str, override: Optional[int] = None) -> Optional[int]:
@@ -432,16 +474,43 @@ def filter_valid(questions: List[Any]) -> Tuple[List[Question], int]:
     return valid, skipped
 
 
+def _match_key(name: str) -> str:
+    """A name with letter case, look-alike dashes and compatibility characters ignored."""
+    text = unicodedata.normalize("NFKC", name).casefold()
+    return "".join("-" if unicodedata.category(ch) == "Pd" else ch for ch in text).strip()
+
+
+def similar_quiz_ids(quiz_id: str) -> List[str]:
+    """Quiz files whose name only differs in letter case or look-alike characters."""
+    key = _match_key(quiz_id)
+    try:
+        names = sorted(path.stem for path in QUIZ_DIR.glob("*.json"))
+    except OSError:
+        return []
+    return [name for name in names if name != quiz_id and _match_key(name) == key]
+
+
+def lookalike_characters(name: str) -> List[str]:
+    """Characters that look like a plain hyphen or space but are not (hard to type exactly)."""
+    found = {ch for ch in name
+             if ord(ch) > 127 and unicodedata.category(ch) in ("Pd", "Zs", "Cf")}
+    return [f"U+{ord(ch):04X} {unicodedata.name(ch, 'unknown character')}" for ch in sorted(found)]
+
+
 def load_quiz(quiz_id: str) -> List[Any]:
-    if not QUIZ_ID_PATTERN.fullmatch(quiz_id):
+    if not valid_quiz_id(quiz_id):
         raise ValueError(
-            f"invalid quiz id {quiz_id!r} (use letters, digits, '-' and '_' only)"
+            f"invalid quiz id {quiz_id!r} (use the file name without .json; no '/' or '\\', "
+            "no line breaks, no space or dot at the start or a space at the end)"
         )
     path = QUIZ_DIR / f"{quiz_id}.json"
     try:
         data = read_json(path)
     except (OSError, ValueError) as exc:
-        raise ValueError(f"cannot load quizzes/{path.name}: {exc}") from exc
+        hint = similar_quiz_ids(quiz_id)
+        extra = (f" (a file with a similar name exists: {', '.join(hint)}; names must match "
+                 "exactly, including letter case)") if hint else ""
+        raise ValueError(f"cannot load quizzes/{path.name}: {exc}{extra}") from exc
     if not isinstance(data, list):
         raise ValueError(f"quizzes/{path.name} must contain a JSON list of questions")
     return data
@@ -475,9 +544,9 @@ def whole_number(item: Dict[str, Any], name: str, low: int, high: Optional[int],
 
 def parse_schedule_entry(item: Any) -> ScheduleEntry:
     if not isinstance(item, dict):
-        raise ValueError('entry must look like {"quiz": "ows001", "at": "..."}')
+        raise ValueError('entry must look like {"quiz": "Idioms_idm", "at": "..."}')
     quiz_id = item.get("quiz")
-    if not isinstance(quiz_id, str) or not QUIZ_ID_PATTERN.fullmatch(quiz_id):
+    if not valid_quiz_id(quiz_id):
         raise ValueError(f"invalid quiz id {quiz_id!r}")
     when = parse_time(item.get("at"))
 
@@ -595,13 +664,34 @@ def call_telegram(
     return last
 
 
-def send_text(token: str, chat_id: str, text: str,
-              session: Optional[requests.Session] = None) -> bool:
+def send_message(token: str, chat_id: str, text: str,
+                 session: Optional[requests.Session] = None) -> TelegramResult:
     payload = {"chat_id": chat_id, "text": text}
     if session is not None:
-        return call_telegram(session, token, "sendMessage", payload).ok
+        return call_telegram(session, token, "sendMessage", payload)
     with requests.Session() as own_session:
-        return call_telegram(own_session, token, "sendMessage", payload).ok
+        return call_telegram(own_session, token, "sendMessage", payload)
+
+
+def send_text(token: str, chat_id: str, text: str,
+              session: Optional[requests.Session] = None) -> bool:
+    return send_message(token, chat_id, text, session).ok
+
+
+def pin_message(token: str, chat_id: str, result: TelegramResult) -> bool:
+    """Pin a message that was just sent (quietly). A missing right is logged, not fatal."""
+    info = result.data.get("result") if isinstance(result.data, dict) else None
+    message_id = info.get("message_id") if isinstance(info, dict) else None
+    if not isinstance(message_id, int):
+        return False
+    with requests.Session() as session:
+        pinned = call_telegram(session, token, "pinChatMessage",
+                               {"chat_id": chat_id, "message_id": message_id,
+                                "disable_notification": True})
+    if not pinned.ok:
+        logger.warning("Could not pin the message (the bot needs the right to pin messages): %s",
+                       redact(pinned.description, token))
+    return pinned.ok
 
 
 def send_quiz_poll(
@@ -922,7 +1012,7 @@ def run_quiz(questions: List[Any], token: str, chat_id: str, quiz_id: str = "qui
              stats: Optional[Dict[str, Any]] = None,
              now: Optional[datetime] = None,
              manual_intro: Optional[str] = None) -> QuizOutcome:
-    title = quiz_id.upper()
+    title = quiz_title(quiz_id)
     timer = quiz_timer(quiz_id, entry.timer if entry else None)
     valid, skipped = filter_valid(questions)
 
@@ -1084,11 +1174,48 @@ def load_scores() -> Dict[str, Any]:
             "weekly_posted": posted if isinstance(posted, list) else []}
 
 
+def user_key(user_id: int) -> str:
+    """How a person is stored in scores.json: a keyed hash, never their Telegram ID.
+
+    The secret is SCORES_SALT if set, otherwise the bot token. Keep it unchanged, or the same
+    person would start a new row.
+    """
+    secret = os.environ.get("SCORES_SALT") or os.environ.get("BOT_TOKEN") or "pyqxbot"
+    digest = hmac.new(secret.encode("utf-8"), str(user_id).encode("utf-8"),
+                      hashlib.sha256).hexdigest()
+    return f"u{digest[:16]}"
+
+
+def _merge_user(target: Dict[str, Any], entry: Dict[str, Any]) -> None:
+    if not target.get("name") and entry.get("name"):
+        target["name"] = entry["name"]
+    target["points"] = round(number_of(target, "points") + number_of(entry, "points"), 2)
+    target["seconds"] = round(number_of(target, "seconds") + number_of(entry, "seconds"), 1)
+    for field_name in ("correct", "wrong", "skipped", "quizzes"):
+        target[field_name] = count_of(target, field_name) + count_of(entry, field_name)
+
+
+def anonymise_scores(scores: Dict[str, Any]) -> bool:
+    """Replace Telegram IDs used as keys by hashed keys. Returns True if anything changed."""
+    changed = False
+    for week in scores["weeks"].values():
+        users = week.get("users") if isinstance(week, dict) else None
+        if not isinstance(users, dict):
+            continue
+        for key in [k for k in users if isinstance(k, str) and k.isdigit()]:
+            entry = users.pop(key)
+            target = users.setdefault(user_key(int(key)), {})
+            if isinstance(entry, dict):
+                _merge_user(target, entry)
+            changed = True
+    return changed
+
+
 def add_to_scores(scores: Dict[str, Any], board: List[Scorecard], when: datetime) -> None:
     key = week_key(week_start_for(when))
     users = scores["weeks"].setdefault(key, {}).setdefault("users", {})
     for card in board:
-        entry = users.setdefault(str(card.user_id), {})
+        entry = users.setdefault(user_key(card.user_id), {})
         entry["name"] = card.name
         entry["points"] = round(number_of(entry, "points") + card.score, 2)
         entry["correct"] = count_of(entry, "correct") + card.correct
@@ -1162,11 +1289,17 @@ def post_weekly_if_due(token: str, chat_id: str, scores: Dict[str, Any],
             return True
 
         logger.info("=== Posting the weekly leaderboard ===")
-        if not send_text(token, chat_id, build_weekly_message(start, users, now)):
+        posted = send_message(token, chat_id, build_weekly_message(start, users, now))
+        if not posted.ok:
             logger.error("The weekly leaderboard could not be posted; it will be "
                          "retried on the next run.")
+            owner_alert(token, f"weekly:{key}",
+                        "The weekly leaderboard could not be posted. It will be retried at the "
+                        "next check.")
             return False
         logger.info("SUCCESS: weekly leaderboard posted.")
+        if PIN_WEEKLY_LEADERBOARD:
+            pin_message(token, chat_id, posted)
 
         scores["weekly_posted"] = [*scores["weekly_posted"], key][-WEEKS_TO_KEEP:]
         return save_data(SCORES_FILE, scores, "The leaderboard may be posted again.",
@@ -1308,6 +1441,22 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
     quiz_files = {path.stem for path in QUIZ_DIR.glob("*.json")}
     checked = {quiz_id: inspect_quiz(quiz_id) for quiz_id in sorted(quiz_files | scheduled_ids)}
 
+    by_case: Dict[str, List[str]] = {}
+    for name in quiz_files:
+        by_case.setdefault(name.casefold(), []).append(name)
+    for names in by_case.values():
+        if len(names) > 1:
+            problems += 1
+            logger.info("PROBLEM: quiz files whose names differ only by upper/lower case: %s "
+                        "(Windows and Mac treat them as one file). Rename one of them.",
+                        ", ".join(sorted(names)))
+    for name in sorted(quiz_files | scheduled_ids):
+        odd = lookalike_characters(name)
+        if odd:
+            logger.info("NOTE: %r contains look-alike characters (%s). A plain '-' or space is "
+                        "easier to type exactly, and the name in schedule.json must match the "
+                        "file name exactly.", name, "; ".join(odd))
+
     def describe(quiz_id: str, timer: Optional[int]) -> Tuple[str, bool]:
         valid, invalid, error = checked[quiz_id]
         if error:
@@ -1325,7 +1474,8 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
         if entry.key in sent_record:
             status = "already posted"
         elif entry.when <= now:
-            status = "DUE"
+            too_late = bool(MAX_LATE_HOURS) and now - entry.when > timedelta(hours=MAX_LATE_HOURS)
+            status = "LATE: skipped" if too_late else "DUE"
         else:
             status = "upcoming"
         detail, bad = describe(entry.quiz_id, quiz_timer(entry.quiz_id, entry.timer))
@@ -1341,6 +1491,18 @@ def dry_run_report(schedule: List[ScheduleEntry], sent_record: Dict[str, Any],
         problems += bad
         logger.info("%s | %-10s | %-14s | %s",
                     format_utc(entry.when), entry.quiz_id, status, detail)
+
+    upcoming_times = [entry.when for entry in schedule if entry.when > now]
+    if upcoming_times:
+        days_left = (max(upcoming_times) - now).days
+        logger.info("Schedule: %d upcoming entr%s, the last on %s (%d days from now).",
+                    len(upcoming_times), "y" if len(upcoming_times) == 1 else "ies",
+                    format_utc(max(upcoming_times)), days_left)
+        if days_left < SCHEDULE_WARN_DAYS:
+            logger.info("NOTE: less than %d days are scheduled; add more entries to "
+                        "schedule.json.", SCHEDULE_WARN_DAYS)
+    else:
+        logger.info("NOTE: no upcoming entries are scheduled.")
 
     unscheduled = [quiz_id for quiz_id in sorted(quiz_files) if quiz_id not in scheduled_ids]
     if unscheduled:
@@ -1405,13 +1567,27 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     def current_time() -> datetime:
         return now if now is not None else datetime.now(timezone.utc)
 
+    migrated = scores is not None and anonymise_scores(scores)
+
     if dry_run:
         return 1 if dry_run_report(schedule, sent_record, scores, stats, current_time()) else 0
+
+    if migrated and scores is not None:
+        logger.info("Replacing Telegram IDs in scores.json by anonymous keys.")
+        if not save_data(SCORES_FILE, scores, "scores.json still contains Telegram IDs."):
+            exit_code = 1
 
     process_commands(token)
 
     start_time = current_time()
     due = [e for e in schedule if e.when <= start_time and e.key not in sent_record]
+    if MAX_LATE_HOURS:
+        late_limit = timedelta(hours=MAX_LATE_HOURS)
+        late = [e for e in due if start_time - e.when > late_limit]
+        if late:
+            due = [e for e in due if e not in late]
+            skip_late_entries(token, late, sent_record, start_time)
+    check_schedule_end(token, schedule, start_time)
     if not due:
         upcoming = [e for e in schedule if e.when > start_time and e.key not in sent_record]
         if upcoming:
@@ -1433,6 +1609,11 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
             questions = load_quiz(entry.quiz_id)
         except ValueError as exc:
             logger.error("%s", exc)
+            owner_alert(token, f"load:{entry.key}",
+                        f"The quiz \u201c{quiz_title(entry.quiz_id)}\u201d (due "
+                        f"{format_utc(entry.when)}) could not be posted: {exc}\n\nCheck the file "
+                        "name in quizzes/ against schedule.json. It will be retried at every "
+                        "check until it works.")
             exit_code = 1
             continue
 
@@ -1443,12 +1624,20 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
         if outcome.sent == 0:
             logger.error("Nothing was posted for %s; it stays due and will be "
                          "retried on the next run.", entry.quiz_id)
+            owner_alert(token, f"post:{entry.key}",
+                        f"Nothing could be posted for \u201c{quiz_title(entry.quiz_id)}\u201d (due "
+                        f"{format_utc(entry.when)}). It will be retried at the next check. Is the "
+                        "bot still an admin of the group?")
             exit_code = 1
         else:
             if outcome.failed:
                 logger.warning("%s was only partly posted (%d failed). It is "
                                "recorded as sent; remove it from sent.json to "
                                "post it again.", entry.quiz_id, outcome.failed)
+                owner_alert(token, f"partial:{entry.key}",
+                            f"\u201c{quiz_title(entry.quiz_id)}\u201d was only partly posted: "
+                            f"{outcome.sent} questions went out, {outcome.failed} failed. It is "
+                            "recorded as posted.")
                 exit_code = 1
             sent_record[entry.key] = {
                 "posted_at": stamp(datetime.now(timezone.utc), seconds=True),
@@ -1459,6 +1648,9 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
             }
             if not save_data(SENT_FILE, sent_record,
                              "Stopping to avoid duplicate posts.", logging.CRITICAL):
+                owner_alert(token, "records-not-saved",
+                            "The record of posted quizzes could not be saved, so a quiz might be "
+                            "posted twice. Check the Actions log.", repeat_hours=1)
                 return 1
 
             if scores is not None and outcome.board:
@@ -1487,17 +1679,87 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
     return exit_code
 
 
-def quiz_display_name(quiz_id: str) -> str:
-    """The name shown to people: 'ows_synonyms_set1' -> 'synonyms set1'.
+def load_alerts() -> Dict[str, str]:
+    """When each problem was last reported to the owner (alerts.json)."""
+    try:
+        data = read_json_object(ALERTS_FILE, "alerts.json") or {}
+    except RuntimeError:
+        return {}
+    return {k: v for k, v in data.items() if isinstance(k, str) and isinstance(v, str)}
 
-    The letters before the first underscore (ows, idm, cmp ...) only decide the speed and are
-    not shown. An id that does not follow the 'prefix_name' pattern is shown as it is.
+
+def owner_alert(token: str, key: str, text: str, repeat_hours: Optional[float] = None,
+                now: Optional[datetime] = None) -> bool:
+    """Message the owner about a problem, at most once per `repeat_hours` for the same `key`.
+
+    Never raises: an alert that cannot be sent (no OWNER_CHAT_ID, owner never pressed START) is
+    only logged.
     """
-    prefix = quiz_prefix(quiz_id)
-    rest = quiz_id[len(prefix):]
-    if prefix and rest.startswith("_") and len(rest) > 1:
-        return rest[1:].replace("_", " ")
-    return quiz_id
+    try:
+        owner = owner_chat_id()
+        if owner is None or not token:
+            return False
+        moment = now or datetime.now(timezone.utc)
+        alerts = load_alerts()
+        last = parse_stamp(alerts.get(key))
+        gap = timedelta(hours=ALERT_REPEAT_HOURS if repeat_hours is None else repeat_hours)
+        if last is not None and moment - last < gap:
+            return False
+        if not send_text(token, str(owner), "\u26A0\uFE0F " + text[:MAX_MESSAGE_LENGTH]):
+            logger.warning("Could not alert the owner (open the bot and press START once, and "
+                           "check OWNER_CHAT_ID).")
+            return False
+        alerts[key] = stamp(moment, seconds=True)
+        cutoff = moment - timedelta(days=30)
+        alerts = {k: v for k, v in alerts.items() if (parse_stamp(v) or moment) > cutoff}
+        save_data(ALERTS_FILE, alerts, "The owner may be told about the same problem again.")
+        return True
+    except Exception:
+        logger.exception("Could not alert the owner.")
+        return False
+
+
+def skip_late_entries(token: str, late: List[ScheduleEntry], sent_record: Dict[str, Any],
+                      now: datetime) -> None:
+    """Do not post quizzes that are far too late (an outage, a rename): record and report them."""
+    lines = []
+    for entry in late:
+        hours = int((now - entry.when).total_seconds() // 3600)
+        logger.warning("Skipping %s scheduled for %s: it is %d hours late (the limit is %d).",
+                       entry.quiz_id, format_utc(entry.when), hours, MAX_LATE_HOURS)
+        sent_record[entry.key] = {"posted_at": stamp(now, seconds=True), "sent": 0, "failed": 0,
+                                  "skipped": 0, "late": True, "questions": []}
+        lines.append(f"\u2022 {quiz_title(entry.quiz_id)} (due {format_utc(entry.when)})")
+    save_data(SENT_FILE, sent_record, "The late quizzes may be skipped again.", logging.WARNING)
+    token_part = hashlib.sha1("|".join(e.key for e in late).encode("utf-8")).hexdigest()[:10]
+    owner_alert(token, f"late:{token_part}",
+                f"Skipped {len(late)} quiz(zes) that were more than {MAX_LATE_HOURS} hours late:\n"
+                + "\n".join(lines)
+                + "\n\nTo post one anyway: GitHub > Actions > Quiz Scheduler > Run workflow, and "
+                  "type its name.")
+
+
+def check_schedule_end(token: str, schedule: List[ScheduleEntry], now: datetime) -> None:
+    """Warn the owner (once a day) when the schedule is about to run out."""
+    upcoming = [entry.when for entry in schedule if entry.when > now]
+    if upcoming and max(upcoming) - now >= timedelta(days=SCHEDULE_WARN_DAYS):
+        return
+    if upcoming:
+        days = (max(upcoming) - now).days
+        text = (f"Only {days} day(s) of quizzes are left in schedule.json (the last is on "
+                f"{format_utc(max(upcoming))}). Add more entries so the daily quizzes continue.")
+    else:
+        text = "No upcoming quizzes are scheduled. Add entries to schedule.json."
+    owner_alert(token, "schedule-end", text, repeat_hours=24, now=now)
+
+
+def quiz_display_name(quiz_id: str) -> str:
+    """The name shown to people: 'Synonyms Set 1_ows' -> 'Synonyms Set 1'.
+
+    What follows the last underscore (ows, idm, cmp ...) only decides the speed and is not
+    shown. An id that does not follow the 'Name_prefix' pattern is shown as it is.
+    """
+    return split_quiz_id(quiz_id)[0]
 
 
 def quiz_list_text() -> str:
@@ -1612,7 +1874,7 @@ def quiz_catalog(now: Optional[datetime] = None) -> List[Dict[str, Any]]:
             upcoming[entry.quiz_id] = upcoming.get(entry.quiz_id, 0) + 1
 
     rows: List[Dict[str, Any]] = []
-    for quiz_id in sorted(path.stem for path in QUIZ_DIR.glob("*.json")):
+    for quiz_id in sorted((path.stem for path in QUIZ_DIR.glob("*.json")), key=str.casefold):
         valid, invalid, error = inspect_quiz(quiz_id)
         rows.append({
             "id": quiz_id,
@@ -1646,6 +1908,134 @@ def format_quiz_list(rows: List[Dict[str, Any]]) -> str:
 
 def run_list() -> int:
     print(format_quiz_list(quiz_catalog()))
+    return 0
+
+
+def _id_forms(quiz_id: str) -> List[str]:
+    """How an id can appear inside a JSON file: as typed, or with \\uXXXX escapes."""
+    forms = [json.dumps(quiz_id, ensure_ascii=False)[1:-1], json.dumps(quiz_id)[1:-1]]
+    return list(dict.fromkeys(forms))
+
+
+def _replace_quiz_field(text: str, old: str, new: str) -> Tuple[str, int]:
+    """Change "quiz": "old" into "quiz": "new" (schedule.json, stats.json)."""
+    total = 0
+    new_form = json.dumps(new, ensure_ascii=False)[1:-1]
+    for form in _id_forms(old):
+        pattern = re.compile(r'("quiz"\s*:\s*")' + re.escape(form) + '(")')
+        text, count = pattern.subn(lambda m: m.group(1) + new_form + m.group(2), text)
+        total += count
+    return text, total
+
+
+def _replace_sent_keys(text: str, old: str, new: str) -> Tuple[str, int]:
+    """Change the keys "old@2026-10-19T06:30Z" in sent.json."""
+    total = 0
+    new_form = json.dumps(new, ensure_ascii=False)[1:-1]
+    for form in _id_forms(old):
+        marker = '"' + form + "@"
+        total += text.count(marker)
+        text = text.replace(marker, '"' + new_form + "@")
+    return text, total
+
+
+def _write_text_atomic(path: Path, text: str) -> None:
+    descriptor, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=".tmp-", suffix=".part")
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="") as handle:
+            handle.write(text)
+        os.replace(tmp_name, path)
+    except BaseException:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
+
+
+def rename_quiz(old_id: str, new_id: str, apply: bool = True) -> List[str]:
+    """Rename a quiz everywhere at once: the file, schedule.json, sent.json and stats.json.
+
+    If the file already has the new name (it was renamed by hand), only the references are
+    updated. Nothing is changed if any check fails. Returns a description of what was done.
+    """
+    for label, quiz_id in (("old", old_id), ("new", new_id)):
+        if not valid_quiz_id(quiz_id):
+            raise ValueError(f"the {label} name {quiz_id!r} is not a valid quiz name "
+                             "(use the file name without .json)")
+    if old_id == new_id:
+        raise ValueError("the old and the new name are the same")
+    old_path, new_path = QUIZ_DIR / f"{old_id}.json", QUIZ_DIR / f"{new_id}.json"
+    existing = [path.stem for path in QUIZ_DIR.glob("*.json")]
+    clash = [name for name in existing
+             if name.casefold() == new_id.casefold() and name not in (old_id, new_id)]
+    if clash:
+        raise ValueError(f"a quiz file named {clash[0]!r} already exists (names that differ only "
+                         "by upper/lower case count as the same file)")
+    if old_path.exists() and new_path.exists():
+        raise ValueError(f"quizzes/{new_path.name} already exists; choose another new name")
+    if old_path.exists():
+        move_file = True
+    elif new_path.exists():
+        move_file = False
+    else:
+        hint = similar_quiz_ids(old_id)
+        raise ValueError(f"there is no quizzes/{old_path.name}"
+                         + (f" (similar: {', '.join(hint)})" if hint else "")
+                         + f" and no quizzes/{new_path.name}")
+
+    if move_file:
+        lines = [f"Rename quizzes/{old_path.name} -> quizzes/{new_path.name}"]
+    else:
+        lines = [f"Keep quizzes/{new_path.name} (it already has the new name)"]
+    originals: Dict[Path, str] = {}
+    updated: Dict[Path, str] = {}
+    for path, kind in ((SCHEDULE_FILE, "quiz"), (SENT_FILE, "sent"), (STATS_FILE, "quiz")):
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        new_text, count = (_replace_sent_keys if kind == "sent" else _replace_quiz_field)(
+            text, old_id, new_id)
+        if count:
+            try:
+                parsed = json.loads(new_text)
+            except ValueError as exc:
+                raise ValueError(
+                    f"{path.name} would become invalid ({exc}); nothing changed") from exc
+            if path == SCHEDULE_FILE and any(
+                    isinstance(item, dict) and item.get("quiz") == old_id for item in parsed):
+                raise ValueError("schedule.json still refers to the old name; nothing changed")
+            originals[path], updated[path] = text, new_text
+        lines.append(f"{path.name}: {count} reference(s) {'changed' if apply else 'would change'}")
+    if not apply:
+        return ["Preview only (nothing was changed):", *lines]
+
+    moved = False
+    try:
+        for path, new_text in updated.items():
+            _write_text_atomic(path, new_text)
+        if move_file:
+            os.replace(old_path, new_path)
+            moved = True
+    except OSError as exc:
+        for path, text in originals.items():
+            try:
+                _write_text_atomic(path, text)
+            except OSError:
+                pass
+        if moved and new_path.exists() and not old_path.exists():
+            os.replace(new_path, old_path)
+        raise ValueError(f"the rename failed and was undone: {exc}") from exc
+    return lines
+
+
+def run_rename(old_id: str, new_id: str, dry_run: bool) -> int:
+    try:
+        for line in rename_quiz(old_id, new_id, apply=not dry_run):
+            logger.info("%s", line)
+    except ValueError as exc:
+        logger.error("%s", exc)
+        return 2
     return 0
 
 
@@ -1770,6 +2160,11 @@ def parse_args(argv: Any = None) -> argparse.Namespace:
                         help="validate files and show what would happen; send nothing")
     parser.add_argument("--list", action="store_true",
                         help="show the available quizzes and exit")
+    parser.add_argument("--rename", nargs=2, metavar=("OLD", "NEW"),
+                        help="rename a quiz everywhere (file, schedule.json, sent.json, "
+                             "stats.json); with --dry-run only show what would change")
+    parser.add_argument("--test-chat", action="store_true",
+                        help="with --quiz: post to the chat in TEST_CHAT_ID instead of the group")
     parser.add_argument("--intro", metavar="TEXT",
                         help="show this intro when running a manual quiz")
     return parser.parse_args(argv)
@@ -1794,6 +2189,8 @@ def main(argv: Any = None) -> int:
 
     if args.list:
         return run_list()
+    if args.rename:
+        return run_rename(args.rename[0], args.rename[1], args.dry_run)
 
     token = chat_id = ""
     if not args.dry_run:
@@ -1802,6 +2199,20 @@ def main(argv: Any = None) -> int:
         except RuntimeError as exc:
             logger.error("%s", exc)
             return 2
+    if args.test_chat:
+        if not args.quiz:
+            logger.error("--test-chat only works together with --quiz (a manual run).")
+            return 2
+        raw_test_chat = os.environ.get("TEST_CHAT_ID", "").strip()
+        if not raw_test_chat:
+            logger.error("TEST_CHAT_ID is not set. Add it as a repository secret first.")
+            return 2
+        try:
+            chat_id = validate_chat_id(raw_test_chat)
+        except (ValueError, RuntimeError) as exc:
+            logger.error("TEST_CHAT_ID: %s", exc)
+            return 2
+        logger.warning("TEST CHAT: posting to the test chat, not to the real group.")
 
     # Optionally start webhook server
     webhook_server = None
@@ -1814,6 +2225,11 @@ def main(argv: Any = None) -> int:
         return run_scheduled(token, chat_id, args.dry_run)
     except RuntimeError as exc:
         logger.error("%s", exc)
+        if not args.quiz and not args.dry_run:
+            error_key = hashlib.sha1(str(exc).encode("utf-8")).hexdigest()[:10]
+            owner_alert(token, f"run-error:{error_key}",
+                        f"The quiz check stopped with an error, so nothing will be posted until "
+                        f"it is fixed: {exc}")
         return 2
     finally:
         if webhook_server:

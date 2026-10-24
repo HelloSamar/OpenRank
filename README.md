@@ -1,18 +1,18 @@
-# 🚀 PYQxBot
+# 🚀 OpenRank
 
 ### Smart daily quizzes for competitive exam prep.
 
-PYQxBot is a fast, fun, and focused quiz platform built for aspirants preparing for SSC, Railway, Banking, and other major competitive exams.
+OpenRank is a fast, fun, and focused quiz platform built for aspirants preparing for SSC, Railway, Banking, and other major competitive exams.
 
 Practice daily, sharpen your instincts, and stay ahead with quick-fire quizzes covering English, reasoning, aptitude, GK, and current affairs.
 
 ---
 
-## Why PYQxBot?
+## Why OpenRank?
 
 - ⚡ **Speed-first learning** with short, timed questions (10–60 seconds depending on the section)
 - 🎯 **Exam-like scoring**: +2 for correct, -0.5 for wrong
-- 🏆 **Real-time leaderboard** to compete with friends
+- 🏆 **Results after every quiz and a weekly leaderboard** to compete with friends
 - 💡 **Instant feedback** after every question
 - 📈 **Daily practice streak** that keeps you consistent
 - 🧠 **Multi-subject prep** for a complete exam strategy
@@ -68,14 +68,13 @@ Whether you’re preparing for:
 - State Exams
 - Other competitive recruitment tests
 
-PYQxBot helps you stay consistent and improve faster with every quiz.
+OpenRank helps you stay consistent and improve faster with every quiz.
 
 ---
 
 ## 📲 Start today
 
-Bot: **@PYQxBot**  
-Channel: *add your channel link here*  
-Quiz Group: *add your group link here*
+Bot: **OpenRank** (@PYQxBot)  
+Quiz Group: **[t.me/GovtScore](https://t.me/GovtScore)**
 
 *Practice daily. Improve daily. Crack the exam.* 💪

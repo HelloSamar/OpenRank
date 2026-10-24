@@ -1,4 +1,4 @@
-"""Small command responder for the PYQxBot group bot.
+"""Small command responder for the OpenRank group bot.
 
 quiz_bot.py calls this on every scheduled run (about every 15 minutes), so replies are
 batched and can take up to ~15 minutes (longer while a quiz is being posted).
