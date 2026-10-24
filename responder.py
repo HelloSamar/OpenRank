@@ -30,7 +30,7 @@ COMMANDS: List[Tuple[str, str]] = [
     ("contact", "Request a quiz or chat with the owner directly"),
 ]
 
-GROUP_URL = "https://t.me/OpenScore"      # the group /start sends people to
+GROUP_URL = "https://t.me/OpenRank"      # the group /start sends people to
 
 MAX_TEXT_LENGTH = 1000          # longest message that is forwarded
 MAX_PER_USER = 5                # commands answered per person in one run (spam guard)
