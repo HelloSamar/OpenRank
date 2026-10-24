@@ -1,0 +1,81 @@
+name: Rename quiz
+
+# Renames a quiz everywhere at once: the file in quizzes/, schedule.json, sent.json and
+# stats.json. Use this instead of renaming by hand, so that nothing is posted twice and
+# nothing stops working. If you already renamed the file by hand, run it anyway: it then only
+# updates the references.
+
+on:
+  workflow_dispatch:
+    inputs:
+      old:
+        description: "Current quiz name: the file name without .json, as schedule.json spells it (for example ows000)"
+        required: true
+        type: string
+      new:
+        description: "New quiz name: Quiz Name_prefix, the file name without .json (spaces and special characters are fine)"
+        required: true
+        type: string
+      preview:
+        description: "Only show what would change, change nothing"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+# The same lock as the quiz scheduler, so a rename can never overlap a quiz run.
+concurrency:
+  group: quiz-scheduler
+  cancel-in-progress: false
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Rename
+        env:
+          OLD_NAME: ${{ inputs.old }}
+          NEW_NAME: ${{ inputs.new }}
+          PREVIEW: ${{ inputs.preview }}
+        run: |
+          if [ "$PREVIEW" = "true" ]; then
+            python quiz_bot.py --rename "$OLD_NAME" "$NEW_NAME" --dry-run
+            exit 0
+          fi
+          python quiz_bot.py --rename "$OLD_NAME" "$NEW_NAME"
+          # Information only: problems that existed before this rename may still be listed.
+          python quiz_bot.py --dry-run || echo "(The report above lists problems that still need fixing.)"
+
+      - name: Save changes
+        if: ${{ inputs.preview != true }}
+        env:
+          OLD_NAME: ${{ inputs.old }}
+          NEW_NAME: ${{ inputs.new }}
+        run: |
+          git config core.quotepath false
+          git add -A quizzes schedule.json sent.json stats.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Rename quiz: $OLD_NAME -> $NEW_NAME"
+            git pull --rebase
+            git push
+          fi

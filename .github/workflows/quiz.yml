@@ -4,14 +4,21 @@ on:
   schedule:
     # Wakes up every 15 minutes (UTC) and posts whatever is due in schedule.json.
     # The quiz times are NOT set here - edit schedule.json to change them.
-    - cron: "*/15 * * * *"
+    # The minutes are 7, 22, 37 and 52 on purpose: GitHub delays scheduled runs most at the
+    # start of the hour, so the checks stay away from :00.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       quiz:
-        description: "Post this quiz now, ignoring the schedule (e.g. ows001). Leave empty to run the normal schedule check."
+        description: "Post this quiz now, ignoring the schedule: the file name without .json (e.g. Idioms_idm). Leave empty to run the normal schedule check."
         required: false
         default: ""
         type: string
+      test_chat:
+        description: "Only with a quiz name: post it to the test chat (secret TEST_CHAT_ID) instead of the real group. Nothing is recorded."
+        required: false
+        default: false
+        type: boolean
 
 # "write" is needed so the run can commit sent.json (the record of posted quizzes).
 permissions:
@@ -52,10 +59,17 @@ jobs:
           OWNER_CHAT_ID: ${{ secrets.OWNER_CHAT_ID }}
           OWNER_USERNAME: ${{ vars.OWNER_USERNAME }}
           DISABLE_COMMANDS: ${{ vars.DISABLE_COMMANDS }}
+          TEST_CHAT_ID: ${{ secrets.TEST_CHAT_ID }}
+          SCORES_SALT: ${{ secrets.SCORES_SALT }}
           MANUAL_QUIZ: ${{ inputs.quiz }}
+          USE_TEST_CHAT: ${{ inputs.test_chat }}
         run: |
           if [ -n "$MANUAL_QUIZ" ]; then
-            python quiz_bot.py --quiz "$MANUAL_QUIZ"
+            if [ "$USE_TEST_CHAT" = "true" ]; then
+              python quiz_bot.py --quiz "$MANUAL_QUIZ" --test-chat
+            else
+              python quiz_bot.py --quiz "$MANUAL_QUIZ"
+            fi
           else
             python quiz_bot.py
           fi
@@ -63,7 +77,7 @@ jobs:
       - name: Save records
         if: always()
         run: |
-          for f in sent.json scores.json stats.json; do
+          for f in sent.json scores.json stats.json alerts.json; do
             if [ -f "$f" ]; then git add "$f"; fi
           done
           if ! git diff --cached --quiet; then
