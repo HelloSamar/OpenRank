@@ -3,7 +3,16 @@
   "weeks": {
     "2026-10-18T14:30Z": {
       "users": {
-        "8630381516": {
+        "u4c2eb7c76bc5f020": {
+          "correct": 9,
+          "name": "samar",
+          "points": 7.5,
+          "quizzes": 1,
+          "seconds": 826.9,
+          "skipped": 70,
+          "wrong": 21
+        },
+        "u899b6dd9563c457a": {
           "correct": 73,
           "name": "samar",
           "points": 126.0,
@@ -12,7 +21,7 @@
           "skipped": 197,
           "wrong": 40
         },
-        "8838949600": {
+        "ud7acd6578268e5cb": {
           "correct": 32,
           "name": "S",
           "points": 54.5,

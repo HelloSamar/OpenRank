@@ -47,12 +47,6 @@
     "sent": 10,
     "skipped": 0
   },
-  "idm001@2026-10-17T17:30Z": {
-    "failed": 0,
-    "posted_at": "2026-10-17T20:20:40Z",
-    "sent": 10,
-    "skipped": 0
-  },
   "One‑Word-Substitutions_ows@2026-10-17T17:00Z": {
     "failed": 0,
     "posted_at": "2026-10-17T20:17:46Z",
@@ -1281,6 +1275,436 @@
       }
     ],
     "sent": 100,
+    "skipped": 0
+  },
+  "One‑Word-Substitutions_ows@2026-10-22T06:30Z": {
+    "failed": 0,
+    "late": true,
+    "posted_at": "2026-10-24T07:05:09Z",
+    "questions": [],
+    "sent": 0,
+    "skipped": 0
+  },
+  "One‑Word-Substitutions_ows@2026-10-23T06:30Z": {
+    "failed": 0,
+    "late": true,
+    "posted_at": "2026-10-24T07:05:09Z",
+    "questions": [],
+    "sent": 0,
+    "skipped": 0
+  },
+  "One‑Word-Substitutions_ows@2026-10-24T06:30Z": {
+    "failed": 0,
+    "posted_at": "2026-10-24T07:24:00Z",
+    "questions": [
+      {
+        "id": "07b1cc4c8481",
+        "q": "A large deep pot used both in oven and as serving vessel"
+      },
+      {
+        "id": "1459bbeb56c6",
+        "q": "A person who suffers from imaginary illness"
+      },
+      {
+        "id": "a167904f5704",
+        "q": "A system of society or government in which men hold the powe"
+      },
+      {
+        "id": "50774a28ac4d",
+        "q": "Deep unconscious state, usually lasting a long time and caus"
+      },
+      {
+        "id": "586d6ce35044",
+        "q": "Condition in which someone is not able to think normally bec"
+      },
+      {
+        "id": "6256e2435525",
+        "q": "When something moves in a straight line"
+      },
+      {
+        "id": "42b7ebea6053",
+        "q": "Expressing feelings or opinions in a very loud or forceful w"
+      },
+      {
+        "id": "9f175bf2f3e4",
+        "q": "An instruction that is added later to a will, usually to cha"
+      },
+      {
+        "id": "71abbc6a8b56",
+        "q": "A medicine to nullify the effect of poison"
+      },
+      {
+        "id": "d08f4ea02a9b",
+        "q": "A vertical passageway into a mine"
+      },
+      {
+        "id": "043d05f7ecbf",
+        "q": "Make certain that something will happen"
+      },
+      {
+        "id": "96ab44c8f131",
+        "q": "Words carved on a stone or monument"
+      },
+      {
+        "id": "326576e2e0bc",
+        "q": "Without enough money to pay what you owe"
+      },
+      {
+        "id": "1cccd6194d93",
+        "q": "Collection of written or spoken texts"
+      },
+      {
+        "id": "563ae6f5c9d4",
+        "q": "A doctor who studies and treats skin diseases"
+      },
+      {
+        "id": "b732076aa89e",
+        "q": "Feelings of great happiness and excitement"
+      },
+      {
+        "id": "776cd2ecc345",
+        "q": "Travelling from place to place, especially to find work"
+      },
+      {
+        "id": "329e1a56f16a",
+        "q": "Having complete or unlimited power"
+      },
+      {
+        "id": "3bed7c27e6bc",
+        "q": "A short speech at the end of a play"
+      },
+      {
+        "id": "5ae20ea4e135",
+        "q": "Leaving (property) to a person or other beneficiary by a wil"
+      },
+      {
+        "id": "8fcd03c9b03f",
+        "q": "Likely to arouse envy"
+      },
+      {
+        "id": "0262ae51de4c",
+        "q": "Large notices or signs put up in a public place or carried b"
+      },
+      {
+        "id": "aaa183640dab",
+        "q": "A person who loves automobiles / cars"
+      },
+      {
+        "id": "ccd9d7bf0bf1",
+        "q": "Permanent administrative offices department"
+      },
+      {
+        "id": "d20aab3e1a0d",
+        "q": "Foolish, confused, or meaningless words"
+      },
+      {
+        "id": "6f6c3044ec19",
+        "q": "Persons with whom somebody spends a lot of time"
+      },
+      {
+        "id": "524134813fb0",
+        "q": "First time an actor, musician, athlete, etc., does something"
+      },
+      {
+        "id": "b173c5aa3bc5",
+        "q": "A diplomatic representative in another country"
+      },
+      {
+        "id": "3f94157f7a74",
+        "q": "The part of a theatre where people who are watching and list"
+      },
+      {
+        "id": "0952a63cb443",
+        "q": "A person who believes in or tries to bring about a state of "
+      },
+      {
+        "id": "77c374f2f376",
+        "q": "Having mixed feelings or contradictory ideas about something"
+      },
+      {
+        "id": "bb68b18a678e",
+        "q": "A public room or building where gambling games are played"
+      },
+      {
+        "id": "b9b96dddc1b9",
+        "q": "Indirect and usually bad results of an action or event that "
+      },
+      {
+        "id": "9c953c1225a3",
+        "q": "A person who has broken the law, especially one who remains "
+      },
+      {
+        "id": "17111ba21d3b",
+        "q": "Science of blood"
+      },
+      {
+        "id": "bf435726e881",
+        "q": "An activity that more and more people are becoming involved "
+      },
+      {
+        "id": "79c7fd3dcf88",
+        "q": "The work of collecting and writing news, stories for newspap"
+      },
+      {
+        "id": "7586cf28a772",
+        "q": "Making or spreading scandalous claims about someone with the"
+      },
+      {
+        "id": "39a07ee6ce0a",
+        "q": "One who receives something"
+      },
+      {
+        "id": "7f9387d1864a",
+        "q": "Something that serves as a reminder"
+      },
+      {
+        "id": "9b437006744b",
+        "q": "A particular method of working"
+      },
+      {
+        "id": "9685f1286a2d",
+        "q": "Intense military campaign intended to bring about a swift vi"
+      },
+      {
+        "id": "8ec126b6febf",
+        "q": "Made to look like an exact copy of something in order to tri"
+      },
+      {
+        "id": "cb03fa417ace",
+        "q": "A song sung in the past at a funeral or for a dead person"
+      },
+      {
+        "id": "4c86d72ad939",
+        "q": "Not clear"
+      },
+      {
+        "id": "f9aa3a9d6ee0",
+        "q": "An arrangement of leaves, flowers, fruits, etc., in the shap"
+      },
+      {
+        "id": "732b5a64d77d",
+        "q": "An act or fact of having a romantic or sexual relationship w"
+      },
+      {
+        "id": "e9e4da8ad397",
+        "q": "One who believes in fate"
+      },
+      {
+        "id": "16d5bca130de",
+        "q": "An activity or art of copying the behaviour or speech of oth"
+      },
+      {
+        "id": "47e5f6465ede",
+        "q": "Not as important as something else"
+      },
+      {
+        "id": "a511e8aa8a26",
+        "q": "A group of worshippers"
+      },
+      {
+        "id": "5270fe774916",
+        "q": "Lasting for only a short time"
+      },
+      {
+        "id": "cdf13babd987",
+        "q": "Looking at someone in an unpleasantly sexual way"
+      },
+      {
+        "id": "c96346bbf715",
+        "q": "Person who gives written testimony for use in a law court"
+      },
+      {
+        "id": "3336674f66f3",
+        "q": "Harsh discordant mixture of sounds"
+      },
+      {
+        "id": "5a632daa68bc",
+        "q": "Full of bitter, harsh and angry criticism"
+      },
+      {
+        "id": "01daf890c0d9",
+        "q": "Helping you to remember something"
+      },
+      {
+        "id": "d69242c6c5e6",
+        "q": "A person devoid of kind feeling and sympathy"
+      },
+      {
+        "id": "a4515a456f30",
+        "q": "Feelings of pity and sorrow for someone else's misfortune"
+      },
+      {
+        "id": "6d09083a9545",
+        "q": "Certain to happen"
+      },
+      {
+        "id": "7a2c6e0e92d0",
+        "q": "Marriage outside one's tribe"
+      },
+      {
+        "id": "b9cb10afbafd",
+        "q": "Happening at the same time"
+      },
+      {
+        "id": "1526d40c51b9",
+        "q": "An imaginary line drawn on the earth equidistant from the po"
+      },
+      {
+        "id": "6b7040e9a439",
+        "q": "Not giving enough thought to other people's feelings or need"
+      },
+      {
+        "id": "b4bc7d0b00ef",
+        "q": "Having or showing an ability to understand difficult ideas a"
+      },
+      {
+        "id": "db86ba91f80f",
+        "q": "Periods of temporary economic decline during which trade and"
+      },
+      {
+        "id": "1c3c42a46542",
+        "q": "Hitting (someone or something) very hard with a stick, whip,"
+      },
+      {
+        "id": "7b2843ddf35a",
+        "q": "A person who is walking in a city, along a road, etc"
+      },
+      {
+        "id": "33b9cb6f20ce",
+        "q": "Rapid increase in the number or amount of something"
+      },
+      {
+        "id": "ba6018c96815",
+        "q": "Study or practice of flying aeroplanes"
+      },
+      {
+        "id": "5654828269bb",
+        "q": "A large deep metal pot used for cooking over open fire"
+      },
+      {
+        "id": "dbf06878c013",
+        "q": "Government by elected representatives"
+      },
+      {
+        "id": "b8dc344d44ce",
+        "q": "Have saliva dripping copiously from the mouth"
+      },
+      {
+        "id": "bdb1fd308fa7",
+        "q": "A person who loves dreams"
+      },
+      {
+        "id": "34c8c9844f90",
+        "q": "The killing of a king"
+      },
+      {
+        "id": "e3e654a2eff5",
+        "q": "Sets of ideas that somebody believes in and tries to persuad"
+      },
+      {
+        "id": "6e4eef54a67e",
+        "q": "An ability, talent, or special skill needed to do something"
+      },
+      {
+        "id": "2fb861f626b1",
+        "q": "A hunting weapon used by Australian Aborigines that comes ba"
+      },
+      {
+        "id": "4634c03b3653",
+        "q": "A supreme ruler"
+      },
+      {
+        "id": "489dca9919dc",
+        "q": "The practice of marrying one person at a time"
+      },
+      {
+        "id": "106a47bfdda3",
+        "q": "Quiet and peaceful"
+      },
+      {
+        "id": "a0c4c3b8a1b5",
+        "q": "A person who pretends to be what he or she is not"
+      },
+      {
+        "id": "1abdc88a14dd",
+        "q": "A cold-blooded vertebrate animal that is born in water and b"
+      },
+      {
+        "id": "6f3dda6a57ff",
+        "q": "Harsh or critical statements about someone"
+      },
+      {
+        "id": "44edd6d7767c",
+        "q": "Combine to form a whole"
+      },
+      {
+        "id": "ddde3a3b0843",
+        "q": "A person or thing that is likely to cause harm"
+      },
+      {
+        "id": "dd17ec595701",
+        "q": "Sending (a person who has been accused of a crime) to anothe"
+      },
+      {
+        "id": "5ad31944f092",
+        "q": "Ready and excited to start to do something"
+      },
+      {
+        "id": "0fdf9de4da48",
+        "q": "Showing care and effort in your work"
+      },
+      {
+        "id": "1ca9d969dfc4",
+        "q": "To take someone somewhere suddenly and quickly"
+      },
+      {
+        "id": "164b3e8e783e",
+        "q": "One who possesses outstanding technical ability in a particu"
+      },
+      {
+        "id": "2eedb3e21845",
+        "q": "Make pale by excluding light"
+      },
+      {
+        "id": "b7a3216e8c09",
+        "q": "Simple fast spreading plant without flowers or leaves which "
+      },
+      {
+        "id": "bd2642f21091",
+        "q": "A place in a large institution for the care of those who are"
+      },
+      {
+        "id": "b0140eb5dfc8",
+        "q": "An act of returning something that was lost or stolen to its"
+      },
+      {
+        "id": "8fa4e99fa50c",
+        "q": "Beginning or origin of something"
+      },
+      {
+        "id": "4ab7d4aa4ea4",
+        "q": "Refusing (something, such as an offer or suggestion) in a ru"
+      },
+      {
+        "id": "c49572a1b59f",
+        "q": "Having juicy or fleshy and thick tissues"
+      },
+      {
+        "id": "8d38f1e4eda1",
+        "q": "One who does not express himself freely"
+      },
+      {
+        "id": "098eecd53536",
+        "q": "Able to do many different things"
+      }
+    ],
+    "sent": 100,
+    "skipped": 0
+  },
+  "idm001@2026-10-17T17:30Z": {
+    "failed": 0,
+    "posted_at": "2026-10-17T20:20:40Z",
+    "sent": 10,
     "skipped": 0
   },
   "ows001@2026-10-17T11:45Z": {
