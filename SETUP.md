@@ -118,7 +118,7 @@ The bot answers three commands. It has no always-on server: every 15-minute chec
 
 | Command | What it does |
 |---|---|
-| `/start` | Asks the person to join the group; the words "join our group" are a hyperlink to `https://t.me/GovtScore`. To use another group, change `GROUP_URL` at the top of `responder.py`. |
+| `/start` | Asks the person to join the group; the words "join our group" are a hyperlink to `https://t.me/OpenRank`. To use another group, change `GROUP_URL` at the top of `responder.py`. |
 | `/quizlists` | One line per stored quiz with only its name and number of questions, nothing else. The prefix after the underscore (`_ows`, `_idm`, ...) is not shown; names appear exactly as written in the file name, sorted alphabetically. |
 | `/contact` | For asking for a quiz on an exam topic or subject, or for anything else. It shows a button that opens a direct chat with the owner. The person can also send `/contact your message`, which is passed on to the owner. (`/request` still works as another name for it.) |
 
@@ -142,11 +142,11 @@ contact - Request a quiz or chat with the owner directly
 
 **Late quizzes.** A quiz that is more than 12 hours late (`MAX_LATE_HOURS`) is skipped, not posted, and you are told. This stops a burst of old quizzes after an outage or a rename mistake. It is recorded in `sent.json` with `"late": true`, so it does not come back. To post one anyway: Actions -> Quiz Scheduler -> Run workflow, and type its name. Set `MAX_LATE_HOURS = 0` to switch the limit off.
 
-**Renaming a quiz.** Actions -> **Rename quiz** -> Run workflow. *old* is the current name (as `schedule.json` spells it), *new* is the new name (`Quiz Name_prefix`). It renames the file and updates `schedule.json`, `sent.json` and `stats.json` in one commit, so nothing is posted twice. Tick *preview* to see what would change first. Never rename by hand.
+**Renaming a quiz.** Actions -> **Rename quiz** -> Run workflow. *old* is the current name (as `schedule.json` spells it), *new* is the new name (`Quiz Name_prefix`). It renames the file and updates `schedule.json`, `sent.json`, and `stats.json` in a single commit, so nothing is posted twice. Tick *preview* to see what would change first. Never rename by hand.
 
 **Test chat.** Make a private test group, add the bot, and add its ID (it starts with `-100`) as the secret `TEST_CHAT_ID`. Then Actions -> Quiz Scheduler -> Run workflow, type a quiz name and tick *test_chat*: the quiz goes only to the test group and nothing is recorded (no sent, score or statistics change). Use it before trusting any change.
 
-**Anonymous scores.** `scores.json` no longer stores Telegram IDs. Each person is stored under a keyed hash; names stay (they are visible in the group anyway). Old entries are converted at the first run. Add a secret `SCORES_SALT` (any long random text) and never change it; without it the bot token is used, and a new token would start everyone on a fresh row. Note: older versions of `scores.json` remain in the repository history. If the repository is public, anyone can still read them there; removing them completely means making the repository private or recreating it.
+**Anonymous scores.** `scores.json` no longer stores Telegram IDs. Each person is stored under a keyed hash; names stay (they are visible in the group anyway). Old entries are converted at the first run. Add a secret `SCORES_SALT` (any long random text) and never change it; without it the bot token is used, and a new token would start everyone on a fresh row. Note: older versions of `scores.json` remain in the repository history. If the repository is public, anyone can still read its contents; removing them entirely means making the repository private or recreating it.
 
 **Weekly pin.** `PIN_WEEKLY_LEADERBOARD = True` pins the weekly leaderboard after it is posted. The bot needs the *Pin messages* right in the group. It is off by default; a refused pin is only logged.
 
@@ -158,7 +158,7 @@ contact - Request a quiz or chat with the owner directly
 
 1. The bot is **OpenRank**. Add it to your quiz **group**.
 2. `CHAT_ID` is the group's numeric ID (negative, like `-1001234567890`).
-3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot unless you also set `WEBHOOK_ENABLED=true` (then Telegram must post updates to `WEBHOOK_PORT`, optionally protected by `WEBHOOK_SECRET`). Otherwise only one program can read updates at a time, and a clash switches scoring off for that quiz.
+3. Do not open `getUpdates` in a browser while a quiz is running, and do not set a webhook on this bot unless you also set `WEBHOOK_ENABLED=true` (then Telegram must post updates to `WEBHOOK_PORT`, optionally protected by `WEBHOOK_SECRET`). Otherwise, only one program can read updates at a time, and a clash switches scoring off for that quiz.
 4. The script asks Telegram for poll answers and for messages (the commands below), and Telegram remembers that. To look up a chat ID later with `getUpdates`, add `&allowed_updates=[]` to the URL.
 
 ## GitHub (browser only)
@@ -173,7 +173,7 @@ contact - Request a quiz or chat with the owner directly
 
 - A quiz starts at the first 15-minute check after its time, and GitHub can add 5 to 20 minutes of delay. A time that has already passed runs at the next check.
 - Public repositories have free Actions minutes. Private ones have a monthly allowance; if you make the repository private, check fewer times, for example `7,37 * * * *` in the cron line of `quiz.yml`.
-- A quiz takes about (questions x seconds each); the workflow stops a run after 350 minutes. Private repositories pay for every minute, so very long quizzes use up the monthly allowance.
+- A quiz takes about (questions x seconds each); the workflow stops a run after 350 minutes. Private repositories charge per minute, so very long quizzes use up the monthly allowance.
 - **Interrupted quizzes:** if a run is cancelled (SIGINT/SIGTERM) the bot stops posting, posts the partial result and does not start further quizzes. A quiz that had at least one poll posted is recorded in `sent.json` and is not posted again; delete its entry in `sent.json` to run it again.
 - If a quiz is only partly posted it is still recorded as sent so it is not duplicated. If nothing posted, it is retried on the next run.
 - If Telegram creates a poll but the answer is lost on the way, the retry can post that one question twice. Telegram offers no way to prevent this.
