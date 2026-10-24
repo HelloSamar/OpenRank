@@ -85,6 +85,7 @@ class SandboxCase(unittest.TestCase):
             mock.patch.object(qb, "SENT_FILE", self.tmp / "sent.json"),
             mock.patch.object(qb, "SCORES_FILE", self.tmp / "scores.json"),
             mock.patch.object(qb, "STATS_FILE", self.tmp / "stats.json"),
+            mock.patch.object(qb, "ALERTS_FILE", self.tmp / "alerts.json"),
             mock.patch.object(qb, "UPDATES_OFFSET_FILE", self.tmp / ".offset"),
             mock.patch.object(qb, "WEBHOOK_ENABLED", False),
             mock.patch.object(qb.time, "sleep", lambda *_: None),
@@ -124,7 +125,11 @@ class WeeklyTests(unittest.TestCase):
                   "skipped": 0, "seconds": 10, "quizzes": 1}}}},
             "weekly_posted": []}
         sent = []
-        with mock.patch.object(qb, "send_text", lambda *a, **k: sent.append(a[2]) or True), \
+        def fake_send(*args, **kwargs):
+            sent.append(args[2])
+            return qb.TelegramResult(ok=True, data={"result": {"message_id": 5}}, status=200)
+
+        with mock.patch.object(qb, "send_message", fake_send), \
                 mock.patch.object(qb, "save_data", lambda *a, **k: True):
             self.assertTrue(qb.post_weekly_if_due("t", "c", scores, now))
             self.assertTrue(qb.post_weekly_if_due("t", "c", scores, now))
@@ -168,7 +173,7 @@ class ScheduledRunTests(SandboxCase):
         sent = json.loads((self.tmp / "sent.json").read_text())
         self.assertIn("ows900@2026-10-19T00:00Z", sent)
         scores = json.loads((self.tmp / "scores.json").read_text())
-        week = next(iter(scores["weeks"].values()))["users"]["7"]
+        week = next(iter(scores["weeks"].values()))["users"][qb.user_key(7)]
         self.assertEqual(week["correct"], 3)
         self.assertEqual(week["points"], 6.0)
         self.assertTrue((self.tmp / "stats.json").exists())
@@ -233,6 +238,70 @@ class QuizListTests(SandboxCase):
     def test_list_flag_needs_no_token(self):
         self.write("schedule.json", [])
         self.assertEqual(qb.main(["--list"]), 0)
+
+
+class QuizNameTests(SandboxCase):
+    """Quiz files are named 'Quiz Name_ows.json': the name, then the prefix after the underscore."""
+
+    def test_names_may_have_spaces_and_special_characters(self):
+        good = ["Synonyms Set 1_ows", "One\u2011Word-Substitutions_ows", "A & B (Set 2) 50%!_idm",
+                "\u0939\u093f\u0902\u0926\u0940_ows", "O'Neil's quiz #3, part [1]_mth",
+                "ows000", "x"]
+        for quiz_id in good:
+            self.assertTrue(qb.valid_quiz_id(quiz_id), quiz_id)
+
+    def test_unsafe_or_broken_ids_are_refused(self):
+        bad = ["", "../schedule", "a/b", "a\\b", ".hidden", " lead", "trail ", "line\nbreak",
+               "tab\there", "x" * 101, None, 5]
+        for quiz_id in bad:
+            self.assertFalse(qb.valid_quiz_id(quiz_id), repr(quiz_id))
+        for quiz_id in ("../schedule", "a/b", "a\\b", "line\nbreak"):
+            with self.assertRaises(ValueError):
+                qb.load_quiz(quiz_id)
+            with self.assertRaises(ValueError):
+                qb.parse_schedule_entry({"quiz": quiz_id, "at": "2026-10-19T00:00Z"})
+
+    def test_name_and_prefix(self):
+        cases = {
+            "Synonyms Set 1_ows": ("Synonyms Set 1", "ows"),
+            "One\u2011Word-Substitutions_OWS": ("One\u2011Word-Substitutions", "ows"),
+            "Idioms_idm": ("Idioms", "idm"),
+            "A_B_ows": ("A_B", "ows"),                    # only the last underscore counts
+            "ows000": ("ows000", "ows"),                  # the older style still works
+            "Quiz_": ("Quiz_", "quiz"),
+            "_ows": ("_ows", ""),
+        }
+        for quiz_id, expected in cases.items():
+            self.assertEqual(qb.split_quiz_id(quiz_id), expected, quiz_id)
+
+    def test_speed_follows_the_prefix_after_the_underscore(self):
+        self.assertEqual(qb.quiz_timer("Anything Here_ows"), qb.quiz_timer("ows000"))
+        self.assertEqual(qb.quiz_timer("Anything Here_idm"), qb.quiz_timer("idm001"))
+        self.assertEqual(qb.quiz_timer("Anything_OWS"), qb.quiz_timer("Anything_ows"))
+        self.assertEqual(qb.quiz_timer("Unknown_zzz"), qb.quiz_timer("zzz999"))
+
+    def test_group_messages_show_the_name_without_the_prefix(self):
+        self.assertEqual(qb.quiz_title("Maths & Reasoning (Set 2)_mth"),
+                         "Maths & Reasoning (Set 2)")
+        self.assertEqual(qb.quiz_title("ows000"), "OWS000")        # older style looks as before
+
+    def test_a_quiz_with_an_awkward_name_is_posted_scored_and_recorded(self):
+        quiz_id = "Maths & Reasoning (Set 2) 50%_ows"
+        self.make_quiz(quiz_id, 3)
+        self.write("schedule.json", [{"quiz": quiz_id, "at": "2026-10-19T00:00Z", "timer": 10}])
+        fake = FakeTelegram()
+        now = datetime(2026, 10, 19, 6, 30, tzinfo=timezone.utc)
+        with mock.patch.object(qb.requests, "Session", fake):
+            self.assertEqual(qb.run_scheduled("tok", "-100", False, now=now), 0)
+        self.assertEqual(len(fake.polls), 3)
+        result = next(m for m in fake.messages if "Final Result" in m)
+        self.assertIn("Maths & Reasoning (Set 2) 50% - Final Result", result)
+        self.assertNotIn("_ows", result)
+        self.assertNotIn("_OWS", result)
+        sent = json.loads((self.tmp / "sent.json").read_text())
+        self.assertIn(f"{quiz_id}@2026-10-19T00:00Z", sent)
+        self.assertEqual(qb.run_scheduled("tok", "-100", False, now=now), 0)   # not posted twice
+        self.assertEqual(len(fake.polls), 3)
 
 
 class ShutdownTests(SandboxCase):

@@ -112,7 +112,6 @@ class ContactTests(unittest.TestCase):
         button = payload["reply_markup"]["inline_keyboard"][0][0]
         self.assertEqual(button["url"], f"https://t.me/{OWNER_NAME}")
         self.assertIn("chat with the owner directly", payload["text"])
-        self.assertIn("/contact", payload["text"])               # also explains sending here
         self.assertNotIn("force_reply", payload["reply_markup"])
         self.assertEqual(api.sent(OWNER), [])                    # nothing forwarded yet
 

@@ -34,6 +34,10 @@ class FakeTelegram:
         self.next_id = 1000
         self.fail_updates = None            # e.g. 409
         self.on_poll = None                 # called with the poll number after each sendPoll
+        self.fail_polls = False             # every sendPoll is refused
+        self.fail_owner = False             # messages to the owner are refused
+        self.pinned = []
+        self.message_ids = 0
 
     def __call__(self):
         return self
@@ -63,11 +67,19 @@ class FakeTelegram:
                 self.updates = [u for u in self.updates if u["update_id"] >= offset]
             return tq.FakeResponse({"ok": True, "result": self.updates[: json.get("limit", 100)]})
         if method == "sendMessage":
+            if self.fail_owner and str(json["chat_id"]) == str(OWNER):
+                return tq.FakeResponse({"ok": False, "description": "Forbidden"}, 403)
             self.sent.append(json)
-            return tq.FakeResponse({"ok": True, "result": {}})
+            self.message_ids += 1
+            return tq.FakeResponse({"ok": True, "result": {"message_id": self.message_ids}})
+        if method == "pinChatMessage":
+            self.pinned.append(json)
+            return tq.FakeResponse({"ok": True, "result": True})
         if method == "getMe":
             return tq.FakeResponse({"ok": True, "result": {"username": "PYQxBot"}})
         if method == "sendPoll":
+            if self.fail_polls:
+                return tq.FakeResponse({"ok": False, "description": "Bad Request"}, 400)
             self.polls.append(json)
             number = len(self.polls)
             self.add({"update_id": self.new_id(), "poll_answer": {
@@ -80,6 +92,11 @@ class FakeTelegram:
 
     def texts(self, chat_id):
         return [m["text"] for m in self.sent if m["chat_id"] == chat_id]
+
+    def alerts(self):
+        """Messages sent to the owner by the alert function (it sends the id as text)."""
+        return [m["text"] for m in self.sent
+                if str(m["chat_id"]) == str(OWNER) and m["text"].startswith("\u26A0")]
 
 
 class CommandCase(tq.SandboxCase):
@@ -234,7 +251,9 @@ class ScheduledRunTests(CommandCase):
         result = next(t for t in self.fake.texts("-100") if "Final Result" in t)
         self.assertIn("Meera", result)
         scores = json.loads((self.tmp / "scores.json").read_text())
-        self.assertEqual(next(iter(scores["weeks"].values()))["users"]["7"]["correct"], 3)
+        users = next(iter(scores["weeks"].values()))["users"]
+        self.assertEqual(users[qb.user_key(7)]["correct"], 3)
+        self.assertNotIn("7", users)                       # no raw Telegram id is stored
 
     def test_a_broken_responder_does_not_change_the_quiz_result(self):
         self.schedule_due()
@@ -263,40 +282,61 @@ class QuizListTextTests(CommandCase):
 
     def test_only_the_name_and_the_number_of_questions_without_the_prefix(self):
         self.drop_default_quiz()
-        self.make_quiz("ows_synonyms", 3)
-        self.make_quiz("idm_idioms_set1", 1)
-        self.make_quiz("cmp_basics", 2)
+        self.make_quiz("Synonyms_ows", 3)
+        self.make_quiz("Idioms Set 1_idm", 1)
+        self.make_quiz("Computer Awareness_cmp", 2)
         self.assertEqual(qb.quiz_list_text(),
-                         "\u2022 basics \u2013 2 questions\n"
-                         "\u2022 idioms set1 \u2013 1 question\n"
-                         "\u2022 synonyms \u2013 3 questions")
+                         "\u2022 Computer Awareness \u2013 2 questions\n"
+                         "\u2022 Idioms Set 1 \u2013 1 question\n"
+                         "\u2022 Synonyms \u2013 3 questions")
+
+    def test_spaces_special_characters_and_other_scripts_are_kept_as_written(self):
+        self.drop_default_quiz()
+        hindi = "\u0939\u093f\u0902\u0926\u0940 \u0935\u094d\u092f\u093e\u0915\u0930\u0923"
+        self.make_quiz("One\u2011Word-Substitutions_ows", 2)           # a non-breaking hyphen
+        self.make_quiz("Maths & Reasoning (Set 2) - 50% Easy!_mth", 1)
+        self.make_quiz(f"{hindi}_ows", 4)
+        text = qb.quiz_list_text()
+        self.assertIn("\u2022 One\u2011Word-Substitutions \u2013 2 questions", text)
+        self.assertIn("\u2022 Maths & Reasoning (Set 2) - 50% Easy! \u2013 1 question", text)
+        self.assertIn(f"\u2022 {hindi} \u2013 4 questions", text)
 
     def test_nothing_else_is_added(self):
         self.drop_default_quiz()
-        self.make_quiz("ows_synonyms", 3)
+        self.make_quiz("Synonyms_ows", 3)
         text = qb.quiz_list_text()
-        for extra in ("Stored", "ows", "per question", "/request", "Computer", "One Word",
+        for extra in ("Stored", "_ows", "ows", "per question", "/request", "Computer", "One Word",
                       "scheduled"):
             self.assertNotIn(extra, text)
 
-    def test_names_that_do_not_follow_the_pattern_are_shown_whole(self):
-        self.assertEqual(qb.quiz_display_name("ows_quizname"), "quizname")
-        self.assertEqual(qb.quiz_display_name("ows_two_words_here"), "two words here")
-        self.assertEqual(qb.quiz_display_name("ows000"), "ows000")
-        self.assertEqual(qb.quiz_display_name("ows_"), "ows_")
-        self.assertEqual(qb.quiz_display_name("quiz"), "quiz")
-        self.assertEqual(qb.quiz_display_name("ows-synonyms"), "ows-synonyms")
+    def test_ids_that_do_not_follow_the_pattern_are_shown_whole(self):
+        shown = {"Quiz Name_ows": "Quiz Name", "A & B (set 1)_idm": "A & B (set 1)",
+                 "A_B_ows": "A_B", "ows000": "ows000", "ows_": "ows_", "_ows": "_ows",
+                 "quiz": "quiz"}
+        for quiz_id, expected in shown.items():
+            self.assertEqual(qb.quiz_display_name(quiz_id), expected, quiz_id)
 
-    def test_quizzes_named_ows_name_still_get_their_usual_speed_and_topic(self):
-        self.make_quiz("ows_synonyms", 2)
+    def test_quizzes_keep_their_usual_speed_and_topic(self):
+        for quiz_id in ("Synonyms_ows", "Idioms_idm", "Basics_cmp", "Whatever_zzz"):
+            self.make_quiz(quiz_id, 2)
         rows = {r["id"]: r for r in qb.quiz_catalog()}
-        self.assertEqual(rows["ows_synonyms"]["timer"], 10)
-        self.assertEqual(rows["ows_synonyms"]["topic"], "One Word Substitution")
-        self.assertEqual(rows["ows_synonyms"]["questions"], 2)
+        self.assertEqual((rows["Synonyms_ows"]["timer"], rows["Synonyms_ows"]["topic"]),
+                         (10, "One Word Substitution"))
+        self.assertEqual(rows["Idioms_idm"]["timer"], 15)
+        self.assertEqual(rows["Basics_cmp"]["topic"], "Computer Knowledge")
+        self.assertEqual(rows["Whatever_zzz"]["topic"], "General")      # unknown prefix
+        self.assertEqual(rows["Synonyms_ows"]["questions"], 2)
+
+    def test_list_is_sorted_by_name_ignoring_case(self):
+        self.drop_default_quiz()
+        for quiz_id in ("cherry_ows", "Banana_ows", "apple_ows"):
+            self.make_quiz(quiz_id, 1)
+        names = [line.split(" \u2013 ")[0] for line in qb.quiz_list_text().splitlines()]
+        self.assertEqual(names, ["\u2022 apple", "\u2022 Banana", "\u2022 cherry"])
 
     def test_long_lists_are_cut_to_fit_one_message(self):
         for i in range(250):
-            self.make_quiz(f"gen_quiz_number_{i:03d}", 2)
+            self.make_quiz(f"Gen Quiz Number {i:03d}_gen", 2)
         text = qb.quiz_list_text()
         self.assertLessEqual(len(text), qb.MAX_MESSAGE_LENGTH)
         self.assertRegex(text, r"and \d+ more")
