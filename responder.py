@@ -63,7 +63,7 @@ CONTACT_BUTTON = "\U0001F4AC Chat with the owner"
 NOTE_HEADING = "\u2709\uFE0F Message"
 SENT_TEXT = "\u2705 Your message was sent to the owner. If they reply, you will get it here."
 UNAVAILABLE_TEXT = "Sorry, this is not available right now. Please try again later."
-HINT_TEXT = "I only understand commands. Try /quizlists or /contact."
+HINT_TEXT = "I only understand commands. Try /start or /quizlists or /contact."
 
 TAG = re.compile(r"#u(\d+)")
 
