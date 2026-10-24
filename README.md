@@ -74,7 +74,7 @@ OpenRank helps you stay consistent and improve faster with every quiz.
 
 ## 📲 Start today
 
-Bot: **OpenRank** (@PYQxBot)  
-Quiz Group: **[t.me/GovtScore](https://t.me/GovtScore)**
+Bot: **OpenRank** (@OpenRankBot)  
+Quiz Group: **[t.me/GovtScore](https://t.me/OpenRank)**
 
 *Practice daily. Improve daily. Crack the exam.* 💪
