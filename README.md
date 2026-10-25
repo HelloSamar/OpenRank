@@ -1,4 +1,5 @@
-# OpenRank  <img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/25d17bee-155d-410c-9735-5e16f384a4ec" />
+# OpenRank
+# <img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/25d17bee-155d-410c-9735-5e16f384a4ec" />
 
 
 ### Smart daily quizzes for competitive exam prep.
