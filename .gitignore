@@ -3,3 +3,7 @@ __pycache__/
 .updates_offset
 .webhook_last.json
 .tmp-*
+.env
+.pytest_cache/
+.coverage
+*.db
