@@ -18,6 +18,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "00c303f33fa4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A funeral procession",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "00c4afb8a56f": {
       "asked": 1,
       "correct": 1,
@@ -42,6 +51,15 @@
       "last_asked": "2026-10-21T06:30:00Z",
       "q": "Having or showing no moral principles",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "02197267e70c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Groups of singers or dancers performing together in a supporting role in a music",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
     },
@@ -81,11 +99,38 @@
       "skipped": 0,
       "wrong": 1
     },
+    "04056793075e": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Very comfortable and expensive",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "043d05f7ecbf": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-24T06:30:00Z",
       "q": "Make certain that something will happen",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "04a40b6c9d44": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A form of punishment or torture that involves caning the soles of the feet",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "053e6c9e13d0": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "An instrument for measuring temperature",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -115,6 +160,15 @@
       "q": "A small piece of burning or glowing coal or wood in a dying fire",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "08acd3729160": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Indefinite period of time",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "0952a63cb443": {
@@ -161,6 +215,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "0bf8f7aa8c0b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A state of mental weariness from lack of occupation",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "0c3ff1d348e1": {
       "asked": 1,
@@ -216,6 +279,15 @@
       "skipped": 1,
       "wrong": 1
     },
+    "0e17225031bb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A minor mistake in grammar or social behaviour",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "0e52450e2683": {
       "asked": 1,
       "correct": 1,
@@ -250,6 +322,15 @@
       "q": "Quiet and peaceful",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
+      "wrong": 0
+    },
+    "10a34aaac46e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "That which can not be called back",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
       "wrong": 0
     },
     "1196fa49ea7b": {
@@ -306,6 +387,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "13e2eff7eddf": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Paying money to get a publication or service regularly",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "1458d3b3aa44": {
       "asked": 1,
       "correct": 0,
@@ -331,6 +421,15 @@
       "q": "An imaginary line drawn on the earth equidistant from the poles",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "15a4e58a890b": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Asking for or demanding and taking (something) for one's use",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "15b67e0b5efc": {
@@ -522,6 +621,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "2286df6c94c2": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Showing a lack of respect for people or things that are generally taken seriousl",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "22a87780c6e0": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A wall built to prevent the sea or a river from flooding an area",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "23f7a289042c": {
       "asked": 1,
       "correct": 0,
@@ -531,6 +648,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "2465350f0257": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Large amount of things that come at the same time",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "24bcfbdac162": {
       "asked": 1,
       "correct": 1,
@@ -538,6 +664,15 @@
       "q": "A legislative body having two chambers",
       "quiz": "ows000",
       "skipped": 0,
+      "wrong": 0
+    },
+    "25105056bb73": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A place where objects are exhibited",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
       "wrong": 0
     },
     "2647028f21ee": {
@@ -584,6 +719,24 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "2c28622e0f14": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Used to express excitement or joy",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "2da6e95804cb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A person who loves stars or astronomy",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "2dbe72d36825": {
       "asked": 1,
@@ -666,6 +819,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "3129eb79f767": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Moving about quickly from side to side or up and down",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "312e8897b9cd": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Feeling or showing a lack of courage or confidence",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "326576e2e0bc": {
       "asked": 1,
       "correct": 0,
@@ -701,6 +872,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "33b72502735e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A substance used for killing pests",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "33b9cb6f20ce": {
       "asked": 1,
@@ -765,12 +945,30 @@
       "skipped": 1,
       "wrong": 0
     },
+    "3936500f325b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who values practicality",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "3954bb8108e1": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "An area with people who are different in some way from the people in the areas a",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "39577a34eb05": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Large parties or celebrations",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
     },
@@ -837,6 +1035,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "416c8258064d": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A gangster's girlfriend",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "41a4444f1636": {
       "asked": 1,
       "correct": 1,
@@ -844,6 +1051,15 @@
       "q": "Lists of items required, things to be done, or points to be considered, used as ",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "41af5f51d56e": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Existing, but not yet very noticeable, active or well developed",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "4287a6b5bb6b": {
@@ -981,6 +1197,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "4815c3591ff8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Something that is hidden",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "4868da761afe": {
       "asked": 1,
       "correct": 0,
@@ -1017,6 +1242,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "4a992d2787b0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Go or come after a person or thing proceeding ahead",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "4ab7d4aa4ea4": {
       "asked": 1,
       "correct": 0,
@@ -1044,6 +1278,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "4fc8a17cbbc5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Many changes or problems that happen over time",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "4fe868c7370f": {
       "asked": 1,
       "correct": 0,
@@ -1070,6 +1313,24 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "51257010f255": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Difficult and unpleasant to do or deal with",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "514a3c1fd546": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A small kitchen or room at the back of a house used for washing dishes and other",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "5213c09b6a50": {
       "asked": 1,
@@ -1116,6 +1377,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "5571cd84dcb5": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A long, complicated, and annoying process or procedure",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "55b252779c4f": {
       "asked": 1,
       "correct": 1,
@@ -1132,6 +1402,15 @@
       "q": "Killing (a person or animal) by squeezing the throat",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "560d2fa15769": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The practice of magic",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "563ae6f5c9d4": {
@@ -1151,6 +1430,24 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
+    },
+    "57cc58997659": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The sound of crows",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "57e0428e8adb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Chief commander of an army",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "57f4fa642aff": {
       "asked": 1,
@@ -1341,6 +1638,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "5ee5cf3df3bc": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Criticise in an abusive or angrily insulting manner",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "5f92a0589406": {
       "asked": 1,
       "correct": 2,
@@ -1365,6 +1671,15 @@
       "last_asked": "2026-10-19T06:30:00Z",
       "q": "The sound made by a snake",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "6154a1276c18": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who has no money",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
     },
@@ -1629,6 +1944,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "726202894893": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who helps a person in need",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "732b5a64d77d": {
       "asked": 1,
       "correct": 0,
@@ -1719,6 +2043,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "761f803e7e87": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A long, usually serious speech that a character in a play makes to an audience a",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "762967bf4d22": {
       "asked": 1,
       "correct": 1,
@@ -1726,6 +2059,15 @@
       "q": "That will be successful",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "76aa805f23e3": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Careful and persistent work or effort",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "76c8f2f3199c": {
@@ -1755,6 +2097,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "794d83ad063d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who talks a lot, especially about trivial things",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "79c7fd3dcf88": {
       "asked": 1,
       "correct": 0,
@@ -1763,6 +2114,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
+    },
+    "79e6ef62c592": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Certain to die",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "7a2c6e0e92d0": {
       "asked": 1,
@@ -1809,6 +2169,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "7be68b71d16b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Lack of the usual social or ethical standards in an individual or group",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "7cf1568f2d49": {
       "asked": 1,
       "correct": 0,
@@ -1854,6 +2223,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "7f399bab1ee2": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The beginning of puberty",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "7f7806cbf1c0": {
       "asked": 1,
       "correct": 0,
@@ -1871,6 +2249,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
+    },
+    "801e748fc61e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "People who belong to the same country",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "804bcad69a6e": {
       "asked": 1,
@@ -1944,6 +2331,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8480efc77970": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A person who is good at telling stories in an interesting and amusing way",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "84c180f8bd70": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Owing money to someone",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "84e7cb25c2d7": {
       "asked": 1,
       "correct": 0,
@@ -1961,6 +2366,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "8664451fe271": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The scientific study of the structure and diseases of teeth",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "867f6ca49c19": {
       "asked": 1,
@@ -1989,6 +2403,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "87f83ac20aaf": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The state of being alone, especially when you find this pleasant",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "8844ca6c8ac7": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Very brave or courageous",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "88addf4ef119": {
       "asked": 1,
       "correct": 0,
@@ -1997,6 +2429,15 @@
       "quiz": "ows000",
       "skipped": 2,
       "wrong": 0
+    },
+    "8a6d62710246": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The hard remains of a prehistoric animal or plant found inside rock",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "8abf322e2485": {
       "asked": 1,
@@ -2070,6 +2511,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8d413ca1c7de": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Disappointing end to an exciting or impressive series of events",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "8de9cc0ca035": {
       "asked": 1,
       "correct": 0,
@@ -2087,6 +2537,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "8e9142cf192c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "An ancient text in the form of a book, official list of medicines or chemicals",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "8ec126b6febf": {
       "asked": 1,
@@ -2178,6 +2637,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "95737ce60c15": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "To make evasive or misleading statements",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "959241466e04": {
       "asked": 1,
       "correct": 0,
@@ -2186,6 +2654,24 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "95ed6669845c": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "To make atonement for one's sins",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "965d05990a23": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Ideas or statements that are often false or exaggerated and that are spread in o",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "9685f1286a2d": {
       "asked": 1,
@@ -2222,6 +2708,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "997fa9cfa843": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A strong and fast-moving stream of water or other liquid",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "99e95e998840": {
       "asked": 1,
@@ -2304,6 +2799,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "9d0c8627e8da": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Bad or immoral behaviour that involves sex, drugs, alcohol, etc",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
+    },
     "9d2992d9d3f6": {
       "asked": 1,
       "correct": 0,
@@ -2329,6 +2833,15 @@
       "q": "Original copies of a play, book, piece of music, etc., before those have been pr",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "9dc3b74a6137": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who speaks on behalf of others",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "9e7774a62fd5": {
@@ -2457,6 +2970,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "a4027668c537": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Impressive display or range of a particular type of thing",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "a4515a456f30": {
       "asked": 1,
       "correct": 0,
@@ -2492,6 +3014,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
+    },
+    "a56a66d07989": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A lack of food over a long period of time in a region",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "a5db16da0640": {
       "asked": 1,
@@ -2553,6 +3084,24 @@
       "last_asked": "2026-10-21T06:30:00Z",
       "q": "Excessive sexual desire in a woman for men",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "a7c5538d96ec": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Satisfied, with no desire to change or improve",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "a829a3ac98d7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Moving quickly to one side in order to avoid being hit by (someone or something)",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
     },
@@ -2628,6 +3177,15 @@
       "skipped": 1,
       "wrong": 1
     },
+    "aa9ad699d00c": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Humour that uses ridicule to expose weaknesses or corruption",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "aaa183640dab": {
       "asked": 1,
       "correct": 1,
@@ -2673,6 +3231,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "ac993538add8": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "To wrap something in order to prevent sound from escaping or to deaden a sound",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "acadb563c196": {
       "asked": 1,
       "correct": 0,
@@ -2682,6 +3249,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "ae3003377b2f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Dance or musical performance",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "ae5c2146d507": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "An amount of money that a company or the government pays to a person who is old ",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "ae94ce6d8b71": {
       "asked": 1,
       "correct": 0,
@@ -2689,6 +3274,15 @@
       "q": "An accidental good fortune",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "afceb94922bf": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "To go around an area to keep a watch",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "b0140eb5dfc8": {
@@ -2718,6 +3312,24 @@
       "skipped": 0,
       "wrong": 0
     },
+    "b1c82a8baf67": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who believes in many gods",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "b3125f3d6f81": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The period when day is ending and night is beginning",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "b3f0a2713cd0": {
       "asked": 1,
       "correct": 1,
@@ -2732,6 +3344,15 @@
       "correct": 0,
       "last_asked": "2026-10-24T06:30:00Z",
       "q": "Having or showing an ability to understand difficult ideas and situations and to",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "b59cdb19b709": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A person who works in a bar, serving drinks",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
@@ -2799,6 +3420,15 @@
       "skipped": 1,
       "wrong": 1
     },
+    "b91dc61c6812": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Someone who leaves one country to settle in another",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "b99a31383d25": {
       "asked": 1,
       "correct": 0,
@@ -2807,6 +3437,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "b9a9c422425b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Move suddenly and powerfully forward or upward",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "b9b96dddc1b9": {
       "asked": 1,
@@ -2961,6 +3600,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "c2b9b5762772": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "An artist who makes sculptures",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "c32287c65a58": {
       "asked": 1,
       "correct": 1,
@@ -2979,6 +3627,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "c3a4cededf31": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Represent something as larger, better or worse than it really is",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "c49572a1b59f": {
       "asked": 1,
       "correct": 0,
@@ -2996,6 +3653,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "c5fc6260f572": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Marriage within one's tribe",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "c615370cca96": {
       "asked": 1,
@@ -3032,6 +3698,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "c847f51a8536": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Unwelcome aspect of a situation",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "c8681425bb22": {
       "asked": 1,
@@ -3077,6 +3752,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "ca0d0b39be18": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A computer printout sent out by a bank regarding debits and credits in your acco",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "ca3ef64a29e0": {
       "asked": 1,
@@ -3150,6 +3834,15 @@
       "skipped": 1,
       "wrong": 1
     },
+    "ceb985d4642e": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Great and often wild or uncontrolled activities",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "ced962c676be": {
       "asked": 1,
       "correct": 0,
@@ -3184,6 +3877,15 @@
       "q": "Public disgrace arising from shameful conduct",
       "quiz": "ows000",
       "skipped": 2,
+      "wrong": 0
+    },
+    "d1b9231d8b6d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Study of election trends",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
       "wrong": 0
     },
     "d20aab3e1a0d": {
@@ -3258,6 +3960,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "d89bbfccb5c3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A person employed to drive a private or hired car",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "da23943cac24": {
       "asked": 1,
       "correct": 0,
@@ -3312,6 +4023,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "dc9e10697ead": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Belonging or relating to heaven",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "dd17ec595701": {
       "asked": 1,
       "correct": 0,
@@ -3321,6 +4041,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "dd6350b6da56": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Guilty of the crime",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "ddde3a3b0843": {
       "asked": 1,
       "correct": 0,
@@ -3329,6 +4058,24 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
+    },
+    "deeb7b454473": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Something or someone makes you feel deep sadness or pity",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "defe040140f0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Recklessly extravagant or wasteful in the use of resources",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "e08e42e5c7a7": {
       "asked": 1,
@@ -3356,6 +4103,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "e18a72820412": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A man who is womanish in his habits",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "e24830659fe1": {
       "asked": 1,
@@ -3411,6 +4167,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e5a771d2bff9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Refresh and revive",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "e630d72b5b97": {
       "asked": 1,
       "correct": 0,
@@ -3456,12 +4221,30 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e725551b02d6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Conferred as an honour",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "e760eb7ce1fa": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "A female ballet dancer",
       "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "e77591f5386e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "That can burn or catches fire easily",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
     },
@@ -3482,6 +4265,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 0
+    },
+    "e880321f4901": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Forgive or pardon some wrongdoing or an offence",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "e8d5654ae351": {
       "asked": 1,
@@ -3537,6 +4329,15 @@
       "skipped": 2,
       "wrong": 0
     },
+    "ebb0f9e4fa41": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A new word coined by an author",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
+    },
     "ec84197f802c": {
       "asked": 1,
       "correct": 0,
@@ -3545,6 +4346,15 @@
       "quiz": "ows000",
       "skipped": 1,
       "wrong": 0
+    },
+    "ecf695c4c658": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Having a speech problem that causes one to repeat the beginning sound of some wo",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
     },
     "ed553fd13036": {
       "asked": 1,
@@ -3562,6 +4372,24 @@
       "q": "Enjoyable in a lively or noisy way",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "ee2cd6ece168": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "The part of a country's government responsible for its legal system",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "ef02f2a743db": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Extracting money from (someone) by fine or taxation",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "ef3f05d77142": {
@@ -3591,6 +4419,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "f4101a64853d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "A place where clothes are washed and pressed",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "f4641e2a3895": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Laws or rules that limit or control something; strong criticism",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
     "f5c4f62e8e54": {
       "asked": 1,
       "correct": 0,
@@ -3608,6 +4454,24 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 2
+    },
+    "f6b1c002d6f4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Causing no harm",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "f720ff6f97bc": {
+      "asked": 1,
+      "correct": 1,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Very important or serious",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "f80784ae72a6": {
       "asked": 1,
@@ -3633,6 +4497,15 @@
       "last_asked": "2026-10-21T06:30:00Z",
       "q": "The firing of many guns at the same time to mark an occasion",
       "quiz": "ows000",
+      "skipped": 1,
+      "wrong": 0
+    },
+    "f95afb01886e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Existing or happening in the same time period",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
       "wrong": 0
     },
@@ -3671,6 +4544,33 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 2
+    },
+    "fc0b792159f6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Living in trees",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "fc127a1d7d7d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "Move ahead or forward steadily and gradually",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 1
+    },
+    "fd511f686eb7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-25T06:30:00Z",
+      "q": "One who changes sides",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 1,
+      "wrong": 0
     },
     "fdbcc893e40d": {
       "asked": 1,
