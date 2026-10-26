@@ -1,0 +1,491 @@
+{
+ "about": "Shared test cases for the quiz question validator. 'valid' says whether Telegram can post the question. These assume question numbers are shown ('Q12/100: ' reserves 12 characters, so a question may have at most 288 characters). Any other runtime (for example the Cloudflare Worker) must give the same answers.",
+ "limits": {
+  "question": 300,
+  "question_prefix_reserve": 12,
+  "option": 100,
+  "explanation": 200,
+  "options_min": 2,
+  "options_max": 10,
+  "explanation_line_breaks_max": 2
+ },
+ "cases": [
+  {
+   "name": "minimal valid question with explanation",
+   "item": [
+    "Capital of France?",
+    [
+     "Paris",
+     "Rome",
+     "Oslo",
+     "Bern"
+    ],
+    0,
+    "Paris is the capital."
+   ],
+   "valid": true
+  },
+  {
+   "name": "valid without an explanation (3 items)",
+   "item": [
+    "Capital of France?",
+    [
+     "Paris",
+     "Rome"
+    ],
+    1
+   ],
+   "valid": true
+  },
+  {
+   "name": "valid with an empty explanation",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    ""
+   ],
+   "valid": true
+  },
+  {
+   "name": "two options is the minimum",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    1
+   ],
+   "valid": true
+  },
+  {
+   "name": "ten options is the maximum",
+   "item": [
+    "Q?",
+    [
+     "o0",
+     "o1",
+     "o2",
+     "o3",
+     "o4",
+     "o5",
+     "o6",
+     "o7",
+     "o8",
+     "o9"
+    ],
+    9
+   ],
+   "valid": true
+  },
+  {
+   "name": "one option is too few",
+   "item": [
+    "Q?",
+    [
+     "a"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "options"
+  },
+  {
+   "name": "eleven options is too many",
+   "item": [
+    "Q?",
+    [
+     "o0",
+     "o1",
+     "o2",
+     "o3",
+     "o4",
+     "o5",
+     "o6",
+     "o7",
+     "o8",
+     "o9",
+     "o10"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "options"
+  },
+  {
+   "name": "question of 288 characters fits next to the 'Q12/100: ' prefix",
+   "item": [
+    "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+    [
+     "a",
+     "b"
+    ],
+    0
+   ],
+   "valid": true
+  },
+  {
+   "name": "question of 289 characters is too long once the prefix is added",
+   "item": [
+    "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+    [
+     "a",
+     "b"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "question exceeds"
+  },
+  {
+   "name": "option of 100 characters is fine",
+   "item": [
+    "Q?",
+    [
+     "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+     "b"
+    ],
+    0
+   ],
+   "valid": true
+  },
+  {
+   "name": "option of 101 characters is too long",
+   "item": [
+    "Q?",
+    [
+     "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+     "b"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "option exceeds"
+  },
+  {
+   "name": "explanation of 200 characters is fine",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+   ],
+   "valid": true
+  },
+  {
+   "name": "explanation of 201 characters is too long",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+   ],
+   "valid": false,
+   "problem_contains": "explanation exceeds"
+  },
+  {
+   "name": "explanation with two line breaks is fine",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    "one\ntwo\nthree"
+   ],
+   "valid": true
+  },
+  {
+   "name": "explanation with three line breaks is refused",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    "1\n2\n3\n4"
+   ],
+   "valid": false,
+   "problem_contains": "line breaks"
+  },
+  {
+   "name": "explanation must be text",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    5
+   ],
+   "valid": false,
+   "problem_contains": "explanation must be text"
+  },
+  {
+   "name": "first option can be correct",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b",
+     "c"
+    ],
+    0
+   ],
+   "valid": true
+  },
+  {
+   "name": "last option can be correct",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b",
+     "c"
+    ],
+    2
+   ],
+   "valid": true
+  },
+  {
+   "name": "negative correct index",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    -1
+   ],
+   "valid": false,
+   "problem_contains": "out of range"
+  },
+  {
+   "name": "correct index equal to the number of options",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    2
+   ],
+   "valid": false,
+   "problem_contains": "out of range"
+  },
+  {
+   "name": "true is not a number",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    true
+   ],
+   "valid": false,
+   "problem_contains": "integer"
+  },
+  {
+   "name": "1.0 is not a whole number index",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    1.0
+   ],
+   "valid": false,
+   "problem_contains": "integer"
+  },
+  {
+   "name": "index given as text",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    "0"
+   ],
+   "valid": false,
+   "problem_contains": "integer"
+  },
+  {
+   "name": "empty question",
+   "item": [
+    "",
+    [
+     "a",
+     "b"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "non-empty"
+  },
+  {
+   "name": "question of spaces only",
+   "item": [
+    "   ",
+    [
+     "a",
+     "b"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "non-empty"
+  },
+  {
+   "name": "question that is not text",
+   "item": [
+    5,
+    [
+     "a",
+     "b"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "non-empty"
+  },
+  {
+   "name": "empty option",
+   "item": [
+    "Q?",
+    [
+     "a",
+     ""
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "non-empty"
+  },
+  {
+   "name": "option that is not text",
+   "item": [
+    "Q?",
+    [
+     "a",
+     7
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "non-empty"
+  },
+  {
+   "name": "options that is not a list",
+   "item": [
+    "Q?",
+    "ab",
+    0
+   ],
+   "valid": false,
+   "problem_contains": "options must be a list"
+  },
+  {
+   "name": "identical options",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b",
+     "a"
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "different"
+  },
+  {
+   "name": "options that differ only by surrounding spaces are identical",
+   "item": [
+    "Q?",
+    [
+     "a",
+     " a "
+    ],
+    0
+   ],
+   "valid": false,
+   "problem_contains": "different"
+  },
+  {
+   "name": "options that differ only by letter case are allowed",
+   "item": [
+    "Q?",
+    [
+     "Paris",
+     "paris"
+    ],
+    0
+   ],
+   "valid": true
+  },
+  {
+   "name": "an object instead of a list",
+   "item": {
+    "q": "x"
+   },
+   "valid": false,
+   "problem_contains": "entry must be"
+  },
+  {
+   "name": "too few items",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ]
+   ],
+   "valid": false,
+   "problem_contains": "entry must be"
+  },
+  {
+   "name": "too many items",
+   "item": [
+    "Q?",
+    [
+     "a",
+     "b"
+    ],
+    0,
+    "e",
+    "extra"
+   ],
+   "valid": false,
+   "problem_contains": "entry must be"
+  },
+  {
+   "name": "Hindi text is counted in characters, not bytes",
+   "item": [
+    "भारत की राजधानी क्या है?",
+    [
+     "दिल्ली",
+     "मुंबई"
+    ],
+    0,
+    "नई दिल्ली"
+   ],
+   "valid": true
+  }
+ ]
+}
