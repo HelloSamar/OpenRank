@@ -52,7 +52,7 @@ Create `quizzes/Quiz Name_ows.json` (see the naming rule below). Each question i
 ```
 
 - The explanation appears when someone picks a wrong answer or taps the lamp icon on the poll.
-- Limits: question up to 288 characters (room is kept for the `Q12/100:` prefix), 2 to 10 options of up to 100 characters, explanation up to 200 characters with at most 2 line breaks.
+- Limits: question up to 288 characters (room is kept for the `Q12/100:` prefix), 2 to 10 options of up to 100 characters (no two options may be identical), explanation up to 200 characters with at most 2 line breaks. These are Telegram's own limits; `tests/fixtures/quiz_validation_cases.json` holds the test cases for them.
 - A question that is invalid, or repeats an earlier one in the same file (same question and same answer), is skipped with a warning. The validation check also shows it as a problem.
 - **Naming: `Quiz Name_prefix.json`**, for example `Synonyms Set 1_ows.json` or `Idioms_idm.json`. The quiz name comes first and may contain spaces and special characters (letters of any language, `&`, `(`, `%` ...) but should not contain an underscore; after the underscore comes the prefix, which decides the usual speed (see `TIMER_BY_PREFIX` below): `ows`, `idm`, `rsn`, `mth`, `cmp`. The part after the last underscore is the prefix. People see only the name, exactly as written: `/quizlists` shows `Synonyms Set 1`, and the group's messages say `Synonyms Set 1 - Final Result`. A file name without an underscore, such as `ows000`, still works: it is shown whole and its leading letters are the prefix. Not allowed in a name: `/`, `\`, line breaks, a space or dot at the start, a space at the end, more than 100 characters. Tip: on Windows and many tools the characters `: * ? " < > |` cannot be used in file names, so avoid them. Also avoid look-alike characters (a non-breaking hyphen `‑` looks like `-` but is a different character): the name in `schedule.json` must match the file name exactly.
 - **Renaming a quiz file changes its ID** (the whole file name without `.json`), and the ID is used in `schedule.json` and `sent.json`. **Do not rename by hand: use the Rename quiz workflow** (Actions -> Rename quiz -> Run workflow, see "Safety nets" below). It changes the file and all references in one commit. If you did rename a file by hand, run the workflow anyway: it then only updates the references.
@@ -81,6 +81,7 @@ Only settings that are not in `schedule.json`. To change one: open `quiz_bot.py`
 | `SCHEDULE_WARN_DAYS` | 14 | You are alerted when fewer days of quizzes are scheduled |
 | `ALERT_REPEAT_HOURS` | 6 | A problem that is still there is repeated this often |
 | `PIN_WEEKLY_LEADERBOARD` | False | Pin the weekly leaderboard (the bot needs the pin right) |
+| `SYNC_COMMANDS` | True | At every check, repair the bot's command menu if it is missing or wrong |
 
 ## Results and the weekly leaderboard
 
@@ -130,6 +131,7 @@ quizlists - See all quizzes and how many questions each has
 contact - Request a quiz or chat with the owner directly
 ```
 
+- **The menu repairs itself.** The command menu is a Telegram setting that can vanish (a bot setting, another program, a new bot). At every check the bot compares the menu with `COMMANDS` in `responder.py` and fixes it if it differs, also removing any separate list for private chats or groups that would hide it. You are told when it had to repair something. To change the menu, edit `COMMANDS` in `responder.py`; BotFather edits are overwritten at the next check. Set `SYNC_COMMANDS = False` to stop this.
 - **Answering people:** a message sent through `/contact` reaches you in the bot's chat with the person's name, username and ID. Reply to that message (use Reply) and your answer is passed on to the person. Only your replies are passed on.
 - **In the group:** the bot does not answer commands there; it points the person to a private chat with the bot, once per run.
 - **Limits:** at most 5 commands per person per run, messages up to 1000 characters. Only messages that are commands, replies or sent in a private chat are read. Nothing is stored: handled messages are confirmed to Telegram and dropped.

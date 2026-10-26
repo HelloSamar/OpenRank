@@ -3,3 +3,19 @@ __pycache__/
 .updates_offset
 .webhook_last.json
 .tmp-*
+
+# Secrets and local data: never commit these
+.env
+.env.*
+!.env.example
+.dev.vars
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+
+# Tooling for the Cloudflare version (later phases)
+node_modules/
+.wrangler/
+dist/

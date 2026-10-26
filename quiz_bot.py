@@ -87,6 +87,7 @@ MAX_LATE_HOURS = 12             # a quiz later than this is skipped, not posted 
 SCHEDULE_WARN_DAYS = 14         # tell the owner when less than this many days are scheduled
 ALERT_REPEAT_HOURS = 6          # a problem that is still there is repeated this often
 PIN_WEEKLY_LEADERBOARD = False  # True: pin the weekly leaderboard (the bot needs the "pin" right)
+SYNC_COMMANDS = True            # keep the bot's command menu equal to COMMANDS in responder.py
 
 POST_WEEKLY = True
 LOCAL_TZ_NAME = "IST"
@@ -435,6 +436,8 @@ def validate_question(item: Any) -> str:
             return "every option must be a non-empty string"
         if len(opt) > MAX_OPTION_LENGTH:
             return f"an option exceeds {MAX_OPTION_LENGTH} characters"
+    if len({opt.strip() for opt in options}) != len(options):
+        return "options must all be different (Telegram does not accept identical options)"
 
     if not isinstance(correct_index, int) or isinstance(correct_index, bool):
         return "correct_index must be an integer"
@@ -1577,6 +1580,7 @@ def run_scheduled(token: str, chat_id: str, dry_run: bool,
         if not save_data(SCORES_FILE, scores, "scores.json still contains Telegram IDs."):
             exit_code = 1
 
+    sync_bot_commands(token)
     process_commands(token)
 
     start_time = current_time()
@@ -1751,6 +1755,68 @@ def check_schedule_end(token: str, schedule: List[ScheduleEntry], now: datetime)
     else:
         text = "No upcoming quizzes are scheduled. Add entries to schedule.json."
     owner_alert(token, "schedule-end", text, repeat_hours=24, now=now)
+
+
+COMMAND_SCOPES = ("all_private_chats", "all_group_chats", "all_chat_administrators")
+
+
+def sync_bot_commands(token: str) -> bool:
+    """Make sure the bot's command menu shows exactly COMMANDS from responder.py.
+
+    The menu is a Telegram setting that can silently disappear (a bot setting changed, another
+    program, a new bot). Checking it at every run costs a few quick calls and repairs it within
+    15 minutes. Never raises; a problem here never affects the quizzes.
+    """
+    if not SYNC_COMMANDS or not commands_enabled():
+        return True
+    try:
+        return _sync_bot_commands(token)
+    except Exception:
+        logger.exception("Could not check the command menu (quiz posting is not affected).")
+        return False
+
+
+def _sync_bot_commands(token: str) -> bool:
+    wanted = list(responder.COMMANDS)
+    payload = [{"command": command, "description": description} for command, description in wanted]
+
+    def pairs(items: Any) -> List[Tuple[Any, Any]]:
+        return [(item.get("command"), item.get("description"))
+                for item in items if isinstance(item, dict)]
+
+    repaired: List[str] = []
+    with requests.Session() as session:
+        def current(scope: Optional[str]) -> Optional[List[Any]]:
+            body: Dict[str, Any] = {} if scope is None else {"scope": {"type": scope}}
+            result = call_telegram(session, token, "getMyCommands", body)
+            found = result.data.get("result") if result.ok else None
+            return found if isinstance(found, list) else None
+
+        have = current(None)
+        if have is None:
+            logger.warning("Could not read the bot's command menu; leaving it alone.")
+            return False
+        if pairs(have) != wanted:
+            if call_telegram(session, token, "setMyCommands", {"commands": payload}).ok:
+                repaired.append("the missing menu" if not have else "the wrong menu")
+            else:
+                logger.warning("Could not set the bot's command menu.")
+                return False
+        for scope in COMMAND_SCOPES:
+            extra = current(scope)
+            # A separate list for one kind of chat hides the main one there: remove it.
+            if extra and pairs(extra) != wanted:
+                if call_telegram(session, token, "deleteMyCommands",
+                                 {"scope": {"type": scope}}).ok:
+                    repaired.append(f"a different list for {scope.replace('_', ' ')}")
+    if repaired:
+        logger.warning("The command menu was not as expected; restored: %s.", ", ".join(repaired))
+        owner_alert(token, "commands-restored",
+                    "The bot's command menu was not what it should be, so I restored it "
+                    f"({', '.join(repaired)}). If this keeps happening, something else is "
+                    "changing the menu: another program using this bot's token, or a different "
+                    "bot that you are editing in BotFather.", repeat_hours=24)
+    return True
 
 
 def quiz_display_name(quiz_id: str) -> str:
