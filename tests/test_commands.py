@@ -36,6 +36,9 @@ class FakeTelegram:
         self.on_poll = None                 # called with the poll number after each sendPoll
         self.fail_polls = False             # every sendPoll is refused
         self.fail_owner = False             # messages to the owner are refused
+        self.menus = {}                     # scope -> list of {"command", "description"}
+        self.menu_calls = []                # (method, scope)
+        self.fail_menu = False              # every command-menu call is refused
         self.pinned = []
         self.message_ids = 0
 
@@ -72,6 +75,18 @@ class FakeTelegram:
             self.sent.append(json)
             self.message_ids += 1
             return tq.FakeResponse({"ok": True, "result": {"message_id": self.message_ids}})
+        if method in ("getMyCommands", "setMyCommands", "deleteMyCommands"):
+            scope = ((json or {}).get("scope") or {}).get("type", "default")
+            self.menu_calls.append((method, scope))
+            if self.fail_menu:
+                return tq.FakeResponse({"ok": False, "description": "Bad Request"}, 400)
+            if method == "getMyCommands":
+                return tq.FakeResponse({"ok": True, "result": list(self.menus.get(scope, []))})
+            if method == "setMyCommands":
+                self.menus[scope] = list(json["commands"])
+            else:
+                self.menus.pop(scope, None)
+            return tq.FakeResponse({"ok": True, "result": True})
         if method == "pinChatMessage":
             self.pinned.append(json)
             return tq.FakeResponse({"ok": True, "result": True})
@@ -366,7 +381,7 @@ class ContactThroughTheRunTests(CommandCase):
         self.fake.add(private(1, "/start"))
         qb.process_commands("tok")
         payload = next(m for m in self.fake.sent if m["chat_id"] == 42)
-        self.assertIn('<a href="https://t.me/GovtScore">', payload["text"])
+        self.assertIn(f'<a href="{responder.GROUP_URL}">', payload["text"])
         self.assertEqual(payload["parse_mode"], "HTML")
 
 

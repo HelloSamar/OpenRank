@@ -14,6 +14,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import quiz_bot as qb
+import responder
 import test_commands as tc
 
 REPO = Path(__file__).resolve().parent.parent
@@ -25,7 +26,15 @@ def iso(moment):
 
 
 class SafetyCase(tc.CommandCase):
-    """CommandCase gives: a fake Telegram, OWNER_CHAT_ID=900, a quiz called ows900 (3 questions)."""
+    """CommandCase gives: a fake Telegram, OWNER_CHAT_ID=900, a quiz called ows900 (3 questions).
+
+    The fake bot starts with a correct command menu, so the menu repair stays silent here.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.fake.menus = {"default": [{"command": c, "description": d}
+                                       for c, d in responder.COMMANDS]}
 
     def run_it(self, now=NOW):
         return qb.run_scheduled("tok", "-100", False, now=now)
@@ -502,6 +511,11 @@ class WorkflowFileTests(unittest.TestCase):
         self.assertEqual(len(minutes), 4)
         self.assertNotIn(0, minutes)
         self.assertEqual([b - a for a, b in itertools.pairwise(minutes)], [15, 15, 15])
+
+    def test_a_hung_run_cannot_hold_the_lock_for_hours(self):
+        for name, limit in (("quiz.yml", 120), ("rename-quiz.yml", 30)):
+            minutes = int(re.search(r"timeout-minutes:\s*(\d+)", self.read(name)).group(1))
+            self.assertLessEqual(minutes, limit, name)
 
     def test_the_scheduler_has_the_new_inputs_and_secrets(self):
         text = self.read("quiz.yml")

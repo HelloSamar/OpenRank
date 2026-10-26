@@ -58,7 +58,7 @@ class StartTests(unittest.TestCase):
         bot.handle(msg("/start"))
         payload = api.sent(42)[0]
         self.assertEqual(payload["parse_mode"], "HTML")
-        self.assertIn('<a href="https://t.me/GovtScore">join our group</a>', payload["text"])
+        self.assertIn(f'<a href="{rs.GROUP_URL}">join our group</a>', payload["text"])
         self.assertIn("Hi Asha!", payload["text"])
         self.assertTrue(payload["link_preview_options"]["is_disabled"])
 
@@ -69,8 +69,9 @@ class StartTests(unittest.TestCase):
         self.assertIn("Hi &lt;b&gt;X&lt;/b&gt; &amp; Y!", text)
         self.assertEqual(text.count("<a "), 1)
 
-    def test_group_url_is_the_govtscore_group(self):
-        self.assertEqual(rs.GROUP_URL, "https://t.me/GovtScore")
+    def test_group_url_is_a_telegram_link(self):
+        """The group link may change (edit GROUP_URL); it must stay a plain https://t.me link."""
+        self.assertRegex(rs.GROUP_URL, r"^https://t\.me/[A-Za-z0-9_+-]{3,}$")
 
 
 class BasicCommandTests(unittest.TestCase):
