@@ -33,7 +33,7 @@ jobs:
   post-quizzes:
     runs-on: ubuntu-latest
     # A run lasts about (questions x seconds per question); stop anything that hangs for far longer.
-    timeout-minutes: 350
+    timeout-minutes: 120
 
     steps:
       - name: Check out repository
