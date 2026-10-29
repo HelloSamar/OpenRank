@@ -28,13 +28,13 @@
     "2026-10-25T14:30Z": {
       "users": {
         "u4c2eb7c76bc5f020": {
-          "correct": 28,
+          "correct": 29,
           "name": "samar",
-          "points": 45.5,
-          "quizzes": 2,
-          "seconds": 1718.2,
-          "skipped": 151,
-          "wrong": 21
+          "points": 47.0,
+          "quizzes": 3,
+          "seconds": 2708.6,
+          "skipped": 249,
+          "wrong": 22
         }
       }
     }
