@@ -863,6 +863,414 @@
     "sent": 100,
     "skipped": 0
   },
+  "Idioms_idm@2026-10-30T06:31Z": {
+    "failed": 0,
+    "posted_at": "2026-10-30T07:56:06Z",
+    "questions": [
+      {
+        "id": "af003a715f89",
+        "q": "To persuade someone; to convince them."
+      },
+      {
+        "id": "85e5cd48b4c6",
+        "q": "To lose energy, enthusiasm, or momentum."
+      },
+      {
+        "id": "54a8abf6aa0b",
+        "q": "To try to calm a dispute or difficult situation."
+      },
+      {
+        "id": "4020cc6c6de9",
+        "q": "Advantages and disadvantages."
+      },
+      {
+        "id": "c34cbefe103e",
+        "q": "To undertake a bold, daring effort to overcome something."
+      },
+      {
+        "id": "cb597f594c09",
+        "q": "In very good health; feeling excellent."
+      },
+      {
+        "id": "05eef38807ed",
+        "q": "Very rapidly or at a fast pace."
+      },
+      {
+        "id": "976740c66fac",
+        "q": "Excellent and valuable work or assistance."
+      },
+      {
+        "id": "9f59a514fc68",
+        "q": "Insincere expressions of sorrow."
+      },
+      {
+        "id": "a79b145085e7",
+        "q": "A person or thing that holds no secrets."
+      },
+      {
+        "id": "4021128225ce",
+        "q": "Puzzled, confused, or not knowing what to do."
+      },
+      {
+        "id": "1bf5553c5522",
+        "q": "Free from difficulties and dangers."
+      },
+      {
+        "id": "b32c0e630850",
+        "q": "To repeatedly criticise or bully someone."
+      },
+      {
+        "id": "9965374951c3",
+        "q": "Very nervous or restless."
+      },
+      {
+        "id": "67c04aa4fa52",
+        "q": "To be slow or reluctant to act."
+      },
+      {
+        "id": "8cc912dc63c7",
+        "q": "To fail to remember something; to get no response."
+      },
+      {
+        "id": "611ba3d7e071",
+        "q": "To balance or reach an average result."
+      },
+      {
+        "id": "c74bf46aec1f",
+        "q": "An imaginary or illusory benefit or pleasure."
+      },
+      {
+        "id": "3668c317d81d",
+        "q": "To wait or slow down; to be patient."
+      },
+      {
+        "id": "4b3ee7f5541b",
+        "q": "In a difficult or problematic situation."
+      },
+      {
+        "id": "4341c38b1dc3",
+        "q": "Something one does not understand at all."
+      },
+      {
+        "id": "879c411233e2",
+        "q": "Rushing to finish something before a deadline."
+      },
+      {
+        "id": "52ad40af2638",
+        "q": "Great things take time to achieve."
+      },
+      {
+        "id": "5fc5fa91ab32",
+        "q": "A controversial topic or situation that is difficult to hand"
+      },
+      {
+        "id": "c4d3467b8024",
+        "q": "To decide what to do."
+      },
+      {
+        "id": "723832263bee",
+        "q": "To lose control."
+      },
+      {
+        "id": "a374f0f1e0f0",
+        "q": "In a difficult or troublesome situation."
+      },
+      {
+        "id": "e225d9dc9a10",
+        "q": "Discovered in the act of doing something wrong."
+      },
+      {
+        "id": "113618a01c65",
+        "q": "Family relationships are the strongest and most important on"
+      },
+      {
+        "id": "8aca0d64a3ae",
+        "q": "In a difficult situation without any means of help or soluti"
+      },
+      {
+        "id": "7b8e92f7fe90",
+        "q": "To eat a lot of food greedily."
+      },
+      {
+        "id": "d0f276f72e06",
+        "q": "A great chance or opportunity."
+      },
+      {
+        "id": "20c2e8c4f556",
+        "q": "Having a friendly relationship with someone."
+      },
+      {
+        "id": "06c1bac5e672",
+        "q": "To become distinguished or successful."
+      },
+      {
+        "id": "8976092fef05",
+        "q": "To accept or take on a responsibility."
+      },
+      {
+        "id": "33d927d18f15",
+        "q": "Neat and clean; tidy."
+      },
+      {
+        "id": "2a908d8f0b6f",
+        "q": "To be kept waiting for a long time."
+      },
+      {
+        "id": "e7783cab25ef",
+        "q": "To look sad, unhappy or disappointed."
+      },
+      {
+        "id": "6fbf8a154414",
+        "q": "A friend who deserts you in difficult times."
+      },
+      {
+        "id": "fea6be3b95d1",
+        "q": "To say something embarrassing or inappropriate."
+      },
+      {
+        "id": "cad5051a15d6",
+        "q": "A product or business that generates a steady large profit."
+      },
+      {
+        "id": "f7cf907c5381",
+        "q": "To know how to do a job or activity; to understand the proce"
+      },
+      {
+        "id": "188926d148b5",
+        "q": "Instead of; in place of."
+      },
+      {
+        "id": "5c729177f29b",
+        "q": "Ultimately; over a long period of time."
+      },
+      {
+        "id": "ce782e4da2e7",
+        "q": "Adapt to the customs and behaviors of the place you're in."
+      },
+      {
+        "id": "ddab6f4b96da",
+        "q": "To be shocked or surprised by something."
+      },
+      {
+        "id": "83bf0c4466df",
+        "q": "To pay attention; to be quick and alert."
+      },
+      {
+        "id": "d4567ffa38a5",
+        "q": "To attempt to do something without the proper materials or r"
+      },
+      {
+        "id": "0184b6097f04",
+        "q": "In a risky or precarious situation."
+      },
+      {
+        "id": "7a8f1228ed45",
+        "q": "To act recklessly without regard for consequences."
+      },
+      {
+        "id": "510153155852",
+        "q": "To take a firm stand; to be very strict about something."
+      },
+      {
+        "id": "95d9c46a0833",
+        "q": "A very difficult or dangerous situation."
+      },
+      {
+        "id": "42604f545400",
+        "q": "At first sight; on the first impression."
+      },
+      {
+        "id": "00dd81ab98a4",
+        "q": "Relatives and friends."
+      },
+      {
+        "id": "70bf138ac20a",
+        "q": "To be so extraordinary that it cannot be described adequatel"
+      },
+      {
+        "id": "382df849fbb0",
+        "q": "Wanted or popular because of good quality or rarity."
+      },
+      {
+        "id": "6f59976e748d",
+        "q": "Under suspicion or in disgrace."
+      },
+      {
+        "id": "0926ea3aeb95",
+        "q": "Facing a distressing situation."
+      },
+      {
+        "id": "2678188951a8",
+        "q": "To remain calm and sensible in a difficult situation."
+      },
+      {
+        "id": "aa48d3740475",
+        "q": "An overview or general view from above."
+      },
+      {
+        "id": "03ca98ca4b5c",
+        "q": "To horrify or disgust someone."
+      },
+      {
+        "id": "8b4c959612b4",
+        "q": "To pass and be forgotten; to subside."
+      },
+      {
+        "id": "ddd45887f94b",
+        "q": "To go out of business; to close down."
+      },
+      {
+        "id": "a4d8e1b1eade",
+        "q": "To use imagination."
+      },
+      {
+        "id": "617a104e1a5a",
+        "q": "Temporarily dismissing workers from employment."
+      },
+      {
+        "id": "8d035d1adc4e",
+        "q": "Reconsideration of a previous decision."
+      },
+      {
+        "id": "1961b5ed331f",
+        "q": "To continue to hope even when the situation seems hopeless."
+      },
+      {
+        "id": "b1b9608bd4a8",
+        "q": "To persevere and not give up."
+      },
+      {
+        "id": "c2e69109b3bb",
+        "q": "To start or create something from the very beginning."
+      },
+      {
+        "id": "1321c690f01b",
+        "q": "You can't achieve anything without effort."
+      },
+      {
+        "id": "7bc8103ff92f",
+        "q": "In a difficult or awkward situation."
+      },
+      {
+        "id": "3c48454485fd",
+        "q": "Willingness to compromise or adjust in a relationship."
+      },
+      {
+        "id": "c19cda68af55",
+        "q": "More important or interesting matters to attend to."
+      },
+      {
+        "id": "40c8e76c989d",
+        "q": "Ordinary people; the general membership of an organization."
+      },
+      {
+        "id": "15a4fdb5330e",
+        "q": "Difficulties experienced in the early stages of something ne"
+      },
+      {
+        "id": "0bea067f7bb3",
+        "q": "Something very easy to do."
+      },
+      {
+        "id": "8418bba919cb",
+        "q": "Hesitating or refusing to take a side."
+      },
+      {
+        "id": "62be73824543",
+        "q": "To act suddenly without planning."
+      },
+      {
+        "id": "9d29dc8e2e7d",
+        "q": "Complete nonsense; something superficial or fanciful."
+      },
+      {
+        "id": "9e4713412319",
+        "q": "To be serious and determined about something."
+      },
+      {
+        "id": "84fbbb02c37c",
+        "q": "To make a great effort to help or please someone."
+      },
+      {
+        "id": "d2746988b8ef",
+        "q": "To seek only the pleasures and enjoyments of life."
+      },
+      {
+        "id": "ba61491c11d9",
+        "q": "To earn money in a legitimate and honest way."
+      },
+      {
+        "id": "a12c90cb6ad0",
+        "q": "A faithful friend or a devoted follower."
+      },
+      {
+        "id": "9caf542c2cbf",
+        "q": "An insult disguised in the form of a compliment."
+      },
+      {
+        "id": "2db8e265e32e",
+        "q": "To daydream; to make plans that are unlikely to happen."
+      },
+      {
+        "id": "31a00c88fe6b",
+        "q": "To be someone's guest; to benefit from another's hospitality"
+      },
+      {
+        "id": "783d47259b3a",
+        "q": "A very long time."
+      },
+      {
+        "id": "3f3899ddf09d",
+        "q": "To improve one's behaviour."
+      },
+      {
+        "id": "3364325a5e6e",
+        "q": "To be preoccupied or obsessed with a particular idea."
+      },
+      {
+        "id": "5ac42c36569a",
+        "q": "Providing precise and detailed information."
+      },
+      {
+        "id": "8bb8cd0bcfef",
+        "q": "A thoughtless or broad generalization."
+      },
+      {
+        "id": "65d93e1f99a5",
+        "q": "Happening consistently or repeatedly every year."
+      },
+      {
+        "id": "7828e9ea211a",
+        "q": "A selfish person who prevents others from using something th"
+      },
+      {
+        "id": "6e48c985f8ab",
+        "q": "To begin working seriously."
+      },
+      {
+        "id": "ccb1e3b00db6",
+        "q": "To spread very rapidly."
+      },
+      {
+        "id": "91263559001b",
+        "q": "Discovered while doing something wrong."
+      },
+      {
+        "id": "e64bbda7bf06",
+        "q": "The complete or full extent of something."
+      },
+      {
+        "id": "0c49ca1add32",
+        "q": "To initiate conversation in a social setting."
+      },
+      {
+        "id": "0c6dce3f928e",
+        "q": "To take on more responsibility than one can handle."
+      }
+    ],
+    "sent": 100,
+    "skipped": 0
+  },
   "One‑Word Substitutions_ows@2026-10-17T17:00Z": {
     "failed": 0,
     "posted_at": "2026-10-17T20:17:46Z",
@@ -4552,6 +4960,414 @@
       {
         "id": "1c0ef45ef9ea",
         "q": "Kept secret, especially because it would not be approved of"
+      }
+    ],
+    "sent": 100,
+    "skipped": 0
+  },
+  "One‑Word Substitutions_ows@2026-10-30T06:30Z": {
+    "failed": 0,
+    "posted_at": "2026-10-30T07:37:43Z",
+    "questions": [
+      {
+        "id": "f0c8b146b4a9",
+        "q": "A person who can speak two languages"
+      },
+      {
+        "id": "2a1675aaac87",
+        "q": "Limited to a small number of people"
+      },
+      {
+        "id": "f73132807653",
+        "q": "A person who is new to a profession without training or expe"
+      },
+      {
+        "id": "e7faa20d5f86",
+        "q": "A strong blast of wind"
+      },
+      {
+        "id": "615ebebd7c91",
+        "q": "A series of stars"
+      },
+      {
+        "id": "5fb76a4269d8",
+        "q": "The treatment to improve the appearance and health of the fe"
+      },
+      {
+        "id": "8d873646ff35",
+        "q": "Groups of members of the public who listen to the facts of a"
+      },
+      {
+        "id": "e443d8cd13c1",
+        "q": "Actor or actress"
+      },
+      {
+        "id": "71eefbded7f1",
+        "q": "The act or habit of talking in one's sleep"
+      },
+      {
+        "id": "c06038799dbc",
+        "q": "Jargon or slang of a particular group or class"
+      },
+      {
+        "id": "3fe77a43504c",
+        "q": "A solemn promise or undertaking"
+      },
+      {
+        "id": "bc519c1f8b13",
+        "q": "Particular subjects or issues that are discussed often or re"
+      },
+      {
+        "id": "48db943c43e6",
+        "q": "Place for collection of dried plant specimens"
+      },
+      {
+        "id": "b549d660a60b",
+        "q": "Conformity to facts"
+      },
+      {
+        "id": "721249d3d037",
+        "q": "A wooden object used for connecting animals that are pulling"
+      },
+      {
+        "id": "97bc5b7fb905",
+        "q": "High sounding pompous speech or writing"
+      },
+      {
+        "id": "699655493db3",
+        "q": "Expressing severe disapproval of (someone or something), esp"
+      },
+      {
+        "id": "796386acc098",
+        "q": "A story full of exciting action, mystery, adventure, or susp"
+      },
+      {
+        "id": "34557addca07",
+        "q": "Two children born at the same birth"
+      },
+      {
+        "id": "bb9f65df8d7c",
+        "q": "Song which is sung in a church by a group of singers"
+      },
+      {
+        "id": "8821efb7b3a3",
+        "q": "Dangers or problems that are hidden or not obvious at first"
+      },
+      {
+        "id": "6658c22cfbb0",
+        "q": "An instrument to measure atmospheric pressure"
+      },
+      {
+        "id": "beb5929667f5",
+        "q": "Station at the end of a route"
+      },
+      {
+        "id": "d53639aa37e6",
+        "q": "Showing no feeling or no interest"
+      },
+      {
+        "id": "4e6a74b20ee3",
+        "q": "Informal, less grammatically rigid language"
+      },
+      {
+        "id": "eb8c86f60495",
+        "q": "A Christian community of nuns living together under monastic"
+      },
+      {
+        "id": "dca2507835fe",
+        "q": "A critical judge of any art and craft"
+      },
+      {
+        "id": "b1f236624bd0",
+        "q": "Groups or organisation of nations or people united for a pur"
+      },
+      {
+        "id": "a119e851a67f",
+        "q": "Meals consisting of several dishes from which guests serve t"
+      },
+      {
+        "id": "7daf46b7ffcf",
+        "q": "That which lasts for a short time"
+      },
+      {
+        "id": "809856b37b6e",
+        "q": "Groups of military ships commanded by the same person"
+      },
+      {
+        "id": "ce8a78b20e07",
+        "q": "A set of twenty"
+      },
+      {
+        "id": "114c68307fa9",
+        "q": "An act of printing a statement about somebody that is not tr"
+      },
+      {
+        "id": "f39ae28dcefe",
+        "q": "Reasons or explanations for something"
+      },
+      {
+        "id": "dcb95476e040",
+        "q": "Dictionary of the special terms in a particular field or job"
+      },
+      {
+        "id": "3024b6c73d38",
+        "q": "An amount of money that must be paid and that is collected b"
+      },
+      {
+        "id": "26bb05e30ad5",
+        "q": "Fragments from an exploded artillery shell, mine, or bomb"
+      },
+      {
+        "id": "788053d38f66",
+        "q": "To boil food briefly to cook it slightly"
+      },
+      {
+        "id": "c5b020c73a1a",
+        "q": "One who works very hard"
+      },
+      {
+        "id": "ceede9586184",
+        "q": "An area of soft, wet ground; situation that is hard to deal "
+      },
+      {
+        "id": "2ac130fb8379",
+        "q": "To separate husk from the grain"
+      },
+      {
+        "id": "0e11eea5fd42",
+        "q": "The speed of something in a particular direction"
+      },
+      {
+        "id": "2e54c5ae8fb7",
+        "q": "Wild and drunken celebrations"
+      },
+      {
+        "id": "36c6d00ddd76",
+        "q": "Feelings of like or dislike for someone or something especia"
+      },
+      {
+        "id": "1ca0b341498f",
+        "q": "Humorous rhyming poem of five lines"
+      },
+      {
+        "id": "300717f492ba",
+        "q": "Something that is difficult to understand"
+      },
+      {
+        "id": "7c7e331f854d",
+        "q": "A festival or festive celebration"
+      },
+      {
+        "id": "5be0684afb18",
+        "q": "A quality that makes one person or thing different from anot"
+      },
+      {
+        "id": "e97ff379623f",
+        "q": "A book of names and addresses"
+      },
+      {
+        "id": "3f2c9df12430",
+        "q": "A person who shows people their seats"
+      },
+      {
+        "id": "a7eb9a798584",
+        "q": "Inscriptions on a building, statue, or coin"
+      },
+      {
+        "id": "4af60289523e",
+        "q": "Confused struggles or fights involving many people"
+      },
+      {
+        "id": "60959412632c",
+        "q": "Government by the populace"
+      },
+      {
+        "id": "8d6e3cd03f74",
+        "q": "Level of respect that people have for a successful person, o"
+      },
+      {
+        "id": "77f4a61fae8b",
+        "q": "Using high-sounding, pompous language"
+      },
+      {
+        "id": "ff89e5e69600",
+        "q": "Objects, activities, or ideas that are used as symbols of so"
+      },
+      {
+        "id": "bed76b849309",
+        "q": "A person or thing that brings bad luck"
+      },
+      {
+        "id": "d757eede2cae",
+        "q": "Continual increase in the price of goods and services"
+      },
+      {
+        "id": "cb6256a3e54a",
+        "q": "One who lives on fish"
+      },
+      {
+        "id": "5b6c71abc288",
+        "q": "Events that may or may not happen"
+      },
+      {
+        "id": "b11ace3b8a65",
+        "q": "Making marks that cannot be removed"
+      },
+      {
+        "id": "aeddbd11ce5a",
+        "q": "Cause (things or people) to separate and go in different dir"
+      },
+      {
+        "id": "b5f953c65789",
+        "q": "Having the qualities or appearance considered to be typical "
+      },
+      {
+        "id": "bd8379d78ea2",
+        "q": "Very different, strange, or unusual"
+      },
+      {
+        "id": "032578cd31ce",
+        "q": "A large cage, building, or enclosure to keep birds"
+      },
+      {
+        "id": "449f140c2440",
+        "q": "Working-class people regarded collectively"
+      },
+      {
+        "id": "468ccc64bef9",
+        "q": "Loud and confused noises, strongly expressed protest or dema"
+      },
+      {
+        "id": "ae5564686262",
+        "q": "An amount of something that is produced by a person or thing"
+      },
+      {
+        "id": "4d4d3fdcae35",
+        "q": "To throw an event into confusion or disorder"
+      },
+      {
+        "id": "27e699f22ebd",
+        "q": "A situation where no progress is possible"
+      },
+      {
+        "id": "19700dd074d3",
+        "q": "Feelings or beliefs that bad things will happen in the futur"
+      },
+      {
+        "id": "c212a1cc575a",
+        "q": "Brief written messages or reports from one person or departm"
+      },
+      {
+        "id": "af742caafb04",
+        "q": "Amusing and very strange"
+      },
+      {
+        "id": "aaacd3cb8aa9",
+        "q": "Member of a band of robbers"
+      },
+      {
+        "id": "02fad4f00371",
+        "q": "Beautiful woman; the most beautiful woman in a particular pl"
+      },
+      {
+        "id": "e6f6c6a61175",
+        "q": "A person who has changed his faith"
+      },
+      {
+        "id": "6631692d45d5",
+        "q": "Periods of time during which someone does not work at his or"
+      },
+      {
+        "id": "adba760f13d3",
+        "q": "Benefits which one enjoys or is entitled to on account of on"
+      },
+      {
+        "id": "98e548a33a06",
+        "q": "Handwriting which is difficult or impossible to read"
+      },
+      {
+        "id": "545f02eceb42",
+        "q": "An act of going or travelling to a place along a way that is"
+      },
+      {
+        "id": "4aa8932608eb",
+        "q": "Marks or qualities that show what something is or what it co"
+      },
+      {
+        "id": "8aa8bc11141d",
+        "q": "Sailors who attacked ships at sea and stole from them"
+      },
+      {
+        "id": "7c39b373b137",
+        "q": "Impossible to harm, damage, or defeat"
+      },
+      {
+        "id": "ca6c7d44c309",
+        "q": "Move or lift something so that it is no longer smooth or nea"
+      },
+      {
+        "id": "fcc7beb9e97d",
+        "q": "An illegal business; a loud, unpleasant noise"
+      },
+      {
+        "id": "46075bc84184",
+        "q": "One who believes that gaining pleasure is the most important"
+      },
+      {
+        "id": "373ba65d4a43",
+        "q": "A form of government in which power is held by the nobility"
+      },
+      {
+        "id": "52583c261196",
+        "q": "The sound of monkeys"
+      },
+      {
+        "id": "4364e77549f0",
+        "q": "The sound of horses"
+      },
+      {
+        "id": "59834490d7c2",
+        "q": "The art of cleaning and preserving animal skins"
+      },
+      {
+        "id": "90279a142976",
+        "q": "Be deprived of a close relation or friend through their deat"
+      },
+      {
+        "id": "8fc2e2394c22",
+        "q": "The forming of a theory or conjecture without firm evidence"
+      },
+      {
+        "id": "f008765da0ff",
+        "q": "Concern for one's own area or region at the expense of natio"
+      },
+      {
+        "id": "5e65a6d4b5f4",
+        "q": "Doctor who deals with bone problems"
+      },
+      {
+        "id": "45d98e1af1bf",
+        "q": "Restore something to better condition"
+      },
+      {
+        "id": "2170d2ed2f2b",
+        "q": "Something that is poisonous or unhealthy"
+      },
+      {
+        "id": "b31f46ea01a4",
+        "q": "To spend winter in a dormant state"
+      },
+      {
+        "id": "b7cd677e52ec",
+        "q": "Central character in a story or play"
+      },
+      {
+        "id": "221d8881b102",
+        "q": "Operations in which police or other forces surround a buildi"
+      },
+      {
+        "id": "2202adf31378",
+        "q": "A sheath for the blade of a sword"
       }
     ],
     "sent": 100,
