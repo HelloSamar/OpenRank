@@ -27,6 +27,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "0020ebe1213f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "The final problem in a series that causes someone to lose patience.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "007338d3b98f": {
       "asked": 1,
       "correct": 0,
@@ -90,6 +99,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "01052d477d63": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Story told to illustrate a moral or spiritual truth",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "01272b71e481": {
       "asked": 1,
       "correct": 0,
@@ -126,12 +144,30 @@
       "skipped": 1,
       "wrong": 0
     },
+    "01afde21dbcb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To make oneself rich by improper means.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "01daf890c0d9": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-24T06:30:00Z",
       "q": "Helping you to remember something",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "01e5ba09a856": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Indulging in irresponsible pleasures during youth.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -169,6 +205,15 @@
       "q": "What does the idiom 'Cost an arm and a leg' mean?",
       "quiz": "idm000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "0255c2b16a23": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Very rarely.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "0262ae51de4c": {
@@ -223,6 +268,15 @@
       "q": "A large cage, building, or enclosure to keep birds",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "03540def2e4d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An animal that feeds on plants",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "0375d6e05aa4": {
@@ -315,6 +369,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "0502434e587e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To do something carelessly or cheaply to save time or money.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "053e6c9e13d0": {
       "asked": 1,
       "correct": 1,
@@ -340,6 +403,15 @@
       "q": "Very rapidly or at a fast pace.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "0609287f8e19": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A deity or spirit embodied in human form",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "06c1bac5e672": {
@@ -387,6 +459,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0814f4ca30c9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be completely and arrogantly certain.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "08272e479c0b": {
       "asked": 1,
       "correct": 0,
@@ -414,6 +495,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0868087cdb22": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To ensure that income and expenditure are equal.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "0871ecfc53b8": {
       "asked": 1,
       "correct": 0,
@@ -437,6 +527,15 @@
       "correct": 1,
       "last_asked": "2026-10-25T06:30:00Z",
       "q": "Indefinite period of time",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "09027d73d8d0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Connected with the place where one was born; a person, animal or plant belonging",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -522,12 +621,39 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0a1c4d4eea7f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Rearing of silk worms",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "0a439cca1b84": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Something that is imagined but does not exist",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "0a526c20975e": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-28T06:31:00Z",
       "q": "By any means, whether honest or dishonest.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "0ab00969efbc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Large group of people, especially an organised group with a particular purpose",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -554,6 +680,15 @@
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "A weak point or area of vulnerability.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "0b82ba2a6181": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Spoil a plan.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -675,6 +810,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "0d4f4e69d07f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Permanently; for always.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "0d90fca9cec8": {
       "asked": 1,
       "correct": 0,
@@ -720,6 +864,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0f1da383a711": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Long and angry fights or quarrels between two people or two groups",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "0f2bb354b8cf": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To find out what someone is thinking or feeling about something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "0f3d5980a258": {
       "asked": 1,
       "correct": 1,
@@ -747,6 +909,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "0fb548bf647d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Regardless of the weather conditions.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "0fbd492f8e76": {
       "asked": 1,
       "correct": 0,
@@ -772,6 +943,15 @@
       "q": "Showing care and effort in your work",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "10056ada10a7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To deceive or mislead someone.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "102888a156c9": {
@@ -810,6 +990,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "11188098b52c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Dogmatic in one's opinions",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "113489c4fe8a": {
       "asked": 1,
       "correct": 0,
@@ -835,6 +1024,24 @@
       "q": "An act of printing a statement about somebody that is not true and that gives pe",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "1156a4b9e8e8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A man who is controlled by his wife",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "11618a673d77": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Something like an opening, particularly one in the body such as a nostril",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "1196fa49ea7b": {
@@ -891,6 +1098,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "13350aa0c14b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Excessive official procedures and bureaucracy that causes delays.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "13391cecfe87": {
       "asked": 1,
       "correct": 0,
@@ -898,6 +1114,15 @@
       "q": "What does the idiom 'Break the ice' mean?",
       "quiz": "idm000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "13670387eff5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Hitting something with a loud, dull sound",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "1375ba536349": {
@@ -990,6 +1215,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "14cff6c740db": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "No decision has been reached yet; the outcome is still uncertain.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "14ebbb6b4a09": {
       "asked": 1,
       "correct": 0,
@@ -1005,6 +1239,15 @@
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "To show dislike or disappointment through a facial expression.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "1518fffbcef8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Not having knowledge or experience of a particular subject or activity",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -1051,6 +1294,24 @@
       "q": "A large crowd of people, especially one that may become violent and cause troubl",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "160d47633b75": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "If too many people work on something, it will be done poorly.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "161b15d16347": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "In a situation where you must choose between two equally unpleasant options.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "164b3e8e783e": {
@@ -1116,6 +1377,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "17ddd25004e1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Giving help or support to the main group of workers",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "180e1bcae4aa": {
       "asked": 1,
       "correct": 0,
@@ -1161,6 +1431,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "186791ddef80": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The art and practice of cooking and eating good food",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "1888332bfb72": {
       "asked": 1,
       "correct": 1,
@@ -1197,6 +1476,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "1966b70ec219": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To become known; to be revealed.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "19700dd074d3": {
       "asked": 1,
       "correct": 0,
@@ -1214,6 +1502,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "19cd3be8fde2": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Unusual habits or way of behaving, something strange that happens by chance",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "1a151c6f76d2": {
       "asked": 1,
@@ -1233,6 +1530,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "1a85c61b101e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To choose to be less important or active in a role.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "1a98d416d609": {
       "asked": 1,
       "correct": 0,
@@ -1249,6 +1555,15 @@
       "q": "Which can easily be bent without breaking",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "1abc3842efe8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The sound of geese",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "1abdc88a14dd": {
@@ -1458,11 +1773,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "1fa61d822694": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Stream flowing into another big river",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "1fbcbefadc50": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-28T06:31:00Z",
       "q": "To stop working and finish for the day.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "1fd0cc1db325": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To avoid someone or something.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -1584,6 +1917,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "21c78938aa4e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "If wishing could make things happen, even the poorest would have everything.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "2202adf31378": {
       "asked": 1,
       "correct": 1,
@@ -1647,6 +1989,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "22b611c09b4b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "A severe scolding.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "22b67dfcaa06": {
       "asked": 1,
       "correct": 0,
@@ -1674,12 +2025,39 @@
       "skipped": 1,
       "wrong": 0
     },
+    "22f3b3c0ccad": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Distorted representation of something",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "2389fdf4a197": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be very expensive.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "23b3a343f770": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-28T06:31:00Z",
       "q": "To stop doing something; to be done with it.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "23d6894247b0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The faculty or power of using one's will",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -1764,11 +2142,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "251285a287f5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Great disaster or complete failure",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "25f4bb4f7be3": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-26T06:30:00Z",
       "q": "The sound of parrots",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "260a7ffe3453": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The process by means of which plants and animals breathe",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -1816,6 +2212,15 @@
       "q": "A person who shows a great or excessive fondness for one's wife",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "26e956256b55": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A shady place under trees",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "27178851adfb": {
@@ -2007,6 +2412,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "2ba339e820b1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A gathering for discussion of theological questions",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "2bb4fb8dde7b": {
       "asked": 1,
       "correct": 0,
@@ -2052,6 +2466,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "2cbb9ba79b7e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A storehouse for threshed grain",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "2da6e95804cb": {
       "asked": 1,
       "correct": 0,
@@ -2095,6 +2518,15 @@
       "q": "Showing a skilful use of underhand tactics to achieve goals",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "2e27b23172ba": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Delusion of suffering from a disease",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "2e33bc63f750": {
@@ -2186,6 +2618,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "2f7858704d07": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "People who are extremely poor",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "2f84dd1fe125": {
       "asked": 1,
@@ -2457,6 +2898,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "341f69db2182": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Hundredth anniversary of a significant event",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "342aad4a358e": {
       "asked": 1,
       "correct": 0,
@@ -2574,6 +3024,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "3760d039aec1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Failing to show proper respect and courtesy",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "379774906d15": {
       "asked": 1,
       "correct": 0,
@@ -2600,6 +3059,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "3827cd429fe1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Dead bodies of animals",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "382849fd78e3": {
       "asked": 1,
@@ -2637,6 +3105,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "39383850a708": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "People will be severely punished or dismissed.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "3954bb8108e1": {
       "asked": 1,
       "correct": 0,
@@ -2673,6 +3150,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "39c596e65eda": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Consider something to be not completely true or right.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "39da2555c810": {
       "asked": 1,
       "correct": 0,
@@ -2688,6 +3174,24 @@
       "last_asked": "2026-10-27T06:30:00Z",
       "q": "A device for deciphering codes and ciphers",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "3a6abe1e5072": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "All day and night; continuously.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "3ae3020475b1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Partially deaf; unable to hear well.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -2727,6 +3231,24 @@
       "skipped": 1,
       "wrong": 0
     },
+    "3c040e6c12be": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To experience the same unpleasant treatment one has given to others.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "3c2e33a7f7e6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The state of living unmarried",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "3c48454485fd": {
       "asked": 1,
       "correct": 0,
@@ -2751,6 +3273,24 @@
       "last_asked": "2026-10-26T06:30:00Z",
       "q": "Building that is used for Jewish religious services",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "3d97d8a42798": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "A learned or intellectual woman.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "3da73a26fca8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Fixed and unable to be changed.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -2835,6 +3375,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "3fb139a33644": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "One who is new to a profession",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "3fe77a43504c": {
       "asked": 1,
       "correct": 0,
@@ -2869,6 +3418,15 @@
       "q": "Puzzled, confused, or not knowing what to do.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "406cd685339c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To listen very carefully and attentively to someone.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "40bded6de97a": {
@@ -2925,6 +3483,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "41cbfcf738aa": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Available for anyone to take or win.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "41dda2bac258": {
       "asked": 1,
       "correct": 0,
@@ -2958,6 +3525,15 @@
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "A feeling of intense longing for something",
       "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "42ad02b514dc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Freedom from punishment, harm, or loss",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -3096,6 +3672,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "4520a5484d20": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Remain cheerful and optimistic in difficult times.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "452e062aadf0": {
       "asked": 1,
       "correct": 0,
@@ -3173,6 +3758,15 @@
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "Living on only the most basic necessities; having barely enough.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "464080b22055": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To apologize and accept humiliation.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -3357,6 +3951,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "4a3099091321": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Imagined, not real",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "4a992d2787b0": {
       "asked": 1,
       "correct": 0,
@@ -3365,6 +3968,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "4aa35047fdd8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To have a secret plan or advantage in reserve.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "4aa8932608eb": {
       "asked": 1,
@@ -3528,6 +4140,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "4e7700e98fed": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Keen interest or enthusiasm",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "4e9b3a9893ed": {
       "asked": 1,
       "correct": 0,
@@ -3570,6 +4191,15 @@
       "last_asked": "2026-10-26T06:30:00Z",
       "q": "Very strange or unusual",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "4f9001004d5f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Overwhelmed by what is happening in the moment.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -3626,6 +4256,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "508270decfab": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Outside the limits of acceptable behaviour or standards.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "510153155852": {
       "asked": 1,
@@ -3807,6 +4446,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "546d92c705d4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Finding faults or flaws in something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "54a8abf6aa0b": {
       "asked": 1,
       "correct": 0,
@@ -3904,6 +4552,33 @@
       "q": "Legal agreements in which a person borrows money to buy property (such as a hous",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "56d59bed28a7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Bringing (someone who is unconscious, not breathing, or close to death) back to ",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "56e64ff1214a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Irregularly; not in a steady or consistent manner.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "56e9c03f5cf4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A person who attends to diseases of the eye",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "575097201ed9": {
@@ -4004,6 +4679,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "59a53525b423": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An arrangement of flowers that is usually given as a present",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "59fca0facdf1": {
       "asked": 1,
@@ -4140,6 +4824,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "5be88d57cd01": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "In good health.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "5c291472a127": {
       "asked": 1,
       "correct": 0,
@@ -4254,6 +4947,15 @@
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "The ability to speak fluently and persuasively.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "5de79486790a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Parts of cities in which members of a particular group or race live usually in p",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -4401,6 +5103,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "60ea8f33aa06": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To come from a particular place.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "60ef4e02c1ea": {
       "asked": 1,
       "correct": 0,
@@ -4482,6 +5193,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "61830e8ce17c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To convey a great deal of meaning without using words.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6256e2435525": {
       "asked": 1,
       "correct": 0,
@@ -4498,6 +5218,15 @@
       "q": "To act suddenly without planning.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "62eff5483a41": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Completely surprised, confused or defeated.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "635432b8a0ac": {
@@ -4545,6 +5274,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "643b3af9cdac": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Having a particular habit, activity, or interest that is long-established and un",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "645bd69c62ad": {
       "asked": 1,
       "correct": 0,
@@ -4570,6 +5308,15 @@
       "q": "Beginning to exist and evolve",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "6559a765a742": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To communicate ideas or feelings successfully.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "657a48e45dc4": {
@@ -4605,6 +5352,15 @@
       "last_asked": "2026-10-20T06:30:00Z",
       "q": "Bringing about a gentle and painless death for someone with an incurable disease",
       "quiz": "ows000",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "661fd0047dac": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Enjoying oneself or celebrating in a noisy or boisterous way",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -4752,6 +5508,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "697d6e5672ad": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Rare; not occurring very often.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "699655493db3": {
       "asked": 1,
       "correct": 0,
@@ -4777,6 +5542,24 @@
       "q": "Study of hereditary, genes and variation in living organisms",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "6a8da13311a8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To fail; to not be completed.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "6ae798b3fdfc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Very common and easy to find.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "6aeac0bd3c50": {
@@ -4833,6 +5616,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "6ba3cdfbc230": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "It is up to you to make the next move.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6bc0dcd8fc54": {
       "asked": 1,
       "correct": 2,
@@ -4878,6 +5670,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "6cbe7789e7a2": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Make someone less angry or hostile",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6cd8ec24e8fa": {
       "asked": 1,
       "correct": 0,
@@ -4914,6 +5715,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "6d4507f2ac83": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Extremely or unusually small",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6d56aa74cb10": {
       "asked": 1,
       "correct": 0,
@@ -4937,6 +5747,15 @@
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "The current or existing state of affairs.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "6e03c6415d7b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To act in a reckless or unreliable manner.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -5022,6 +5841,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "6f36cf129f63": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The statistical study of populations",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "6f3dda6a57ff": {
       "asked": 1,
       "correct": 0,
@@ -5047,6 +5875,15 @@
       "q": "Under suspicion or in disgrace.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "6f6754ada510": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "To destroy completely",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "6f6c3044ec19": {
@@ -5130,6 +5967,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "7124e00cfefb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To surrender or admit defeat.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "71abbc6a8b56": {
       "asked": 1,
       "correct": 1,
@@ -5155,6 +6001,15 @@
       "q": "A wooden object used for connecting animals that are pulling a vehicle",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "722a33309549": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Not to take something too seriously.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "723832263bee": {
@@ -5454,6 +6309,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "788b02ae641b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Extremely silly or foolish.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "79235a1e4529": {
       "asked": 1,
       "correct": 0,
@@ -5533,6 +6397,15 @@
       "q": "Marriage outside one's tribe",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "7a4f80d0bf51": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Being in a situation where there are no good options.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "7a667c09a881": {
@@ -5643,6 +6516,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "7baf1001d445": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Important things take a long time to achieve.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "7bc8103ff92f": {
       "asked": 1,
       "correct": 0,
@@ -5676,6 +6558,15 @@
       "last_asked": "2026-10-30T06:30:00Z",
       "q": "Impossible to harm, damage, or defeat",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "7c5bd9434dbf": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Used to indicate that something is advisable or necessary.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -5747,6 +6638,15 @@
       "correct": 0,
       "last_asked": "2026-10-26T06:30:00Z",
       "q": "A place where animal hides are tanned",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "7d9514c884da": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Large number of something, such as questions that are directed at somebody very ",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -5823,6 +6723,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "7eb8547b38bd": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be useful or of good service to someone.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "7f399bab1ee2": {
       "asked": 1,
       "correct": 1,
@@ -5885,6 +6794,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "803c1adbbf3e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Branch of medicine concerned with children and their illnesses",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "8046f220732c": {
       "asked": 1,
@@ -5985,6 +6903,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "81da50ea37fa": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An invigilator at a university or college examination",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "81de83de892a": {
       "asked": 1,
       "correct": 0,
@@ -6001,6 +6928,15 @@
       "q": "A quick summary or report of a situation",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "81f91e59780d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "The feeling of success or accomplishment.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "82295cf72924": {
@@ -6037,6 +6973,24 @@
       "q": "A person having more than one wife at the same time",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "831cae23ec21": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "An important or influential person.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "834054435f56": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Relating to speeds close to that of sound",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "8369cc5ff08a": {
@@ -6093,6 +7047,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8418fb019f1e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To receive great applause from an audience.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "845d7cddb342": {
       "asked": 1,
       "correct": 0,
@@ -6129,6 +7092,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "84c76a460589": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Take great pleasure",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "84cd158fe388": {
       "asked": 1,
       "correct": 0,
@@ -6154,6 +7126,15 @@
       "q": "To make a great effort to help or please someone.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "8530f8274b96": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Nursery where babies and young children are cared for during the working day",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "85b501f34411": {
@@ -6282,6 +7263,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "87ada0b0c250": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To tremble with fear.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "87f83ac20aaf": {
       "asked": 1,
       "correct": 0,
@@ -6332,6 +7322,15 @@
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "To stay silent; to refrain from speaking.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "892d3e200174": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To reconsider a previous decision.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -6389,6 +7388,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "8ade79904b78": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Indifference to pleasure and pain",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "8af2058a7e75": {
       "asked": 1,
@@ -6487,6 +7495,15 @@
       "q": "Periods of time that are very important in history",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "8c330ee14576": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To concentrate hard in order to understand something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "8c6ddf76d0ec": {
@@ -6624,6 +7641,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8d90fad8fa98": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To shift responsibility to someone else.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "8d9e6fc80c94": {
       "asked": 1,
       "correct": 0,
@@ -6640,6 +7666,15 @@
       "q": "Spoken or done without preparation",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "8ddb9f6b1911": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A disease causing a person to fall unconscious involuntarily",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "8de9cc0ca035": {
@@ -6669,6 +7704,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "8e78f1b2921a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To rush directly towards something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "8e9142cf192c": {
       "asked": 1,
       "correct": 0,
@@ -6677,6 +7721,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "8ec0135b851d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Enjoy something for an extended time",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "8ec126b6febf": {
       "asked": 1,
@@ -6840,6 +7893,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "932c16d14e5f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Feeling extreme happiness or joy.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "944a9fbbfe5a": {
       "asked": 1,
       "correct": 0,
@@ -6867,6 +7929,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "949d05b8936e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "A constant source of irritation or trouble.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "94c86b472893": {
       "asked": 1,
       "correct": 0,
@@ -6885,6 +7956,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "9527b9b73f76": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A person who speaks more than one language",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "9536bb4c18ea": {
       "asked": 1,
       "correct": 0,
@@ -6892,6 +7972,15 @@
       "q": "Hitting or beating something or someone and make a loud, deep sound",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "95699239d90e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Consisting of many things or parts",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "95737ce60c15": {
@@ -6993,6 +8082,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "96e40512da06": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The area that surrounds a place or thing",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "971368ad7826": {
       "asked": 1,
       "correct": 0,
@@ -7018,6 +8116,24 @@
       "q": "Excellent and valuable work or assistance.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "977126873d72": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The killing of one's wife",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "9797ba2bdfb9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To abandon someone in a difficult situation.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "979867852b4f": {
@@ -7065,12 +8181,39 @@
       "skipped": 1,
       "wrong": 0
     },
+    "98bf3649b264": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To eat a very large amount of food.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "98e548a33a06": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-30T06:30:00Z",
       "q": "Handwriting which is difficult or impossible to read",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "98ffc4272011": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To recover remarkably after a disaster or destruction.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "9964c8605d12": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To begin working hard; to make a serious effort.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -7126,6 +8269,24 @@
       "q": "An act of getting money back from people it has been paid to",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "9a60c0aded1e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A person who physically attacks another",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "9acf825a66d4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "In trouble or facing difficulties.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "9b0d57f4ec15": {
@@ -7191,12 +8352,30 @@
       "skipped": 1,
       "wrong": 1
     },
+    "9bca1abf793c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Feelings of strong dislike or disapproval of someone or something you think does",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "9c280fd2af0f": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-28T06:31:00Z",
       "q": "An attempt to guess something without enough information.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "9c2f5fffb5c5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Error in the way a law, rule, or contract is written that makes it possible for ",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -7236,6 +8415,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "9c5f9d27d728": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Persons or things regarded as an exact copy of another",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "9c953c1225a3": {
       "asked": 1,
       "correct": 0,
@@ -7244,6 +8432,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "9ca02af3268c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "In trouble or in disfavour with someone.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "9caf542c2cbf": {
       "asked": 1,
@@ -7362,6 +8559,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "9e5b0644e6ee": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "By or for each person",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "9e7774a62fd5": {
       "asked": 1,
       "correct": 0,
@@ -7459,6 +8665,15 @@
       "q": "A scolding, nagging, bad-tempered woman",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "a098099ae2e1": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The thing that hides or covers somebody",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "a0b3ac123811": {
@@ -7641,6 +8856,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "a3b42590a16b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Behaviour that shows low morals and a great love of pleasure, money, fame, etc",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "a3c2f9499335": {
       "asked": 1,
       "correct": 0,
@@ -7677,6 +8901,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "a40842b7a0c7": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To stop talking; to keep quiet.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "a44dd243d5e8": {
       "asked": 1,
       "correct": 0,
@@ -7702,6 +8935,15 @@
       "q": "One who treats female ailments",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "a4726ad0833a": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Keep quiet.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "a4d8e1b1eade": {
@@ -7749,6 +8991,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "a56e52faa666": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Movies about crime that use dark shadows and lighting to show the complicated mo",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "a5db16da0640": {
       "asked": 1,
       "correct": 0,
@@ -7785,6 +9036,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "a66f1a0d6d80": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "One positive event does not mean that everything will be fine.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "a687ac136573": {
       "asked": 1,
       "correct": 0,
@@ -7792,6 +9052,15 @@
       "q": "Causing great horror or fear; frightful",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "a695939cf15b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The theory or philosophy of law",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "a6ff5ed0ec91": {
@@ -7864,6 +9133,15 @@
       "q": "A person or thing that holds no secrets.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "a7aae4974c0d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be wasted or lost forever.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "a7b3899167ff": {
@@ -7954,6 +9232,15 @@
       "q": "A person aged between 80 and 89",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "a8d5edfaf8ea": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Expressive in the use of words",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "a8f5c040f6c8": {
@@ -8079,6 +9366,15 @@
       "last_asked": "2026-10-30T06:30:00Z",
       "q": "Member of a band of robbers",
       "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "aac48d7a1944": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To ask for something impossible.",
+      "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
     },
@@ -8244,6 +9540,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "ae8536f5789f": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Repeatedly; on many occasions.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "ae94ce6d8b71": {
       "asked": 1,
       "correct": 0,
@@ -8388,6 +9693,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "b0b48871b2ae": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Things are not always as attractive or valuable as they first appear.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "b10744752484": {
       "asked": 1,
       "correct": 0,
@@ -8433,6 +9747,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "b198beea4ae9": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To remain calm and not get angry.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "b1b886217cd6": {
       "asked": 1,
       "correct": 0,
@@ -8459,6 +9782,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "b1cdc8b9fe00": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To become suddenly and extremely angry.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "b1ee1beeaec7": {
       "asked": 1,
@@ -8539,6 +9871,15 @@
       "q": "To repeatedly criticise or bully someone.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "b396b88d7f58": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To watch or monitor something closely.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "b3982cf9add9": {
@@ -8622,6 +9963,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "b527bec72d67": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An involuntary action in response to a stimulus",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "b530fafc9201": {
       "asked": 1,
       "correct": 0,
@@ -8683,6 +10033,15 @@
       "q": "Persons or things that take the place of someone or something else",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "b70cfcc3fd1b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "In a state of suspense and anxiety.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "b732076aa89e": {
@@ -8774,6 +10133,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "b9576fc188d8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Periods of time when people stay awake, especially at night, in order to watch a",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "b99a31383d25": {
       "asked": 1,
@@ -8890,6 +10258,15 @@
       "q": "To earn money in a legitimate and honest way.",
       "quiz": "Idioms_idm",
       "skipped": 1,
+      "wrong": 0
+    },
+    "bab4109c56ef": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Confusing or meaningless words or activities",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "bac8ef36f44c": {
@@ -9054,6 +10431,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "bdc5b449d1b8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A specialist in diseases of the nose",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "be171b03bdd8": {
       "asked": 1,
       "correct": 0,
@@ -9061,6 +10447,15 @@
       "q": "A large number of fish swimming together",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "be1bd841e968": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Reduce something in size by gradual series of steps",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "be3dd93f78c8": {
@@ -9071,6 +10466,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "beb4a7ad1127": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To share the cost of something equally.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "beb5929667f5": {
       "asked": 1,
@@ -9198,6 +10602,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "c14a9fc2ac41": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Distance of a place north or south of the equator",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "c19cc0300063": {
       "asked": 1,
       "correct": 0,
@@ -9225,11 +10638,29 @@
       "skipped": 0,
       "wrong": 0
     },
+    "c2106a075137": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An extremely easy task",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "c212a1cc575a": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-30T06:30:00Z",
       "q": "Brief written messages or reports from one person or department in a company or ",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "c240d510f321": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The sound of alligators",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -9240,6 +10671,15 @@
       "last_asked": "2026-10-28T06:31:00Z",
       "q": "To criticise someone or something.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "c26ce6c48498": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A person who opposes war or use of military force",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -9450,6 +10890,24 @@
       "skipped": 0,
       "wrong": 1
     },
+    "c686131cde6d": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To act at the most opportune moment.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "c6d56a200e4e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A group of followers hired to applaud at a performance",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "c73da08ac1e9": {
       "asked": 1,
       "correct": 1,
@@ -9475,6 +10933,15 @@
       "q": "A group of three people holding power together",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "c7dc29320de0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The belief that events are decided by fate and you can not control them",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "c7dec6883527": {
@@ -9503,6 +10970,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "c84f04c198a8": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Regard something as being due to a cause",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "c8681425bb22": {
       "asked": 1,
@@ -9621,6 +11097,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "cb35142ac995": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Large and very unpleasant amount of dirt",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "cb36347508fe": {
       "asked": 1,
       "correct": 0,
@@ -9665,6 +11150,15 @@
       "quiz": "ows000",
       "skipped": 0,
       "wrong": 1
+    },
+    "cc101345ab71": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be deeply affected or upset by something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
     },
     "cc709bbbaf43": {
       "asked": 1,
@@ -9747,6 +11241,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "ceb7817ac252": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To pretend that something is true.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "ceb985d4642e": {
       "asked": 1,
       "correct": 1,
@@ -9783,11 +11286,29 @@
       "skipped": 1,
       "wrong": 0
     },
+    "cf7a6d1142c2": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "A decisive test to determine the truth or quality of something.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "cf9bcb52e481": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "A small amount of extra money for personal expenses.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "cfbcf039e376": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To behave in an arrogant or superior manner.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -9828,6 +11349,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "d14b4d341b68": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An act of burying a dead person",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "d1572d3031dc": {
       "asked": 1,
       "correct": 0,
@@ -9864,6 +11394,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "d1aee2c4a578": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "An unexpected or unknown winner or competitor.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "d1b9231d8b6d": {
       "asked": 1,
       "correct": 0,
@@ -9880,6 +11419,15 @@
       "q": "Foolish, confused, or meaningless words",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "d21bad6e46eb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To admire or respect someone very much.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "d22663fbe872": {
@@ -9999,6 +11547,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "d468bfc41e98": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The line where sky and land meet",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "d48b784788ea": {
       "asked": 1,
       "correct": 0,
@@ -10015,6 +11572,24 @@
       "q": "Bad or immoral behaviour or habits",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "d4fb356b85b3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To collapse; to yield under pressure.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "d514d0a54f2e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Something which lasts forever",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "d53639aa37e6": {
@@ -10071,6 +11646,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "d69abeb13eb4": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A person who compiles dictionaries",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "d704125b8506": {
       "asked": 1,
       "correct": 0,
@@ -10115,6 +11699,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "d89e29c26618": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The sound of birds",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "d89e367135b6": {
       "asked": 1,
@@ -10224,11 +11817,29 @@
       "skipped": 0,
       "wrong": 1
     },
+    "dbbb716b91e6": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Madness with an obsession with something",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "dbe595be408e": {
       "asked": 1,
       "correct": 1,
       "last_asked": "2026-10-28T06:30:00Z",
       "q": "One who is filled with excessive enthusiasm in religious matters",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "dbe85253ba72": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Events involving destruction or damage on a catastrophic scale",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
@@ -10258,6 +11869,15 @@
       "q": "One who has fixed opinions and beliefs",
       "quiz": "ows000",
       "skipped": 1,
+      "wrong": 0
+    },
+    "dc99fb8210cd": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "A skeptical person who does not believe something easily.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "dc9e10697ead": {
@@ -10512,6 +12132,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "e3c3fe153742": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "That can be heard easily",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "e3e654a2eff5": {
       "asked": 1,
       "correct": 0,
@@ -10548,6 +12177,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e450f2af63bb": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Uncertain; about to happen but not yet confirmed.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "e4511d74db90": {
       "asked": 1,
       "correct": 0,
@@ -10581,6 +12219,15 @@
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "Collapsing or falling in large numbers.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "e53397f9e606": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The act of delaying things",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -10661,6 +12308,15 @@
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "To deteriorate badly; to be ruined.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "e6b1f77d0c34": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Having no more patience or resources left.",
       "quiz": "Idioms_idm",
       "skipped": 0,
       "wrong": 0
@@ -10800,6 +12456,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "e8a26ea8e6bd": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To do something with great energy and enthusiasm.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "e8d5654ae351": {
       "asked": 1,
       "correct": 0,
@@ -10834,6 +12499,15 @@
       "q": "Not doing or involving much physical activity",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "e91279c649dc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Destruction or abortion of a foetus",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
       "wrong": 0
     },
     "e92dfeb83fe9": {
@@ -10917,6 +12591,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "ea34f453ab25": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To detect; to realise the true nature of something or someone.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "ea63332b314d": {
       "asked": 1,
       "correct": 0,
@@ -10951,6 +12634,24 @@
       "q": "A person who is in charge of or takes care of something",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "eacc40f603c3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An animal that has four feet",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "eaf7f34f0d7c": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To confront a difficult situation directly and with courage.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "eb14886b75cd": {
@@ -11079,6 +12780,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "edb8f728d7b2": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "An eight-armed sea creature",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "edf2f368fc55": {
       "asked": 1,
       "correct": 0,
@@ -11105,6 +12815,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "ee7eaea7834b": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Morbid delusion of power, importance or godliness",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "ee8adab2b4a0": {
       "asked": 1,
@@ -11259,6 +12978,15 @@
       "skipped": 0,
       "wrong": 0
     },
+    "f19d13a722f5": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To show no surprise or emotion.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
     "f1b8a50ddb08": {
       "asked": 1,
       "correct": 0,
@@ -11349,12 +13077,30 @@
       "skipped": 0,
       "wrong": 1
     },
+    "f46e7ecb67b0": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "A deep cut or tear in skin or flesh",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "f538cb955f8e": {
       "asked": 1,
       "correct": 0,
       "last_asked": "2026-10-29T06:31:00Z",
       "q": "A very good, honest and reliable person.",
       "quiz": "Idioms_idm",
+      "skipped": 0,
+      "wrong": 0
+    },
+    "f54b4ff51633": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "The date on which an event happened in some previous year",
+      "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 0
     },
@@ -11383,6 +13129,15 @@
       "q": "The state or quality of being holy",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "f61243dc53d3": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "To be absent without permission.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "f616a761f994": {
@@ -11475,6 +13230,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "f73c98af7ddc": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Mixed up or distorted so as to be unclear",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "f775060040ad": {
       "asked": 1,
       "correct": 0,
@@ -11538,6 +13302,15 @@
       "skipped": 1,
       "wrong": 0
     },
+    "f8604b4de2de": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Mental states in which one is confused and not able to think or speak clearly, s",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "f95afb01886e": {
       "asked": 1,
       "correct": 0,
@@ -11545,6 +13318,15 @@
       "q": "Existing or happening in the same time period",
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 1,
+      "wrong": 0
+    },
+    "f96f042bdb36": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:31:00Z",
+      "q": "Doing or saying something risky.",
+      "quiz": "Idioms_idm",
+      "skipped": 0,
       "wrong": 0
     },
     "f9a9e3ebaf65": {
@@ -11655,6 +13437,15 @@
       "skipped": 0,
       "wrong": 1
     },
+    "fbc2e26e0c4e": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Confusing or difficult problem",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
+    },
     "fbe7d1efb12f": {
       "asked": 1,
       "correct": 0,
@@ -11681,6 +13472,15 @@
       "quiz": "One‑Word Substitutions_ows",
       "skipped": 0,
       "wrong": 1
+    },
+    "fc94adb1e987": {
+      "asked": 1,
+      "correct": 0,
+      "last_asked": "2026-10-31T06:30:00Z",
+      "q": "Made or done without preparation",
+      "quiz": "One‑Word Substitutions_ows",
+      "skipped": 0,
+      "wrong": 0
     },
     "fcc7beb9e97d": {
       "asked": 1,
