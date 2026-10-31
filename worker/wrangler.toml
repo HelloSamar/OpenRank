@@ -1,0 +1,21 @@
+# OpenRank multi-group Worker (Cloudflare free plan).
+# Secrets are NOT stored here. They are set by the "Deploy worker" workflow from GitHub secrets.
+name = "openrank-worker"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+# Plain settings. The deploy workflow overwrites PAUSED from its "paused" choice.
+[vars]
+FREE_DAILY_QUESTIONS = "100"
+PAID_DAILY_QUESTIONS = "2000"
+GRACE_DAYS = "3"
+DAILY_BUDGET_EVENTS = "80000"
+PAUSED = "false"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "openrank"
+# The deploy workflow replaces this placeholder with the real id; it is never committed.
+database_id = "REPLACE_WITH_D1_ID"
+migrations_dir = "migrations"
