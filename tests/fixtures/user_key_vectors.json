@@ -1,0 +1,65 @@
+{
+ "about": "user_key(salt, user_id) as produced by quiz_bot.user_key. The Cloudflare Worker (worker/src/hash.ts) must give the same keys, so a person has one key in both systems.",
+ "vectors": [
+  {
+   "salt": "test-salt",
+   "user_id": 1,
+   "key": "u0132058d591f01ef"
+  },
+  {
+   "salt": "test-salt",
+   "user_id": 42,
+   "key": "u7dbb05509e88fffe"
+  },
+  {
+   "salt": "test-salt",
+   "user_id": 8630381516,
+   "key": "u68883d53d857cd70"
+  },
+  {
+   "salt": "test-salt",
+   "user_id": 999999999999,
+   "key": "u02637d86d8107d90"
+  },
+  {
+   "salt": "another secret",
+   "user_id": 1,
+   "key": "u26dbe63bfbfccd96"
+  },
+  {
+   "salt": "another secret",
+   "user_id": 42,
+   "key": "u80ab71aa5d0b5d88"
+  },
+  {
+   "salt": "another secret",
+   "user_id": 8630381516,
+   "key": "u2bd27849929b6a0b"
+  },
+  {
+   "salt": "another secret",
+   "user_id": 999999999999,
+   "key": "uac603b1214a28fb7"
+  },
+  {
+   "salt": "sälz-हिंदी",
+   "user_id": 1,
+   "key": "u435c91dbe000abef"
+  },
+  {
+   "salt": "sälz-हिंदी",
+   "user_id": 42,
+   "key": "uc1c594c6a150cd95"
+  },
+  {
+   "salt": "sälz-हिंदी",
+   "user_id": 8630381516,
+   "key": "uc18c21c29b2a00fd"
+  },
+  {
+   "salt": "sälz-हिंदी",
+   "user_id": 999999999999,
+   "key": "uedae99f6d553051a"
+  }
+ ]
+}
