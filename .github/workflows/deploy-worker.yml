@@ -1,0 +1,141 @@
+name: Deploy worker
+
+# Deploys the multi-group product (worker/) to Cloudflare's free plan, creating the database on
+# the first run. It uses its OWN bot (secret WORKER_BOT_TOKEN): setting a webhook on a bot stops
+# it from receiving updates any other way, so never point this at the bot that the scheduled
+# group quizzes use.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_new_bot:
+        description: "Tick to confirm WORKER_BOT_TOKEN belongs to a NEW bot, not the group quiz bot"
+        required: true
+        default: false
+        type: boolean
+      set_webhook:
+        description: "Point the bot's webhook at this worker (needed the first time)"
+        required: false
+        default: true
+        type: boolean
+      paused:
+        description: "Emergency switch: deploy with new quizzes paused"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: worker
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check and test (nothing is deployed if these fail)
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Check the inputs and secrets
+        env:
+          CONFIRM: ${{ inputs.confirm_new_bot }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_BOT_TOKEN: ${{ secrets.WORKER_BOT_TOKEN }}
+          WORKER_WEBHOOK_SECRET: ${{ secrets.WORKER_WEBHOOK_SECRET }}
+          WORKER_SCORES_SALT: ${{ secrets.WORKER_SCORES_SALT }}
+        run: |
+          if [ "$CONFIRM" != "true" ]; then
+            echo "::error::Tick 'confirm_new_bot'. WORKER_BOT_TOKEN must be a NEW bot, not the group quiz bot."
+            exit 1
+          fi
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID WORKER_BOT_TOKEN WORKER_WEBHOOK_SECRET WORKER_SCORES_SALT; do
+            if [ -z "${!name}" ]; then echo "::error::Missing GitHub secret $name"; missing=1; fi
+          done
+          [ "$missing" = "0" ] || exit 1
+
+      - name: Find or create the database
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          find_id() {
+            npx --yes wrangler@4.152.0 d1 list --json | jq -r '.[] | select(.name == "openrank") | (.uuid // .id // .database_id)' | head -n 1
+          }
+          ID="$(find_id)"
+          if [ -z "$ID" ]; then
+            npx --yes wrangler@4.152.0 d1 create openrank
+            ID="$(find_id)"
+          fi
+          if [ -z "$ID" ]; then echo "::error::Could not find or create the database 'openrank'"; exit 1; fi
+          sed -i "s/REPLACE_WITH_D1_ID/$ID/" wrangler.toml
+
+      - name: Apply the database schema
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4.152.0 d1 migrations apply openrank --remote
+
+      - name: Deploy the worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PAUSED: ${{ inputs.paused }}
+        run: npx --yes wrangler@4.152.0 deploy --var "PAUSED:$PAUSED" 2>&1 | tee deploy.log
+
+      - name: Set the worker's secrets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_BOT_TOKEN: ${{ secrets.WORKER_BOT_TOKEN }}
+          WORKER_WEBHOOK_SECRET: ${{ secrets.WORKER_WEBHOOK_SECRET }}
+          WORKER_SCORES_SALT: ${{ secrets.WORKER_SCORES_SALT }}
+          WORKER_ADMIN_IDS: ${{ secrets.WORKER_ADMIN_IDS }}
+        run: |
+          printf '%s' "$WORKER_BOT_TOKEN" | npx --yes wrangler@4.152.0 secret put BOT_TOKEN
+          printf '%s' "$WORKER_WEBHOOK_SECRET" | npx --yes wrangler@4.152.0 secret put WEBHOOK_SECRET
+          printf '%s' "$WORKER_SCORES_SALT" | npx --yes wrangler@4.152.0 secret put SCORES_SALT
+          if [ -n "$WORKER_ADMIN_IDS" ]; then
+            printf '%s' "$WORKER_ADMIN_IDS" | npx --yes wrangler@4.152.0 secret put ADMIN_IDS
+          fi
+
+      - name: Point the bot's webhook at the worker
+        if: ${{ inputs.set_webhook }}
+        env:
+          WORKER_BOT_TOKEN: ${{ secrets.WORKER_BOT_TOKEN }}
+          WORKER_WEBHOOK_SECRET: ${{ secrets.WORKER_WEBHOOK_SECRET }}
+        run: |
+          URL="$(grep -oE 'https://[A-Za-z0-9._-]+\.workers\.dev' deploy.log | head -n 1)"
+          if [ -z "$URL" ]; then echo "::error::Could not read the worker address from the deploy log"; exit 1; fi
+          echo "Worker address: $URL"
+          curl -sS "https://api.telegram.org/bot${WORKER_BOT_TOKEN}/getMe" | jq '{ok, username: .result.username}'
+          result="$(curl -sS -X POST "https://api.telegram.org/bot${WORKER_BOT_TOKEN}/setWebhook" \
+            --data-urlencode "url=${URL}/webhook" \
+            --data-urlencode "secret_token=${WORKER_WEBHOOK_SECRET}" \
+            --data-urlencode 'allowed_updates=["message","my_chat_member","callback_query","poll_answer"]' \
+            --data-urlencode "drop_pending_updates=true")"
+          echo "$result" | jq '{ok, description}'
+          [ "$(echo "$result" | jq -r '.ok')" = "true" ] || exit 1

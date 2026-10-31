@@ -1,6 +1,6 @@
-name: Validate quiz files
+name: Validate
 
-# Runs whenever quizzes, the schedule or the script change, and shows a red cross
+# Runs whenever quizzes, the schedule, the scripts or the worker change, and shows a red cross
 # if something is broken (for example a missing comma in schedule.json).
 on:
   pull_request:
@@ -11,6 +11,10 @@ on:
       - "responder.py"
       - "requirements.txt"
       - "tests/**"
+      - "schema.sql"
+      - "worker/**"
+      - ".gitignore"
+      - ".github/workflows/**"
   push:
     paths:
       - "quizzes/**"
@@ -19,6 +23,10 @@ on:
       - "responder.py"
       - "tests/**"
       - "requirements.txt"
+      - "schema.sql"
+      - "worker/**"
+      - ".gitignore"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
@@ -47,3 +55,31 @@ jobs:
 
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+
+  worker:
+    name: Worker (TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: worker
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Run worker tests
+        run: npm test
