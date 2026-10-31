@@ -533,7 +533,7 @@ class WorkflowFileTests(unittest.TestCase):
 
     def test_inputs_are_never_pasted_into_shell_scripts(self):
         """Typed input must reach the script only through env variables (no script injection)."""
-        for name in ("quiz.yml", "rename-quiz.yml"):
+        for name in ("quiz.yml", "rename-quiz.yml", "deploy-worker.yml"):
             for line in self.read(name).splitlines():
                 if "${{ inputs." in line:
                     allowed = r"^\s+([A-Z_]+: \$\{\{ inputs\.\w+ \}\}|if: .*)\s*$"

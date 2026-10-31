@@ -46,6 +46,12 @@ class SharedCaseTests(unittest.TestCase):
         self.assertEqual(qb.MAX_EXPLANATION_LENGTH, 200)
 
 
+class PythonOnlyTests(unittest.TestCase):
+    def test_a_float_index_written_as_1_point_0_is_refused(self):
+        """Python tells 1.0 from 1 when reading JSON; JavaScript cannot, so this is not shared."""
+        self.assertIn("integer", qb.validate_question(["Q?", ["a", "b"], 1.0]))
+
+
 class FilterTests(unittest.TestCase):
     def test_only_valid_questions_come_out_and_skips_are_counted(self):
         items = [["Q one?", ["a", "b"], 0], ["", ["a", "b"], 0], ["Q two?", ["a", "b"], 5],
